@@ -1,0 +1,17 @@
+{
+	"folders":
+	[
+		{
+			"follow_symlinks": true,
+			"path": "LCD"
+		},
+		{
+			"follow_symlinks": true,
+			"path": "realTimer"
+		},
+		{
+			"follow_symlinks": true,
+			"path": "Servos"
+		}
+	]
+}

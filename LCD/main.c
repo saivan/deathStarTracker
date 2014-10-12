@@ -4,10 +4,7 @@
 
 char topLine[16] = "shrivelled";
 
-
-
-
-
+//This is a cool
 
 void main( void ){
 

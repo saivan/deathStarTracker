@@ -1,0 +1,1078 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"main",
+				"mainMenu"
+			],
+			[
+				"fun",
+				"functionPoint"
+			],
+			[
+				"LCD",
+				"LCDMenuItem"
+			],
+			[
+				"random",
+				"randomNumber"
+			],
+			[
+				"ran",
+				"randomNumber"
+			],
+			[
+				"string",
+				"stringstream"
+			],
+			[
+				"del",
+				"delay"
+			],
+			[
+				"delay",
+				"delaymarker"
+			],
+			[
+				"print",
+				"printName"
+			],
+			[
+				"buff",
+				"buffer"
+			],
+			[
+				"read",
+				"readings"
+			],
+			[
+				"ve",
+				"currentVelocity"
+			],
+			[
+				"motor",
+				"motorDrive"
+			],
+			[
+				"seria",
+				"Serial"
+			],
+			[
+				"re",
+				"reference"
+			],
+			[
+				"inter",
+				"interpolatedAverage"
+			],
+			[
+				"prin",
+				"println"
+			],
+			[
+				"Buf",
+				"BufferMove"
+			],
+			[
+				"kernel",
+				"kernelSum"
+			],
+			[
+				"veloc",
+				"velocities"
+			],
+			[
+				"avera",
+				"averageTotal"
+			],
+			[
+				"last",
+				"lastTotal"
+			],
+			[
+				"ls",
+				"lastTotal"
+			],
+			[
+				"tota",
+				"lastTotal"
+			],
+			[
+				"aver",
+				"averageTotal"
+			],
+			[
+				"buf",
+				"buffer"
+			],
+			[
+				"la",
+				"lastTotal"
+			],
+			[
+				"Buff",
+				"BUFFSIZE"
+			],
+			[
+				"num",
+				"numReadings"
+			],
+			[
+				"ser",
+				"Serial"
+			],
+			[
+				"curr",
+				"currentVelocity"
+			],
+			[
+				"SE",
+				"Serial"
+			],
+			[
+				"las",
+				"lastReading"
+			],
+			[
+				"int",
+				"interpolatedAverage"
+			],
+			[
+				"step",
+				"stepIndex"
+			],
+			[
+				"analog",
+				"analogRead"
+			],
+			[
+				"ind",
+				"index"
+			],
+			[
+				"hist",
+				"histBuff"
+			],
+			[
+				"KEr",
+				"KernelSum"
+			],
+			[
+				"hi",
+				"histPos"
+			],
+			[
+				"his",
+				"historyBuffer"
+			],
+			[
+				"low",
+				"lowPass"
+			],
+			[
+				"LED",
+				"LEDPin"
+			],
+			[
+				"Ker",
+				"KernelSum"
+			],
+			[
+				"Bu",
+				"BUFFSIZE"
+			],
+			[
+				"fon",
+				"font-weight"
+			],
+			[
+				"background",
+				"background-color"
+			],
+			[
+				"remo",
+				"removeClass  (function)"
+			],
+			[
+				"par",
+				"parent  (function)"
+			],
+			[
+				"pro",
+				"proofContainer"
+			],
+			[
+				"p",
+				"proofContainer"
+			],
+			[
+				"font",
+				"font-size"
+			],
+			[
+				"pad",
+				"padding"
+			],
+			[
+				"Scroll",
+				"ScrollPosition"
+			],
+			[
+				"in",
+				"text-indent"
+			],
+			[
+				"lef",
+				"left"
+			],
+			[
+				"le",
+				"left"
+			],
+			[
+				"bor",
+				"border-left"
+			],
+			[
+				"pos",
+				"pos-s	position: static;"
+			],
+			[
+				"border",
+				"border-right"
+			],
+			[
+				"ali",
+				"vertical-align"
+			],
+			[
+				"back",
+				"background-color"
+			],
+			[
+				"scroll",
+				"ScrollSpeed"
+			],
+			[
+				"scrol",
+				"scrollTop  (function)"
+			],
+			[
+				"Scropl",
+				"ScrollPosition"
+			],
+			[
+				"text",
+				"text-decoration"
+			],
+			[
+				"to",
+				"top"
+			],
+			[
+				"paddi",
+				"padding-top"
+			],
+			[
+				"font-",
+				"font-family"
+			],
+			[
+				"bac",
+				"background-image"
+			],
+			[
+				"op",
+				"opacity"
+			],
+			[
+				"bakc",
+				"background-color"
+			],
+			[
+				"wid",
+				"width"
+			],
+			[
+				"inner",
+				"innerWidth"
+			],
+			[
+				"inn",
+				"innerHeight"
+			],
+			[
+				"dra",
+				"DrawVector"
+			],
+			[
+				"X",
+				"X"
+			],
+			[
+				"screen",
+				"screenWidth"
+			],
+			[
+				"hea",
+				"header	Tag"
+			],
+			[
+				"simulation",
+				"Simulation"
+			],
+			[
+				"caclu",
+				"calculateOrbitalPeriod"
+			],
+			[
+				"defa",
+				"defaults"
+			],
+			[
+				"calcula",
+				"calculateOrbitalPeriod"
+			],
+			[
+				"orbital",
+				"OrbitalPeriod"
+			],
+			[
+				"def",
+				"defaults"
+			],
+			[
+				"crash",
+				"Crashed"
+			],
+			[
+				"anim",
+				"Animate"
+			],
+			[
+				"rad",
+				"radius"
+			],
+			[
+				"moo",
+				"moonLastPos"
+			],
+			[
+				"follow",
+				"followShip"
+			],
+			[
+				"trans",
+				"translate"
+			],
+			[
+				"simula",
+				"Simulation"
+			],
+			[
+				"orbi",
+				"OrbitalVelocity"
+			],
+			[
+				"burns",
+				"Burns"
+			],
+			[
+				"bu",
+				"Burns"
+			],
+			[
+				"circul",
+				"circularize"
+			],
+			[
+				"uxt",
+				"uxTang"
+			],
+			[
+				"Total",
+				"TotalDV"
+			],
+			[
+				"y",
+				"y"
+			],
+			[
+				"uyt",
+				"uyTang"
+			],
+			[
+				"stro",
+				"strokeStyle"
+			],
+			[
+				"draw",
+				"drawCaps"
+			],
+			[
+				"Star",
+				"StartY"
+			],
+			[
+				"left",
+				"leftY"
+			],
+			[
+				"Start",
+				"StartY"
+			],
+			[
+				"line",
+				"lineCap"
+			],
+			[
+				"Dir",
+				"DirX"
+			],
+			[
+				"ut",
+				"uxTMoon"
+			],
+			[
+				"uyT",
+				"uyTMoon"
+			],
+			[
+				"total",
+				"TotalDV"
+			],
+			[
+				"calculate",
+				"calculateOrbitalVelocity"
+			],
+			[
+				"restor",
+				"restoreDefaults"
+			],
+			[
+				"start",
+				"StartY"
+			],
+			[
+				"Rm",
+				"RMoon"
+			],
+			[
+				"on",
+				"onChange"
+			],
+			[
+				"stroke",
+				"strokeStyle"
+			],
+			[
+				"fill",
+				"fillStyle"
+			],
+			[
+				"simul",
+				"simulation"
+			],
+			[
+				"scale",
+				"scaleFactor"
+			],
+			[
+				"focus",
+				"focusY"
+			],
+			[
+				"focu",
+				"focusY"
+			],
+			[
+				"x",
+				"xscr"
+			],
+			[
+				"Path",
+				"PathCanvas"
+			],
+			[
+				"accele",
+				"acceleration"
+			],
+			[
+				"canvas",
+				"canvasValues"
+			],
+			[
+				"defau",
+				"defaults"
+			],
+			[
+				"radiu",
+				"Radius"
+			],
+			[
+				"display",
+				"DisplayMinutes"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "LCD/main.c",
+			"settings":
+			{
+				"buffer_size": 1021,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "Packages/C++/C++.sublime-build",
+	"command_palette":
+	{
+		"height": 375.0,
+		"selected_items":
+		[
+			[
+				"s",
+				"Snippet: class"
+			],
+			[
+				"ss c",
+				"Set Syntax: C"
+			],
+			[
+				"proje",
+				"Project: Save As"
+			],
+			[
+				"colors",
+				"Colorsublime: Install Theme"
+			],
+			[
+				"set c",
+				"Set Syntax: C"
+			],
+			[
+				"ss c++",
+				"Set Syntax: C++"
+			],
+			[
+				"color ",
+				"Colorsublime: Install Theme"
+			],
+			[
+				"increme",
+				"Emmet: Increment Number by 1"
+			],
+			[
+				"",
+				"Emmet: Increment Number by 1"
+			],
+			[
+				"ssy py",
+				"Set Syntax: Python"
+			],
+			[
+				"lines",
+				"Permute Lines: Reverse"
+			],
+			[
+				"instal",
+				"Package Control: Install Package"
+			],
+			[
+				"set c++",
+				"Set Syntax: C/C++(11)"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"setc++",
+				"Set Syntax: C++"
+			],
+			[
+				"python",
+				"Set Syntax: Python"
+			],
+			[
+				"c++",
+				"Set Syntax: C++"
+			],
+			[
+				"console",
+				"Package Control: Install Package"
+			],
+			[
+				"sftp ",
+				"SFTP: Browse Server…"
+			],
+			[
+				"Package Control: ",
+				"Package Control: Install Package"
+			],
+			[
+				"color",
+				"Package Control: Upgrade Package"
+			],
+			[
+				"browse",
+				"Preferences: Browse Packages"
+			],
+			[
+				"package",
+				"Package Control: Remove Package"
+			],
+			[
+				"sftp",
+				"SFTP: Browse Server…"
+			],
+			[
+				"c",
+				"Convert Case: Lower Case"
+			],
+			[
+				"while",
+				"Snippet: While Loop"
+			],
+			[
+				"for",
+				"Snippet: For Loop"
+			],
+			[
+				"eval",
+				"Emmet: Evaluate Math Expression"
+			],
+			[
+				"evalua",
+				"Emmet: Evaluate Math Expression"
+			],
+			[
+				"evalu",
+				"Emmet: Evaluate Math Expression"
+			],
+			[
+				"evaluea",
+				"Emmet: Evaluate Math Expression"
+			],
+			[
+				"Package Control: install ",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 435.0
+	},
+	"console":
+	{
+		"height": 183.0,
+		"history":
+		[
+			"cd",
+			"ls",
+			"python",
+			"close",
+			"import urllib.request,os; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); open(os.path.join(ipp, pf), 'wb').write(urllib.request.urlopen( 'http://sublime.wbond.net/' + pf.replace(' ','%20')).read())",
+			"gcc -o me.c me",
+			"gcc -o me me.c",
+			"ls",
+			"la",
+			"clear"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/Users/saivanhamama/Documents/University/Third Year/Second Semester/Mechatronics III/Major Project/GIT/LCD",
+		"/Users/saivanhamama/Documents/University/Third Year/Second Semester/Mechatronics III/Major Project/GIT/realTimer",
+		"/Users/saivanhamama/Documents/University/Third Year/Second Semester/Mechatronics III/Major Project/GIT/Servos"
+	],
+	"file_history":
+	[
+		"/Users/saivanhamama/Documents/University/Third Year/Second Semester/Mechatronics III/Major Project/GIT/LCD/LCD.c",
+		"/Users/saivanhamama/Desktop/Work/testing.cpp",
+		"/Users/saivanhamama/Desktop/Work/array.c",
+		"/Users/saivanhamama/Desktop/Work/testing.c",
+		"/Users/saivanhamama/Desktop/test.c",
+		"/Users/saivanhamama/Desktop/exerciseFour.asm",
+		"/Users/saivanhamama/Documents/Resources/Programs/Matrix Parsing/Debugging/main.cpp",
+		"/Users/saivanhamama/Desktop/hi.asm",
+		"/Users/saivanhamama/Desktop/Exercise Snippets/EX4-vii",
+		"/Users/saivanhamama/Documents/University/Third Year/Second Semester/Mechatronics III/Exercise Code/PWMVoltageControl_NoInterrupt.asm",
+		"/Users/saivanhamama/Documents/University/Third Year/Second Semester/Mechatronics III/Exercise Code/LightBar.asm",
+		"/Users/saivanhamama/Desktop/Setup.txt",
+		"/Users/saivanhamama/Desktop/Exercise Snippets/EX4-vi",
+		"/Users/saivanhamama/Documents/University/Third Year/Second Semester/Mechatronics III/Exercise Code/serialSendRecieve.asm",
+		"/Users/saivanhamama/Documents/University/Third Year/Second Semester/Mechatronics III/Exercise Code/PWMVoltageControl_Interrupts.asm",
+		"/Users/saivanhamama/Documents/University/Third Year/Second Semester/Mechatronics III/MTRX3700 (Peter phu)Exercises 2012/Exercises 2012/exercise4-1.4 (comment)/exercise4.asm",
+		"/Users/saivanhamama/Documents/University/Third Year/Second Semester/Mechatronics III/MTRX3700 (Peter phu)Exercises 2012/Exercises 2012/exercise4-1.4 (comment)/idata.asm",
+		"/Users/saivanhamama/Documents/University/Third Year/Second Semester/Mechatronics III/MTRX3700 (Peter phu)Exercises 2012/Exercises 2012/exercise1-1.1/P18F452 header.txt",
+		"/Users/saivanhamama/Desktop/stringing.cpp",
+		"/Users/saivanhamama/Desktop/string.cpp",
+		"/Users/saivanhamama/Desktop/Assembly/P18F452 header.txt",
+		"/Users/saivanhamama/Desktop/MTRX3700 (Peter phu)Exercises 2012/Exercises 2012/exercise3-1.4 (comment)/exercise3.asm",
+		"/Users/saivanhamama/Desktop/MTRX3700 (Peter phu)Exercises 2012/Exercises 2012/exercise1-1.3 (comment)/exercise1.asm",
+		"/Users/saivanhamama/Desktop/Assembly/exercise1.asm",
+		"/Users/saivanhamama/Desktop/untitled.py",
+		"/Users/saivanhamama/Desktop/MTRX3700 (Peter phu)Exercises 2012/Exercises 2012/exercise3-1.4 (comment)/exercise3.hex",
+		"/Users/saivanhamama/Desktop/MTRX3700 (Peter phu)Exercises 2012/Exercises 2012/exercise2-1.2 (comment)/exercise2.asm",
+		"/Users/saivanhamama/Desktop/text.txt",
+		"/Users/saivanhamama/Desktop/MTRX3700 (Peter phu)Exercises 2012/Exercises 2012/exercise2-1.1 (working)/exercise2.asm",
+		"/Users/saivanhamama/Desktop/Stuff/classes.cpp",
+		"/Users/saivanhamama/Desktop/Stuff/header.h",
+		"/Users/saivanhamama/Desktop/Stuff/new.cpp",
+		"/Users/saivanhamama/Library/Application Support/Sublime Text 3/Packages/User/Current.sublime-build",
+		"/Users/saivanhamama/Desktop/new.cpp",
+		"/Users/saivanhamama/Desktop/header.h",
+		"/var/folders/58/w3mhm6c13rj78cnt_htj30rr0000gn/T/sublime-sftp-browse-1402730675/saivan/home/saivan/nginx/My Graphing Calculator/Graphing.js",
+		"/Users/saivanhamama/Desktop/LastRoom_Dark.tmTheme",
+		"/Users/saivanhamama/Desktop/quadratics.py",
+		"/var/folders/58/w3mhm6c13rj78cnt_htj30rr0000gn/T/sublime-sftp-browse-1402497372/saivan/home/saivan/nginx/Drawing Vector Fields/fieldDraw.js",
+		"/Users/saivanhamama/Desktop/MotorDrive/MotorDrive.ino",
+		"/Users/saivanhamama/Desktop/PID/PID.ino",
+		"/Users/saivanhamama/Library/Application Support/Sublime Text 3/Packages/User/Preferences.sublime-settings",
+		"/Users/saivanhamama/Desktop/censorShip.py",
+		"/Users/saivanhamama/Desktop/censorShipo.py",
+		"/Users/saivanhamama/Library/Application Support/Sublime Text 3/Packages/Default/Preferences.sublime-settings",
+		"/Users/saivanhamama/Desktop/Latest2/Latest2.ino",
+		"/Users/saivanhamama/Desktop/IndexTest/IndexTest.ino",
+		"/Users/saivanhamama/Desktop/velocityControlRegression/velocityControlRegression.ino",
+		"/Users/saivanhamama/Desktop/Backupt.txt",
+		"/Users/saivanhamama/Desktop/Testing",
+		"/Users/saivanhamama/Desktop/Latest/Check/Check.ino",
+		"/Users/saivanhamama/Desktop/Latest/Latest.ino",
+		"/Users/saivanhamama/Desktop/Latest/Check.ino",
+		"/Users/saivanhamama/Google Drive/Picture Dump/Stuff.txt",
+		"/Users/saivanhamama/Desktop/distanceForce.txt",
+		"/Users/saivanhamama/Downloads/part2kdunderdamped.plt",
+		"/Users/saivanhamama/Google Drive/Picture Dump/input.txt",
+		"/Users/saivanhamama/Desktop/Untitled-1.raw",
+		"/Users/saivanhamama/Desktop/CommonEmitterHardcode.m",
+		"/Users/saivanhamama/Desktop/1898143_10152137745523159_379447369_n 2.raw",
+		"/Users/saivanhamama/Library/Application Support/LTspice/lib/cmp/standard.bjt",
+		"/Users/saivanhamama/Library/Application Support/Sublime Text 3/Packages/User/sftp_servers/saivan",
+		"/var/folders/58/w3mhm6c13rj78cnt_htj30rr0000gn/T/sublime-sftp-browse-1397959453/saivan/home/saivan/nginx/Drawing Vector Fields/fieldDraw.js",
+		"/var/folders/58/w3mhm6c13rj78cnt_htj30rr0000gn/T/sublime-sftp-browse-1397617959/saivan/home/saivan/nginx/Fourier/fourier.php",
+		"/var/folders/58/w3mhm6c13rj78cnt_htj30rr0000gn/T/sublime-sftp-browse-1397618091/saivan/home/saivan/nginx/Fourier/nodeLearn.css",
+		"/Users/saivanhamama/Documents/University/Third Year/First Semester/Power Engineering/Information/Quiz 1",
+		"/Users/saivanhamama/Desktop/Encoder 3 data 4 masses removed.txt",
+		"/Users/saivanhamama/Downloads/INSIDE.NC",
+		"/Users/saivanhamama/Desktop/glut.c",
+		"/Users/saivanhamama/Desktop/Cordic/cordic.c",
+		"/Users/saivanhamama/Sites/nodeLearn/Fourier/fourier.js",
+		"/Users/saivanhamama/Sites/nodeLearn/Fourier/nodeLearn.css",
+		"/Users/saivanhamama/Sites/nodeLearn/Fourier/nodeLearnAnimations.js",
+		"/Users/saivanhamama/Sites/nodeLearn/Fourier/fourier.html",
+		"/Users/saivanhamama/Downloads/profile rev 3.NC",
+		"/private/etc/apache2/users/saivanhamama.conf",
+		"/private/etc/apache2/extra/httpd-vhosts.conf",
+		"/private/etc/apache2/httpd.conf",
+		"/Users/saivanhamama/Desktop/Documents/index.html.en",
+		"/Users/saivanhamama/Sites/nodeLearn/Fourier/fourier.php",
+		"/Library/WebServer/Documents/index.html.en",
+		"/Users/saivanhamama/Sites/nodeLearn/Fourier/fourier.css",
+		"/Users/saivanhamama/Sites/nodeLearn/TestSite/nodeLearn.php",
+		"/Users/saivanhamama/Sites/nodeLearn/TestSite/nodeLearn.css",
+		"/Users/saivanhamama/Sites/nodeLearn/TestSite/nodeLearnAnimations.js",
+		"/Users/saivanhamama/Sites/nodeLearn/TestSite/nodeLearn.js",
+		"/private/etc/apache2/magic",
+		"/private/etc/apache2/users/Guest.conf",
+		"/Users/saivanhamama/Desktop/hello.js",
+		"/Users/saivanhamama/Sites/test.php",
+		"/Users/saivanhamama/Desktop/nodeLearn/TestSite/nodeLearn.css",
+		"/Users/saivanhamama/Desktop/nodeLearn/TestSite/nodeLearn.html",
+		"/Users/saivanhamama/Documents/Web/My Graphing Calculator/Graphing.html",
+		"/Users/saivanhamama/Documents/Web/My Graphing Calculator/Graphing.css",
+		"/Users/saivanhamama/Documents/Web/Drawing Vector Fields/main.html",
+		"/Users/saivanhamama/Documents/Web/My Graphing Calculator/Graphing.js",
+		"/Users/saivanhamama/Documents/Web/Drawing Vector Fields/styling.css",
+		"/Users/saivanhamama/Documents/Web/Drawing Vector Fields/functions.js",
+		"/Users/saivanhamama/Documents/Web/Drawing Vector Fields/fieldDraw.js",
+		"/Users/saivanhamama/Desktop/hello.c",
+		"/Users/saivanhamama/Desktop/files.txt",
+		"/Users/saivanhamama/Desktop/Approx.c",
+		"/Users/saivanhamama/Desktop/List",
+		"/Users/saivanhamama/Desktop/Hi.txt",
+		"/Users/saivanhamama/Downloads/main-1.c",
+		"/Users/saivanhamama/Downloads/plotting-1.c",
+		"/Users/saivanhamama/Downloads/plotting.c",
+		"/Users/saivanhamama/Downloads/main.c",
+		"/Users/saivanhamama/Desktop/main.c",
+		"/Users/saivanhamama/Desktop/reiman.c",
+		"/Users/saivanhamama/Downloads/coupledODEs.c",
+		"/Users/saivanhamama/Downloads/trapline.c",
+		"/Users/saivanhamama/Downloads/hello-1.c",
+		"/Users/saivanhamama/Downloads/hello.c",
+		"/Users/saivanhamama/Library/Application Support/Google/Chrome/Default/Preferences",
+		"/Users/saivanhamama/Desktop/Yo",
+		"/Users/saivanhamama/Desktop/trap.c",
+		"/Users/saivanhamama/Desktop/riemann_sum.c",
+		"/Users/saivanhamama/Desktop/downloads.txt",
+		"/Users/saivanhamama/Desktop/strain.txt",
+		"/Users/saivanhamama/Desktop/me.c",
+		"/Users/saivanhamama/Library/Application Support/Sublime Text 3/Packages/User/C.sublime-build",
+		"/Users/saivanhamama/Desktop/Hello.c",
+		"/Users/saivanhamama/Documents/University/Second Year/Second Semester/AERO2705/Assignments/Assignment Two/Program/CanvasManipulation.js",
+		"/Users/saivanhamama/Documents/University/Second Year/Second Semester/AERO2705/Assignments/Assignment Two/Program/Orbiting.js",
+		"/Users/saivanhamama/Desktop/Space Assignment Two/CanvasManipulation.js",
+		"/Users/saivanhamama/Desktop/Space Assignment Two/Orbiting.js",
+		"/Users/saivanhamama/Desktop/Space Assignment Two/Css.css"
+	],
+	"find":
+	{
+		"height": 31.0
+	},
+	"find_in_files":
+	{
+		"height": 107.0,
+		"where_history":
+		[
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"=",
+			"-1",
+			"portb",
+			"ac",
+			"UDATA",
+			"count",
+			"classRoom",
+			"color",
+			"kernelSum",
+			"interpolatedAverage",
+			"polynomialInterpolate",
+			"lastAverage",
+			"numReadings",
+			"currentVelocity",
+			"IND",
+			"stepindex",
+			"speed",
+			"out",
+			"latest",
+			"histPos",
+			"historyBuffer",
+			"CenterPosition",
+			"out",
+			"LEDPIN",
+			",",
+			"input",
+			"font-family",
+			"back",
+			"users",
+			" ",
+			"matrix",
+			"\n",
+			"prefrences",
+			"StartY",
+			"StartX",
+			"thicknes",
+			"Resolution",
+			"value",
+			"integra",
+			"pm",
+			"Saivan Hamama",
+			"tabs",
+			"starty",
+			"startx",
+			"diry",
+			"dirx",
+			"length",
+			"[]){\n",
+			"dvfine",
+			"earth.Radius",
+			"stepChange",
+			"circularise",
+			"track",
+			"ctx",
+			"tracktransforms",
+			"tim",
+			"ctx",
+			"custom",
+			"moon",
+			"Start/stop",
+			"toggleanimation",
+			"toggle",
+			"#",
+			"graphics",
+			"drawEarth",
+			"CanvasScale",
+			"Scale",
+			"earthpos",
+			"\n}",
+			"vertexbuffer",
+			"50",
+			"controls",
+			"// Set up some lights ",
+			"body"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"a",
+			""
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": false
+	},
+	"groups":
+	[
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "LCD/main.c",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1021,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"incomplete_sync": null,
+							"remote_loading": false,
+							"synced": false,
+							"syntax": "Packages/C++ Starting Kit/CCpp.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 31.0
+	},
+	"input":
+	{
+		"height": 40.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 233.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"output.sftp":
+	{
+		"height": 34.0
+	},
+	"project": "Major Project.sublime-project",
+	"replace":
+	{
+		"height": 58.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+			[
+				"",
+				"~/Desktop/Work/main.cpp"
+			],
+			[
+				"q",
+				"~/Desktop/quadratics.py"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"selected_items":
+		[
+			[
+				"",
+				"~/Documents/University/Third Year/Second Semester/Mechatronics III/Major Project/GIT/Major Project.sublime-project"
+			]
+		],
+		"width": 380.0
+	},
+	"select_symbol":
+	{
+		"height": 375.0,
+		"selected_items":
+		[
+		],
+		"width": 378.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 134.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

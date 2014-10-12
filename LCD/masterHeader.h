@@ -16,12 +16,11 @@
 #define TRUE 1
 #define FALSE 0
 
-struct time{
-    unsigned int minutes;
-    unsigned int microseconds;
-    unsigned char sixteenths : 4;
-};
-
+typedef struct displayDigit{
+    unsigned char upper;
+    unsigned char middle;
+    unsigned char lower;
+} displayDigit;
 
 #include "LCD.h"
 
