@@ -183,3 +183,9 @@ void LCDPushString( char *string, unsigned char line ){
     // finished sending
 
 }
+
+/// Copies le string to le ram
+void stringToRam( static char rom *source, static char *destination ){
+    while( (*destination++ = *source++) != '\0' ){
+    }
+}

@@ -76,6 +76,7 @@ void LCDEventHandler( void );
 
 void LCDInitialise( void );
 void delayMs( unsigned int miliseconds );
+void stringToRam( static char rom *source, static char *destination );
 void LCDInstruction( char data , unsigned char command );
 void LCDMoveCursor( unsigned char line, unsigned char character );
 void LCDPushString( char *string, unsigned char line );

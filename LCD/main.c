@@ -4,10 +4,7 @@
 
 char topLine[16] = "shrivelled";
 
-void stringToRam( static char rom *source, static char *destination ){
-    while( (*destination++ = *source++) != '\0' ){
-    }
-}
+
 
 
 
