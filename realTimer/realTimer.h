@@ -1,24 +1,30 @@
-
 /* 
- * File:   timer.h
+ * File:   realTimer.h
  * Author: saivanhamama
  *
- * Created on October 12, 2014, 5:58 PM
+ * Created on October 13, 2014, 8:44 PM
  */
 
-#ifndef TIMER_H
-#define	TIMER_H
+#ifndef REALTIMER_H
+#define	REALTIMER_H
 
-#define SECOND_CCPVAL
+/**
+ * @struct time Variables related to the real time
+ * @brief Stores timekeeping variables
+ * @details milliseconds and quarts updated only on request
+ */
+typedef struct time {
+	char hours;						///< The time in hours since system booted
+	char minutes;					///< The time in minutes since the last hour
+	char seconds;					///< The time in seconds since the last minute
+	unsigned int milliseconds;		///< The time in milliseconds since the last second
+	char sixteenths;				///< Sixteenths of a millisecond since the last millisecond
+} time;
 
 
-typedef struct timeTag {
-    unsigned int microseconds;
-    unsigned int minutes;
-    unsigned int quarts : 4;
-} timeTag;
-
+/// 
 void setupRealTimeTimer( void );
-char timeGreaterThan( timeTag *refTime );
+void updateMilliseconds( void );
 
-#endif	/* TIMER_H */
+#endif	/* REALTIMER_H */
+

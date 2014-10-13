@@ -5,6 +5,8 @@
  * Created on October 12, 2014, 4:59 PM
  */
 
+ ///// DECLARE STUFF IN INTERRUPTS VOLATILEEEEEE
+
 #ifndef SERVOS_H
 #define	SERVOS_H
 

@@ -11,7 +11,11 @@
 // The timer should work in this mode
 #pragma interrupt highPriorityISR
 void highPriorityISR( void ){
+	/// Serve the capture compare interrupt
+	if( PIR2bits.CCP2IF ){
 
+		PIR2bits.CCP2IF = 0; 			///< Clear the interrupt flag
+	}
 }
 
 #pragma code highPriorityInterruptAddress=0x08
