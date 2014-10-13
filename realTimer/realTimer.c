@@ -8,7 +8,7 @@
 
 #include "masterHeader.h"
 
-time time;            					// Declare the time in the local scope
+ time time;            					// Declare the time in the local scope
 
 /**
  * @brief 	Sets up timer3 to work as a real time clock
@@ -31,11 +31,12 @@ void setupRealTimeTimer( void ){
     TRISCbits.RC0 = 1; 					///< Set T13CKl (RC0) to an input Pin 
     /// Setting up the CCP3 Module to work in compare mode
     T3CONbits.T3CCP2 = 1;               ///< Use timer3 as the CCP source
-	CCP2CONbits.CCP2M = 0b1010;			///< Generate interrupt on successful compare
-	/// Turning on the interrupts and setting priorities
-	IPR2bits.CCP2IP = 1;				///< Set CCP2 to high Priority
-	PIE2bits.CCP2IE = 1; 				///< Enable CCP2 compare interrupts	
-	INTCONbits.GIEH = 1;				///< Enable high priority interrupts
+    CCP2CONbits.CCP2M = 0b1010;			///< Generate interrupt on successful compare
+	
+    /// Turning on the interrupts and setting priorities
+    IPR2bits.CCP2IP = 1;				///< Set CCP2 to high Priority
+    PIE2bits.CCP2IE = 1; 				///< Enable CCP2 compare interrupts
+    INTCONbits.GIEH = 1;				///< Enable high priority interrupts
 }
 
 /**
@@ -48,7 +49,7 @@ void updateMilliseconds( void ){
 	char timer3HighBits = TMR3H;
 	char timer3LowBits = TMR3L;
 	/// Set TMR3<0:3> to †he time in quarts
-	time.quarts = (TMR3L)&(0x0F);		///< Get the low bytes and set them to the time in quarts
+	time.sixteenths = (TMR3L)&(0x0F);	///< Get the low bytes and set them to the time in quarts
 	/// Set TMR3<4:13> to the time in miliseconds
 	time.milliseconds = (TMR3H<2);		///< Update the high bytes
 	if ( (TMR3L&(1<<6)) != 0 )

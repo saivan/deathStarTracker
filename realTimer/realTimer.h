@@ -8,6 +8,8 @@
 #ifndef REALTIMER_H
 #define	REALTIMER_H
 
+#define CCP_SECOND 160000
+
 /**
  * @struct time Variables related to the real time
  * @brief Stores timekeeping variables
@@ -21,8 +23,7 @@ typedef struct time {
 	char sixteenths;				///< Sixteenths of a millisecond since the last millisecond
 } time;
 
-
-/// 
+/// Function forward declartions go here
 void setupRealTimeTimer( void );
 void updateMilliseconds( void );
 
