@@ -25,7 +25,7 @@
 #define SERVO_CCP_MIN (CLOCK_FREQ/4000)
 // Finding the Mapping gradient and Intercept
 #define SERVO_MAPPING_GRAD (SERVO_CCP_MIN/180)
-#define SERVO_MAPPING_YINT (SERVO_CCP_MIN)
+#define SERVO_MAPPING_YINT (SERVO_CCP_MIN) - 4 ///< We subtract 4 for a single clock cycle
 
 // The defined on and off times for the servo
 extern unsigned int servoOffTime;

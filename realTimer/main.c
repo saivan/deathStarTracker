@@ -11,11 +11,16 @@
 // The timer should work in this mode
 #pragma interrupt highPriorityISR
 void highPriorityISR( void ){
-	if( PIR2bits.CCP2IF ){
-        /// RESET TIMER
-//        PIR2bits.CCP2IF = 0; 			///< Clear the interrupt flag
+    if( PIR2bits.CCP2IF ){
+		WriteTimer3(0);					///< Reset the timer
+    	time.updatesRequired++;			///< Flag another update for the main
+    	PIR2bits.CCP2IF = 0; 			///< Clear the interrupt flag
     }
 }
+
+
+
+
 
 #pragma code highPriorityInterruptAddress=0x08
 void high_interrupt( void ){       
