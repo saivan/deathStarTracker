@@ -11,10 +11,9 @@
 // The timer should work in this mode
 #pragma interrupt highPriorityISR
 void highPriorityISR( void ){
-    if( PIR2bits.CCP2IF ){
-		WriteTimer3(0);					///< Reset the timer
+    if( INTCONbits.TMR0IF ){        
     	time.updatesRequired++;			///< Flag another update for the main
-    	PIR2bits.CCP2IF = 0; 			///< Clear the interrupt flag
+    	INTCONbits.TMR0IF = 0; 			///< Clear the interrupt flag
     }
 }
 
@@ -27,14 +26,33 @@ void high_interrupt( void ){
     _asm GOTO highPriorityISR _endasm
 }
 
+
+
+
+
+
 void main( void ){
 
+
+    char nextUpdate = 0;
 	setupRealTimeTimer();				///< See definition for full functionality
-	
-	//	if( /*/EXPECTED TIME*/ )
-	
+			
+	TRISBbits.RB0 = 0; 					// Setup portB for an output to test timing
+        TRISBbits.RB1 = 0; 					// Setup portB for an output to test timing
+	PORTBbits.RB0 = 0;					// turn of RB0
+        PORTBbits.RB1 = 0;					// turn of RB0
+
 	while(1){
-		/// Update the time 
+		/// Test code to check the timers opperation
+		updateTime();					// Update the time 
+		if( time.seconds == 3 ){
+			PORTBbits.RB0 = 1;			// Turn on RB0 after 3 seconds
+		}
+                /// This will cause a blink once per second.
+                if ( nextUpdate == time.seconds ){
+                    PORTBbits.RB1 ^= 1;
+                    nextUpdate++;
+                }
 
 	}
 }
