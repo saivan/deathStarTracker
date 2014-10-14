@@ -66,16 +66,16 @@ void updateTime( void ){
  */
 void setTimeTag( int msToNextEvent, timeTag *eventTag ){
 	/// Copy all of the current time information to the eventTag
-	eventTag->milliseconds = time.milliseconds;
+	eventTag->milliseconds = time.milliseconds;	
 	eventTag->seconds = time.seconds;
 	eventTag->minutes = time.minutes;
 	eventTag->hours = time.hours;
 
 	/// Add the required milliseconds to the current time
-	eventTag->milliseconds += msToNextEvent;
-	if( eventTag->milliseconds > 999 ){
-		eventTag->milliseconds -= 1000;
-		eventTag->seconds++;
+	eventTag->milliseconds += msToNextEvent;			///< Add the milliseconds till the next event
+	if( eventTag->milliseconds > 999 ){					///< If we've overflowed the milliseconds
+		eventTag->milliseconds -= 1000;					///< Subtract 1000ms and
+		eventTag->seconds++;							///< Increment to the next second
 		if( eventTag->seconds > 59 ){
 			eventTag->seconds = 0;
 			eventTag->minutes++;
@@ -93,8 +93,17 @@ void setTimeTag( int msToNextEvent, timeTag *eventTag ){
  * @return true if the time has been exceeded, otherwise false
  */
 char eventDue( timeTag *eventTag ){
-	
-	return TRUE;
+	if( time.hours > eventTag->hours ){
+		return FALSE;
+	} else if ( time.minutes > eventTag->minutes ){
+		return FALSE;
+	} else if ( time.seconds > eventTag->seconds ){
+		return FALSE;
+	} else if ( time.milliseconds > eventTag->milliseconds ){
+		return FALSE;
+	} else {
+		return TRUE;
+	}	
 }
 
 
