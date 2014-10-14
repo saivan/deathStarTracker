@@ -44,10 +44,29 @@ void setupRealTimeTimer( void ){
  * @details Call this function when you need the time in milliseconds updated
  * 			forgetting to call this function will keep the old value in the timers
  */
-void updateMilliseconds( void ){
+void updateTime( void ){
 	/// Get the Timer value, so that it doesnt change during execution
 	char timer3HighBits = TMR3H;
 	char timer3LowBits = TMR3L;
+        ///
+	if( time.updatesRequired > 0 ){
+		time.seconds++; 				///< Increment seconds
+		/// Update the time in milliseconds
+
+		/// Update the time in seconds if required
+		if( time.seconds == 60 ){
+            time.seconds = 0;
+            time.minutes++;				///< If seconds overflowed, increment minutes
+		}
+		/// Update the time in minutes if required
+		if( time.minutes == 60 ){
+			time.minutes == 0;
+			time.hours++;				///< If minutes overflowed, increment hours
+		}
+	}
+
+
+
 	/// Set TMR3<0:3> to †he time in quarts
 	time.sixteenths = (TMR3L)&(0x0F);	///< Get the low bytes and set them to the time in quarts
 	/// Set TMR3<4:13> to the time in miliseconds

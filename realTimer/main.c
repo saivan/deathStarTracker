@@ -11,22 +11,14 @@
 // The timer should work in this mode
 #pragma interrupt highPriorityISR
 void highPriorityISR( void ){
-	/// Serve the capture compare interrupt
 	if( PIR2bits.CCP2IF ){
-		time.seconds++; 				///< Increment seconds
-		if( time.seconds == 0 )
-			time.minutes++;				///< If seconds overflowed, increment minutes
-		if( time.minutes == 0 )
-			time.hours++;				///< If minutes overflowed, increment hours
-		PIR2bits.CCP2IF = 0; 			///< Clear the interrupt flag
-	}
+        /// RESET TIMER
+//        PIR2bits.CCP2IF = 0; 			///< Clear the interrupt flag
+    }
 }
 
 #pragma code highPriorityInterruptAddress=0x08
-void high_interrupt( void ){   
-	if( PIR2bits.CCP2IF ){
-		
-	}
+void high_interrupt( void ){       
     _asm GOTO highPriorityISR _endasm
 }
 
@@ -34,8 +26,12 @@ void main( void ){
 
 	setupRealTimeTimer();				///< See definition for full functionality
 	
-//	if( /*/EXPECTED TIME*/ )
-    
+	//	if( /*/EXPECTED TIME*/ )
+	
+	while(1){
+		/// Update the time 
+
+	}
 }
 
 

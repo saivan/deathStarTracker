@@ -16,16 +16,17 @@
  * @details milliseconds and quarts updated only on request
  */
 typedef struct time {
-	char hours;						///< The time in hours since system booted
-	char minutes;					///< The time in minutes since the last hour
-	char seconds;					///< The time in seconds since the last minute
-	unsigned int milliseconds;		///< The time in milliseconds since the last second
-	char sixteenths;				///< Sixteenths of a millisecond since the last millisecond
+	unsigned char hours;					///< The time in hours since system booted
+	unsigned char minutes;					///< The time in minutes since the last hour
+	unsigned char seconds;					///< The time in seconds since the last minute
+	unsigned int milliseconds;				///< The time in milliseconds since the last second
+	unsigned char sixteenths;				///< Sixteenths of a millisecond since the last millisecond
+	unsigned char updatesRequired;				///< Count milliseconds since last update
 } time;
 
 /// Function forward declartions go here
 void setupRealTimeTimer( void );
-void updateMilliseconds( void );
+void updateTime( void );
 
 #endif	/* REALTIMER_H */
 
