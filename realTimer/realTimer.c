@@ -11,10 +11,10 @@
 volatile Time time = {0,0,0,0,0};     // Declare the time in the local scope initialised to zero
 
 /**
- * @brief 	Sets up Timer0 to work as a real time clock
+ * @brief Sets up Timer0 to work as a real time clock
  * @details Sets up Timer0 with a prescaler of 16 to overflow
- * 			once every millisecond. You can read the value of 
- * 			Timer0 for submillisecond precision if you need it
+ *          once every millisecond. You can read the value of
+ *          Timer0 for submillisecond precision if you need it
  */
 void setupRealTimeTimer( void ){
     /// Turning on timer 0 and setting it up
@@ -41,9 +41,9 @@ void updateTime( void ){
 		/// Update the time in milliseconds
         time.milliseconds += time.updatesRequired; 			///< Increment the milliseconds
         time.updatesRequired = 0;							///< Reset updates to zero as they are done
-        if( time.milliseconds > 1000 ){
+        if( time.milliseconds > 999 ){
         	time.milliseconds -= 1000;						///< If we reached 1 second, we subtract a second 		
-		time.seconds++;										///< And register the new second                
+			time.seconds++;									///< And register the new second                
 			if( time.seconds > 59 ){      
 				time.seconds = 0;							///< If we reached 1 minute, we reset seconds
 				time.minutes++;								///< Then register the new minute
@@ -55,4 +55,48 @@ void updateTime( void ){
 		}
 	}
 }
+
+
+/**
+ * @brief Sets the time for the next event
+ * @details Takes the 
+ * 
+ * @param eventTag The event that is expected to occur
+ * @param msToNextEvent Time in milliseconds till the next event : 10 < msToNextEvent < 999
+ */
+void setTimeTag( int msToNextEvent, timeTag *eventTag ){
+	/// Copy all of the current time information to the eventTag
+	eventTag->milliseconds = time.milliseconds;
+	eventTag->seconds = time.seconds;
+	eventTag->minutes = time.minutes;
+	eventTag->hours = time.hours;
+
+	/// Add the required milliseconds to the current time
+	eventTag->milliseconds += msToNextEvent;
+	if( eventTag->milliseconds > 999 ){
+		eventTag->milliseconds -= 1000;
+		eventTag->seconds++;
+		if( eventTag->seconds > 59 ){
+			eventTag->seconds = 0;
+			eventTag->minutes++;
+			if( eventTag->minutes > 59 ){
+				eventTag->minutes = 0;
+				eventTag->hours++;
+			}
+		}
+	}
+}
+
+/**
+ * @brief Checks if the time for an event has been reached 
+ * @param eventTag The event to check, should use a timeTag
+ * @return true if the time has been exceeded, otherwise false
+ */
+char eventDue( timeTag *eventTag ){
+	
+	return TRUE;
+}
+
+
+
 

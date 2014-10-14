@@ -21,13 +21,25 @@ typedef struct Time {
 	volatile unsigned char updatesRequired: 1;		///< Count milliseconds since last update
 } Time;
 
+/**
+ * @struct timeTag Stores the time when an event should run
+ * @brief The time for the next event 
+ */
+typedef struct timeTag {
+	unsigned char hours;							///< The time in hours since system booted
+	unsigned char minutes;							///< The time in minutes since the last hour
+	unsigned char seconds;							///< The time in seconds since the last minute
+	unsigned int milliseconds;						///< The time in milliseconds since the last second		
+} timeTag;
+
 /// Function forward declartions go here
 void setupRealTimeTimer( void );
 void updateTime( void );
+void setTimeTag( int msToNextEvent , timeTag *eventTag );
+char eventDue( timeTag *eventTag );
 
 /// Declare the time for the system to use
 extern volatile Time time;
-
 
 #endif	/* REALTIMER_H */
 

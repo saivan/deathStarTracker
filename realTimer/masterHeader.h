@@ -16,6 +16,8 @@
 #include <timers.h>
 #include "realTimer.h"
 
+#define TRUE 1
+#define FALSE 0
 
 #endif	/* MASTERHEADER_H */
 

@@ -18,17 +18,10 @@ void highPriorityISR( void ){
 }
 
 
-
-
-
 #pragma code highPriorityInterruptAddress=0x08
 void high_interrupt( void ){       
     _asm GOTO highPriorityISR _endasm
 }
-
-
-
-
 
 
 void main( void ){
@@ -38,9 +31,9 @@ void main( void ){
 	setupRealTimeTimer();				///< See definition for full functionality
 			
 	TRISBbits.RB0 = 0; 					// Setup portB for an output to test timing
-        TRISBbits.RB1 = 0; 					// Setup portB for an output to test timing
-	PORTBbits.RB0 = 0;					// turn of RB0
-        PORTBbits.RB1 = 0;					// turn of RB0
+    TRISBbits.RB1 = 0; 					// Setup portB for an output to test timing
+	PORTBbits.RB0 = 0;					// turn off RB0
+    PORTBbits.RB1 = 0;					// turn off RB0
 
 	while(1){
 		/// Test code to check the timers opperation
@@ -48,11 +41,12 @@ void main( void ){
 		if( time.seconds == 3 ){
 			PORTBbits.RB0 = 1;			// Turn on RB0 after 3 seconds
 		}
-                /// This will cause a blink once per second.
-                if ( nextUpdate == time.seconds ){
-                    PORTBbits.RB1 ^= 1;
-                    nextUpdate++;
-                }
+
+        /// This will cause a blink once per second.
+        if ( nextUpdate == time.seconds ){
+            PORTBbits.RB1 ^= 1;
+            nextUpdate++;
+        }
 
 	}
 }
