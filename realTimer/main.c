@@ -24,43 +24,39 @@ void high_interrupt( void ){
 
 void main( void ){
 
-    timeTag *nextUpdate;
+    timeTag nextUpdate = {0,0,0,0};
 
     setupRealTimeTimer();				///< See definition for full functionality
 
 			
 	TRISBbits.RB0 = 0; 					// Setup portB for an output to test timing
-    TRISBbits.RB1 = 0; 					// Setup portB for an output to test timing
+    TRISCbits.RC6 = 0; 					// Setup portB for an output to test timing
     TRISBbits.RB2 = 0; 					// Setup portB for an output to test timing
 	PORTBbits.RB0 = 0;					// turn off RB0
     PORTBbits.RB1 = 0;					// turn off RB0
-    PORTBbits.RB2 = 0;					// turn off RB0
+    PORTCbits.RC6 = 0;					// turn off RB0
 
-
-    
+    setTimeTag( 2, &nextUpdate );
 
 	while(1){
         /// Test code to check the timers opperation
         updateTime();					// Update the time
-        setTimeTag( 900, nextUpdate );
-        if( time.milliseconds%15 == 0 ){
-        	PORTBbits.RB0 = 1;			// Turn on RB0 after 3 seconds
-        } else {
-            PORTBbits.RB0 = 0;
-        }
-
-        /// This will cause a blink once per second.
-//        if ( eventDue( nextUpdate ) ){
-//            setTimeTag( 900, nextUpdate );
-//            PORTBbits.RB1 ^= 1;
-//
-//
+        
+//        if( time.milliseconds%15 == 0 ){
+//        	PORTBbits.RB0 = 1;			// Turn on RB0 after 3 seconds
+//        } else {
+//            PORTBbits.RB0 = 0;
 //        }
-
-	}
+        PORTBbits.RB2 ^= 1;
+        /// This will cause a blink once per second.
+        if ( eventDue( &nextUpdate ) ){
+            PORTCbits.RC6 ^= 1;
+            setTimeTag( 200, &nextUpdate );
+        }
+  }
 }
 
- #pragma config OSC  = HS
+ #pragma config OSC = HS
  #pragma config PWRT = ON
  #pragma config WDT  = OFF, WDTPS = 1
  #pragma config LVP  = OFF

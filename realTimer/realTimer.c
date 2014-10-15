@@ -64,7 +64,7 @@ void updateTime( void ){
  * @param eventTag The event that is expected to occur
  * @param msToNextEvent Time in milliseconds till the next event : 10 < msToNextEvent < 999
  */
-void setTimeTag( int msToNextEvent, timeTag *eventTag ){
+void setTimeTag( unsigned int msToNextEvent, timeTag *eventTag ){
 	/// Copy all of the current time information to the eventTag
 	eventTag->milliseconds = time.milliseconds;	
 	eventTag->seconds = time.seconds;
@@ -87,25 +87,24 @@ void setTimeTag( int msToNextEvent, timeTag *eventTag ){
 	}
 }
 
+
 /**
  * @brief Checks if the time for an event has been reached 
  * @param eventTag The event to check, should use a timeTag
  * @return true if the time has been exceeded, otherwise false
  */
 char eventDue( timeTag *eventTag ){
-	if( time.hours > eventTag->hours ){
+	if( time.hours < eventTag->hours ) 
 		return FALSE;
-	} else if ( time.minutes > eventTag->minutes ){
+	else if ( (time.minutes < eventTag->minutes) && (time.hours == eventTag->hours) )
 		return FALSE;
-	} else if ( time.seconds > eventTag->seconds ){
+	else if ( (time.seconds < eventTag->seconds) && (time.minutes == eventTag->minutes) )
 		return FALSE;
-	} else if ( time.milliseconds > eventTag->milliseconds ){
+	else if ( (time.milliseconds < eventTag->milliseconds) && (time.seconds == eventTag->seconds) )
 		return FALSE;
-	} else {
+	else 
 		return TRUE;
-	}	
 }
-
 
 
 
