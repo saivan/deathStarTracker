@@ -7,8 +7,8 @@
  * 
  */
 #pragma interrupt highPriorityISR
-void highPriorityISR( void ){
-	/// Handling the servos
+void highPriorityISR( void ){    
+	/// Handling the servos   ///
     if( PIR1bits.CCP1IF ){
         PIR1bits.CCP1IF = 0;                    	///< Clear the flag for the next interrupt
         if( ~servoFlags.azimuthFired ){	

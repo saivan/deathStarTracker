@@ -51,7 +51,7 @@ void main( void ){
         /// This will cause a blink once per second.
         if ( eventDue( &nextUpdate ) ){
             PORTCbits.RC6 ^= 1;
-            setTimeTag( 200, &nextUpdate );
+            setTimeTag( 900, &nextUpdate );
         }
   }
 }
@@ -64,4 +64,3 @@ void main( void ){
  #pragma config CP0  = OFF,CP1 = OFF,CP2 = OFF,CP3 = OFF,CPB = OFF,CPD = OFF
  #pragma config WRT0 = OFF,WRT1 = OFF,WRT2 = OFF,WRT3 = OFF,WRTB = OFF,WRTC = OFF,WRTD = OFF
  #pragma config EBTR0 = OFF,EBTR1 = OFF,EBTR2 = OFF,EBTR3 = OFF,EBTRB = OFF
-
