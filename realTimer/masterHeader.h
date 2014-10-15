@@ -12,8 +12,7 @@
 /**
  * Including all of the external headers
  */
-#include <p18f4520.h>
-//#include <timers.h>
+#include <p18f452.h>
 #include "realTimer.h"
 
 #define TRUE 1

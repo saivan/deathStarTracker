@@ -2,7 +2,7 @@
 
 #include "masterHeader.h"
 
-char topLine[16] = "shrivelled";
+char topLine[16] = "Mama Jwana";
 
 //This is a cool
 
@@ -20,14 +20,20 @@ void main( void ){
     TRISB = 0x00;
     
     LCDInitialise();
-    
+
+
+    intToDisplay(35);
+    LCDWriteHere( displayChars.characters );
+
     LCDWriteHere( topLine );
     delayMs(1);
     LCDWriteHere( LCDSElevation );
     delayMs(1);
     LCDMoveCursor( 1, 1 );
     delayMs(1);
-    LCDWriteHere( setParam.bottomLineArray[1] );
+
+
+
 
     while(1){
         PORTB = 0xFF;

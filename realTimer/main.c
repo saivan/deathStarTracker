@@ -41,17 +41,10 @@ void main( void ){
 	while(1){
         /// Test code to check the timers opperation
         updateTime();					// Update the time
-        
-//        if( time.milliseconds%15 == 0 ){
-//        	PORTBbits.RB0 = 1;			// Turn on RB0 after 3 seconds
-//        } else {
-//            PORTBbits.RB0 = 0;
-//        }
-        PORTBbits.RB2 ^= 1;
-        /// This will cause a blink once per second.
+        /// This will cause a blink as often as setTimeTag says
         if ( eventDue( &nextUpdate ) ){
-            PORTCbits.RC6 ^= 1;
-            setTimeTag( 900, &nextUpdate );
+            PORTBbits.RB2 ^= 1;
+            setTimeTag( 234, &nextUpdate );
         }
   }
 }

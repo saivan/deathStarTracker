@@ -4,9 +4,7 @@
 
 particleCount = 64;
 
-
 x = zeros(particleCount,2);
-
 
 % Adding A push button
 f = figure;
@@ -22,7 +20,7 @@ for measurement = [1:15]
     end
     
     % Wait for button Press
-    uiwait(gcf) %Pressing the button will let stuff keep going
+    uiwait(gcf) % Pressing the button will let stuff keep going
     
     % Update the graph
     hold off

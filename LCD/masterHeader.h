@@ -16,12 +16,6 @@
 #define TRUE 1
 #define FALSE 0
 
-typedef struct displayDigit{
-    unsigned char upper;
-    unsigned char middle;
-    unsigned char lower;
-} displayDigit;
-
 #include "LCD.h"
 
 

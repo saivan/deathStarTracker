@@ -31,6 +31,17 @@
 extern unsigned char currentLCDRow;
 extern unsigned char currentLCDColumn;
 
+typedef struct displayDigit{
+    unsigned char upper;
+    unsigned char middle;
+    unsigned char lower;
+    char characters[3];
+} displayDigit;
+
+extern displayDigit displayChars;
+
+
+
 #pragma udata StringData
 extern char LCDSWelcomeMessage[];
 extern char LCDSPressGo[];
@@ -72,12 +83,16 @@ extern char LCDSValue[];
 
 extern rom const char rom *LCDStrings[];
 
+
+
+
 void LCDEventHandler( void );
 
 void LCDInitialise( void );
 void delayMs( unsigned int miliseconds );
+void intToDisplay( unsigned int displayVal );
 void stringToRam( static char rom *source, static char *destination );
-void LCDInstruction( char data , unsigned char command );
+void LCDInstruction( char data , unsigned char isCommand );
 void LCDMoveCursor( unsigned char line, unsigned char character );
 void LCDPushString( char *string, unsigned char line );
 void LCDWriteHere( char *string );
