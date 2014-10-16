@@ -35,7 +35,7 @@ typedef struct displayDigit{
     unsigned char upper;
     unsigned char middle;
     unsigned char lower;
-    char characters[3];
+    char characters[4];
 } displayDigit;
 
 extern displayDigit displayChars;
@@ -79,8 +79,6 @@ extern char LCDSValue[];
 
 #pragma udata
 extern rom const char rom *LCDStrings[];
-
-
 
 
 void LCDEventHandler( void );

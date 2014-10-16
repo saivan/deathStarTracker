@@ -5,9 +5,7 @@ unsigned char currentLCDRow = 0;
 unsigned char currentLCDColumn = 0;
 
 
-displayDigit displayChars = { 0, 0, 0 };
-
-
+displayDigit displayChars = { 0, 0, 0, 0 };
 
 char LCDSWelcomeMessage[] = "DeathStarTracker";
 char LCDSPressGo[] = "Press <GO>";
@@ -255,10 +253,10 @@ void intToDisplay( unsigned int displayVal ){
         return;                             ///< If the value to be displayed is to large, exit
     /// Working on the most significant byte
     displayChars.upper = displayVal/100;    ///< Get the highest byte
-    displayVal -= displayChars.upper*100;   ///< Subtract the highest byte from the input
+    displayVal -= (unsigned int)(displayChars.upper)*100;   ///< Subtract the highest byte from the input
     /// Working on the middle byte
     displayChars.middle = displayVal/10;    ///< Get the middle byte
-    displayVal -= displayChars.middle*10;   ///< Subtract the middle byte from the input
+    displayVal -= (unsigned int)(displayChars.middle)*10;   ///< Subtract the middle byte from the input
     /// Working on the low byte
     displayChars.lower = displayVal;        ///< We have the value left alone
 
