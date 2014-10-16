@@ -29,10 +29,10 @@ void main( void ){
     setupRealTimeTimer();				///< See definition for full functionality
 
 			
-	TRISBbits.RB0 = 0; 					// Setup portB for an output to test timing
+    TRISBbits.RB0 = 0; 					// Setup portB for an output to test timing
     TRISCbits.RC6 = 0; 					// Setup portB for an output to test timing
     TRISBbits.RB2 = 0; 					// Setup portB for an output to test timing
-	PORTBbits.RB0 = 0;					// turn off RB0
+    PORTBbits.RB0 = 0;					// turn off RB0
     PORTBbits.RB1 = 0;					// turn off RB0
     PORTCbits.RC6 = 0;					// turn off RB0
 
@@ -43,8 +43,8 @@ void main( void ){
         updateTime();					// Update the time
         /// This will cause a blink as often as setTimeTag says
         if ( eventDue( &nextUpdate ) ){
-            PORTBbits.RB2 ^= 1;
-            setTimeTag( 234, &nextUpdate );
+            PORTCbits.RC6 ^= 1;
+            setTimeTag( 242, &nextUpdate );
         }
   }
 }

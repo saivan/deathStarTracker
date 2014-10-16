@@ -76,11 +76,8 @@ extern char LCDSMinElev[];
 extern char LCDSMaxElev[];
 extern char LCDSValue[];
 
-// Put the
-
 
 #pragma udata
-
 extern rom const char rom *LCDStrings[];
 
 

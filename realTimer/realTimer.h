@@ -18,7 +18,7 @@ typedef struct Time {
 	unsigned char minutes;							///< The time in minutes since the last hour
 	unsigned char seconds;							///< The time in seconds since the last minute
 	unsigned int milliseconds;						///< The time in milliseconds since the last second	
-	volatile unsigned char updatesRequired: 1;		///< Count milliseconds since last update
+	volatile unsigned char updatesRequired;                                 ///< Count milliseconds since last update of Time
 } Time;
 
 /**

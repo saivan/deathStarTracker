@@ -39,10 +39,10 @@ void updateTime( void ){
     /// Check if we need to update the time
 	if( time.updatesRequired > 0 ){		
 		/// Update the time in milliseconds
-        time.milliseconds += time.updatesRequired; 			///< Increment the milliseconds
-        time.updatesRequired = 0;							///< Reset updates to zero as they are done
-        if( time.milliseconds > 999 ){
-        	time.milliseconds -= 1000;						///< If we reached 1 second, we subtract a second 		
+                time.milliseconds += time.updatesRequired; 			///< Increment the milliseconds
+                time.updatesRequired = 0;							///< Reset updates to zero as they are done
+                if( time.milliseconds > 999 ){
+                        time.milliseconds -= 1000;						///< If we reached 1 second, we subtract a second
 			time.seconds++;									///< And register the new second                
 			if( time.seconds > 59 ){      
 				time.seconds = 0;							///< If we reached 1 minute, we reset seconds

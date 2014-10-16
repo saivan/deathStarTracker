@@ -250,6 +250,7 @@ void stringToRam( static char rom *source, static char *destination ){
 
 
 void intToDisplay( unsigned int displayVal ){
+
     if( displayVal > 999 )
         return;                             ///< If the value to be displayed is to large, exit
     /// Working on the most significant byte

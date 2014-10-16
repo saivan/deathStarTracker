@@ -1,7 +1,5 @@
 
 
-
-
 particleCount = 64;
 
 x = zeros(particleCount,2);
@@ -11,6 +9,9 @@ f = figure;
 h = uicontrol('Position',[-20 -20 200 40],'String','Continue',...
               'Callback','uiresume(gcbf)');
 
+ballPosition = [150 200];
+servoPosition = [100 100];                  
+          
 for measurement = [1:15]
     
     % Generate New random positions
@@ -27,7 +28,9 @@ for measurement = [1:15]
     axis([0 255 0 255]);
     plot(x(:,1),x(:,2),'ob');       % Plot the particles
     hold on 
-    plot(100,100,'xr')              % Plot the objects positon
+    plot(ballPosition(1), ballPosition(2),'or');         % Plot the objects positon
+    plot(servoPosition(1), servoPosition(2), 'og');
+   
 end
 
 close;
