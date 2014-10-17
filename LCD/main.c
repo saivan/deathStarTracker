@@ -36,15 +36,18 @@ void main( void ){
 //        LCDWriteHere( displayChars.characters );
         LCDWriteHere( topLine );
         delayMs(45);
-
+        // LCDMoveCursor(1,0);
+        // delayMs(4);
+        LCDPushString( LCDSLimits, 1 );
+        delayMs(4);
+        LCDPushString( LCDSLimits, 1 );
+        delayMs(4);
 
     while(1){
         LCDMoveCursor(0,8);
-        delayMs(5);
+        delayMs(1);
         intToDisplay(m);
         LCDWriteHere( displayChars.characters );
-        delayMs(5);
-
         m++;
     }
 }

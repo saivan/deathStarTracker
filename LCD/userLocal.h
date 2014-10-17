@@ -49,14 +49,15 @@ typedef struct menuNode {
 
 
 
-
-
-
-
+/**
+ * @brief A node in the menu tree has this type
+ * @details Includes 
+ * 
+ */
 typedef struct localMenuItem {    
-    // Pointing to the parent menu, null for root
+    /// Pointing to the parent menu, null for root
     struct localMenuItem *parent;
-    // Does this menu have child menus, if so, define them
+    /// Does this menu have child menus, if so, define them
     unsigned char hasChildren : 1;
     unsigned char childCount: 3;
     struct localMenuItem *children[5];
@@ -99,6 +100,47 @@ extern localMenuItem welcomeMenu;
 // Declare the head and current pointer
 extern localMenuItem *rootMenu;
 extern localMenuItem *currentMenu;
+
+
+
+#pragma udata StringData
+extern char LCDSWelcomeMessage[];
+extern char LCDSPressGo[];
+extern char LCDSMainMenu[];
+extern char LCDSStatus[];
+extern char LCDSTemperature[];
+extern char LCDSGoto[];
+extern char LCDSLimits[];
+extern char LCDSRemote[];
+extern char LCDSNotFound[];
+extern char LCDSSearching[];
+extern char LCDSAcquired[];
+extern char LCDSDist[];
+extern char LCDSAzim[];
+extern char LCDSElev[];
+extern char LCDSAzimuth[];
+extern char LCDSElevation[];
+extern char LCDSManually[];
+extern char LCDSSet[];
+extern char LCDSGotoPos[];
+extern char LCDSMove[];
+extern char LCDSArrows[];
+extern char LCDSAngle[];
+extern char LCDSSuccess[];
+extern char LCDSOutOfRange[];
+extern char LCDSReenter[];
+extern char LCDSMinDist[];
+extern char LCDSMaxDist[];
+extern char LCDSMinAzim[];
+extern char LCDSMaxAzim[];
+extern char LCDSMinElev[];
+extern char LCDSMaxElev[];
+extern char LCDSValue[];
+
+#pragma udata
+extern rom const char rom *LCDStrings[];
+
+
 
 #endif	/* USERLOCAL_H */
 

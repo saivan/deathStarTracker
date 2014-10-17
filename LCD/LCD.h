@@ -40,47 +40,6 @@ typedef struct displayDigit{
 
 extern displayDigit displayChars;
 
-
-
-#pragma udata StringData
-extern char LCDSWelcomeMessage[];
-extern char LCDSPressGo[];
-extern char LCDSMainMenu[];
-extern char LCDSStatus[];
-extern char LCDSTemperature[];
-extern char LCDSGoto[];
-extern char LCDSLimits[];
-extern char LCDSRemote[];
-extern char LCDSNotFound[];
-extern char LCDSSearching[];
-extern char LCDSAcquired[];
-extern char LCDSDist[];
-extern char LCDSAzim[];
-extern char LCDSElev[];
-extern char LCDSAzimuth[];
-extern char LCDSElevation[];
-extern char LCDSManually[];
-extern char LCDSSet[];
-extern char LCDSGotoPos[];
-extern char LCDSMove[];
-extern char LCDSArrows[];
-extern char LCDSAngle[];
-extern char LCDSSuccess[];
-extern char LCDSOutOfRange[];
-extern char LCDSReenter[];
-extern char LCDSMinDist[];
-extern char LCDSMaxDist[];
-extern char LCDSMinAzim[];
-extern char LCDSMaxAzim[];
-extern char LCDSMinElev[];
-extern char LCDSMaxElev[];
-extern char LCDSValue[];
-
-
-#pragma udata
-extern rom const char rom *LCDStrings[];
-
-
 void LCDEventHandler( void );
 
 void LCDInitialise( void );
