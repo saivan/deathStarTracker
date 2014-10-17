@@ -2,7 +2,7 @@
 
 #include "masterHeader.h"
 
-char topLine[16] = "Mama Jwana";
+char topLine[16] = "Events: ";
 
 //This is a cool
 
@@ -30,19 +30,20 @@ void main( void ){
 //    // LCDWriteHere( topLine );
 //    // delayMs(1);
 
-        LCDMoveCursor(0,7);
+        LCDMoveCursor(0,0);
         delayMs(5);
         intToDisplay(6);
-        LCDWriteHere( &displayChars.characters );
+//        LCDWriteHere( displayChars.characters );
+        LCDWriteHere( topLine );
         delayMs(45);
 
 
     while(1){
-        LCDMoveCursor(0,7);
+        LCDMoveCursor(0,8);
         delayMs(5);
         intToDisplay(m);
-        LCDWriteHere( &displayChars.characters );
-        delayMs(45);
+        LCDWriteHere( displayChars.characters );
+        delayMs(5);
 
         m++;
     }

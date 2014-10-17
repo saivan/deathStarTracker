@@ -8,7 +8,7 @@
 #ifndef MASTERHEADER_H
 #define	MASTERHEADER_H
 
-#include <p18f4520.h>
+#include <p18f452.h>
 #include "LCD.h"
 #include "userLocal.h"
 

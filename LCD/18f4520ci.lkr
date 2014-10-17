@@ -21,7 +21,7 @@ LIBPATH  ".;C:\Program Files\Microchip\mcc18\lib"
 
 FILES c018i.o
 FILES clib.lib
-FILES p18f4520.lib
+FILES p18f452.lib
 
 
 // CODEPAGE defined memory regions are in Program Memory, and are used for 
