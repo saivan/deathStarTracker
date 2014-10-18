@@ -45,7 +45,6 @@ void highPriorityISR(void);
 void receive(void);
 void transmit(unsigned char* txPtr);
 void prompt(void);
-void serialSetup(void);
 
 
 #endif	/* SERIALINTERFACE_H */
