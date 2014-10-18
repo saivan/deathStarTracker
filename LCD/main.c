@@ -38,11 +38,7 @@ void main( void ){
         delayMs(45);
         // LCDMoveCursor(1,0);
         // delayMs(4);
-        LCDPushString( LCDSLimits, 1 );
-        delayMs(4);
-        LCDPushString( LCDSLimits, 1 );
-        delayMs(4);
-
+        
     while(1){
         LCDMoveCursor(0,8);
         delayMs(1);

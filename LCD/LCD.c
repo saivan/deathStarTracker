@@ -4,47 +4,53 @@
 unsigned char currentLCDRow = 0;
 unsigned char currentLCDColumn = 0;
 
-
 displayDigit displayChars = { 0, 0, 0, 0 };
 
 
-// This function is used purely in the first initialisation of the LCD
-// It <b>should not be used anywhere else</b> as it stalls the program whilst
-// it is opperating. Use only if absolutely necessary
+/** 
+ * This function is used purely in the first initialisation of the LCD
+ * It <b>should not be used anywhere else</b> as it stalls the program whilst
+ * it is opperating. Use only if absolutely necessary or during setup. 
+ */
 void delayMs( unsigned int miliseconds ){
     unsigned int cycles = miliseconds * 500;
     for ( ; cycles > 0 ; cycles-- ){}
 }
 
+
+/**
+ * @brief Initialises the LCD module
+ * @details Call this function before using any of the LCD module functions
+ *          as it initialises the LCD module. This only needs to be called 
+ *          <b>once at the beginning of the program</b>.
+ */
 void LCDInitialise( void ){
 
     // Setup to work in four bit mode
-    PORTD = 0x00;                                   // Clear PortD
-    delayMs(15);                                    // Wait for 15ms
-    LCDInstruction( 0x30, COMMAND_LCD );            // Four bit mode - 2 line - standard font
-    delayMs(10);                                    // Wait for 10ms
-    LCDInstruction( 0x30, COMMAND_LCD );            // Four bit mode - 2 line - standard font       // First initiation// Second initiation value
-    delayMs(1);                                     // Wait for 1ms
-    LCDInstruction( 0x30, COMMAND_LCD );            // Four bit mode - 2 line - standard font       // Third initiation value
-    delayMs(1);                                     // Wait for 1ms
-    LCDInstruction( 0x20, COMMAND_LCD );            // Four bit mode - 2 line - standard font      // Set bus to four bit mode
-    delayMs(1);                                     // Wait for 1ms
+    PORTD = 0x00;                                   ///< Clear PortD
+    delayMs(15);                                    ///< Wait for 15ms
+    LCDInstruction( 0x30, COMMAND_LCD );            ///< Four bit mode - 2 line - standard font
+    delayMs(10);                                    ///< Wait for 10ms
+    LCDInstruction( 0x30, COMMAND_LCD );            ///< Four bit mode - 2 line - standard font 
+    delayMs(1);                                     ///< Wait for 1ms
+    LCDInstruction( 0x30, COMMAND_LCD );            ///< Four bit mode - 2 line - standard font 
+    delayMs(1);                                     ///< Wait for 1ms
+    LCDInstruction( 0x20, COMMAND_LCD );            ///< Four bit mode - 2 line - standard font 
+    delayMs(1);                                     ///< Wait for 1ms
 
     // Now in Four bit mode, commands can be executed
-    LCDInstruction( 0x28, COMMAND_LCD );            // Four bit mode - 2 line - standard font
+    LCDInstruction( 0x28, COMMAND_LCD );            ///< Four bit mode - 2 line - standard font
     delayMs(1);
-    LCDInstruction( 0x0C, COMMAND_LCD );            // No cursor and no blinking
+    LCDInstruction( 0x0C, COMMAND_LCD );            ///< No cursor and no blinking
     delayMs(1);
-    LCDInstruction( 0x06, COMMAND_LCD );            // Automatic increment when character is added
+    LCDInstruction( 0x06, COMMAND_LCD );            ///< Automatic increment when character is added
     delayMs(1);
-    LCDInstruction( 0x80, COMMAND_LCD );            // Move to origin address of the DDRAM
+    LCDInstruction( 0x80, COMMAND_LCD );            ///< Move to origin address of the DDRAM
     delayMs(1);
-    LCDInstruction( 0x01, COMMAND_LCD );            // Move to first digit
+    LCDInstruction( 0x01, COMMAND_LCD );            ///< Move to first digit
     delayMs(1);
 
 }
-
-
 
 
 /**
@@ -101,6 +107,7 @@ void LCDInstruction( char data , unsigned char isCommand ){
 
 }
 
+
 /**
  * @brief Moves the write position on the display
  * @details This function moves the write head to a new position so that
@@ -120,11 +127,12 @@ void LCDMoveCursor( unsigned char line, unsigned char character ){
     LCDInstruction( SET_DDRAM_ADDRESS|(line+character) , COMMAND_LCD );  ///< Command to move to input location
 }
 
+
 /**
  * @brief Prints a string in RAM to the LCD at the given location
  * @details Given the address of a string, this function will
- *          pipe the entire string to the LCD. Remeber to delay
- *          after this function is called.
+ *          pipe the entire string to the LCD. There is no need to delay
+ *          at the end of this function.
  * 
  * @param string A pointer to the string that you want to send to the LCD.
  */
@@ -134,7 +142,6 @@ void LCDWriteHere( char *string ){
         string++;                                           ///< Advance to the next character
     }
 }
-
 
 
 /**
@@ -164,8 +171,8 @@ void LCDPushString( char *string, unsigned char line ){
     }
     // Turn off the sending flag
     // finished sending
-
 }
+
 
 /**
  * @brief Moves a string from Program to data Memory
@@ -181,26 +188,30 @@ void stringToRam( static char rom *source, static char *destination ){
 }
 
 
-
-
+/**
+ * @brief Converts an int to a display string
+ * @details After converting the int, it is stored in the displayChars.characters
+ *          variable as a string. This function <b>does not pipe the string to the 
+ *          LCD</b>, it merely moves the result to the 
+ * 
+ * @param displayVal Is the unsigned int that you want displayed to the screen,
+ *                   cast the variable to an int if you need any other type first.
+ */
 void intToDisplay( unsigned int displayVal ){
-
     if( displayVal > 999 )
-        return;                             ///< If the value to be displayed is to large, exit
+        return;                                             ///< If the value to be displayed is to large, exit
     /// Working on the most significant byte
-    displayChars.upper = displayVal/100;    ///< Get the highest byte
+    displayChars.upper = displayVal/100;                    ///< Get the highest byte
     displayVal -= (unsigned int)(displayChars.upper)*100;   ///< Subtract the highest byte from the input
     /// Working on the middle byte
-    displayChars.middle = displayVal/10;    ///< Get the middle byte
+    displayChars.middle = displayVal/10;                    ///< Get the middle byte
     displayVal -= (unsigned int)(displayChars.middle)*10;   ///< Subtract the middle byte from the input
     /// Working on the low byte
-    displayChars.lower = displayVal;        ///< We have the value left alone
+    displayChars.lower = displayVal;                        ///< We have the value left alone
 
     /// Now we copy the characters into the string and add 0x30 to convert them to ascii values
     displayChars.characters[0] = displayChars.upper + 0x30;
     displayChars.characters[1] = displayChars.middle + 0x30;
     displayChars.characters[2] = displayChars.lower + 0x30;
-
 }
-
 
