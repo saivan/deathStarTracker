@@ -18,12 +18,7 @@ unsigned char rcPosition = 0;         /* This indexes the buffer */
 
 unsigned char rcWord[2] = {'\0', '\0'};
 
-/* Serial Flags */
-struct
-{
-  unsigned int RECEIVED : 1;
-} Serial;
-
+/* 'setup' function: Setup the Configurations for Relevant Registers */
 void serialSetup(void)
 {
     /* Config: Interrupt Control Register (Disable Interrupts during Setup) */

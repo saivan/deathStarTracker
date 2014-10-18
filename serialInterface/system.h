@@ -12,7 +12,6 @@
 #include <P18F4520.h>
 
 #include "serialInterface.h"
-#include "ConfigRegs.h"
 
 
 
