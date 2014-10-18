@@ -1,3 +1,12 @@
+/**********************************************************
+**  File: interface.c
+***********************************************************
+**  Author: Kelvin Hsu
+**  Created on 2 September 2014, 11:42 PM
+**  Assembled with C18 C Compiler v. 4.36
+***********************************************************
+**
+**********************************************************/
 
 #include "interface.h"
 
@@ -6,39 +15,40 @@
  * memory, call stringToRam to move these functions 
  * from program memory to data memory.
  */
-rom const char rom *interfaceString[ TOTAL_STRINGS ];
-//interfaceString[ SYSTEM_NAME ] = "DeathStarTracker";
-//interfaceString[ PRESS_GO ] = "Press <GO>";
-//interfaceString[ MAIN_MENU ] = "Main Menu";
-//interfaceString[ TARGET_STATUS ] = "Target Status";
-//interfaceString[ TEMPERATURE ] = "Temperature";
-//interfaceString[ GOTO_POSITION ] = "Goto Position";
-//interfaceString[ SET_LIMITS ] = "Set Limits";
-//interfaceString[ REMOTE_MODE ] = "Remote Mode";
-//interfaceString[ NOT_FOUND ] = "Target Not Found";
-//interfaceString[ SEARCHING ] = "  Searching...";
-//interfaceString[ ACQUIRED ] = "Target Acquired";
-//interfaceString[ DIST ] = "Dist";
-//interfaceString[ AZIM ] = "Azim";
-//interfaceString[ ELEV ] = "Elev";
-//interfaceString[ AZIMUTH ] = "Azimuth";
-//interfaceString[ ELEVATION ] = "Elevation";
-//interfaceString[ MANUALLY ] = "Manually";
-//interfaceString[ SET ] = "Set ";
-//interfaceString[ GOTO ] = "Goto ";
-//interfaceString[ MANUAL_MOVE ] = "Manual Move";
-//interfaceString[ USE_ARROWS ] = "Use Arrows";
-//interfaceString[ ANGLE ] = "Angle: ";
-//interfaceString[ SUCCESS ] = "Entry Successful";
-//interfaceString[ OUT_OF_RANGE ] = "Out of Range";
-//interfaceString[ RE_ENTER ] = "Re-enter Input";
-//interfaceString[ DIST_MIN ] = "Distance Min";
-//interfaceString[ DIST_MAX ] = "Distance Max";
-//interfaceString[ AZIM_MIN ] = "Azimuth Min";
-//interfaceString[ AZIM_MAX ] = "Azimuth Max";
-//interfaceString[ ELEV_MIN ] = "Elevation Min";
-//interfaceString[ ELEV_MAX ] = "Elevation Max";
-//interfaceString[ VALUE ] = "Value:";
+rom const char rom *LCDStrings[] = {
+/*00*/ "DeathStarTracker",  /* SYSTEM_NAME */
+/*01*/ "Press <GO>",        /* PRESS_GO */
+/*02*/ "Main Menu",         /* MAIN_MENU */
+/*03*/ "Target Status",     /* TARGET_STATUS */
+/*04*/ "Temperature",       /* TEMPERATURE */
+/*05*/ "Goto Position",     /* GOTO_POSITION */
+/*06*/ "Set Limits",        /* SET_LIMITS */
+/*07*/ "Remote Mode",       /* REMOTE_MODE */
+/*08*/ "Target Not Found",  /* NOT_FOUND */
+/*09*/ "  Searching...",    /* SEARCHING */
+/*10*/ "Target Acquired",   /* ACQURIED */
+/*11*/ "Dist",              /* DIST */
+/*12*/ "Azim",              /* AZIM */
+/*13*/ "Elev",              /* ELEV */
+/*14*/ "Azimuth",           /* AZIMUTH */
+/*15*/ "Elevation",         /* ELEVATION */
+/*16*/ "Manually",          /* MANUALLY */
+/*17*/ "Set ",              /* SET */
+/*18*/ "Goto ",             /* GOTO */
+/*19*/ "Manual Move",       /* MANUAL_MOVE*/
+/*20*/ "Use Arrows",        /* USE_ARROWS */
+/*21*/ "Angle: ",           /* ANGLES */
+/*22*/ "Entry Successful",  /* SUCCESS */
+/*23*/ "Out of Range",      /* OUT_OF_RANGE */
+/*24*/ "Re-enter Input",    /* RE_ENTER */
+/*25*/ "Distance Min",      /* DIST_MIN */
+/*26*/ "Distance Max",      /* DIST_MAX */
+/*27*/ "Azimuth Min",       /* AZIM_MIN */
+/*28*/ "Azimuth Max",       /* AZIM_MAX */
+/*29*/ "Elevation Min",     /* ELEV_MIN */
+/*30*/ "Elevation Max",     /* ELEV_MAX */
+/*31*/ "Value:"             /* VALUE */
+};
 
 /**
  * @brief Follows a child pointer

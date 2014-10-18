@@ -41,11 +41,11 @@ extern struct
 } Serial;
 
 /* Function Declaration */
-void highPriorityISR(void);
-void receive(void);
-void transmit(unsigned char* txPtr);
-void prompt(void);
-
+extern void highPriorityISR(void);
+extern void receive(void);
+extern void transmit(unsigned char* txPtr);
+extern void prompt(void);
+extern void serialSetup(void);
 
 #endif	/* SERIALINTERFACE_H */
 

@@ -1,13 +1,12 @@
-
-/* 
- * File:   LCD.h
- * Author: saivanhamama
+/*
+ * File:   interface.h
+ * Author: kkeke_000
  *
- * Created on September 29, 2014, 10:43 AM
+ * Created on 16 October 2014, 9:14 PM
  */
 
-#ifndef LCD_H
-#define	LCD_H
+#ifndef INTERFACE_H
+#define	INTERFACE_H
 
 
 enum{ 
@@ -45,7 +44,8 @@ enum{
     VALUE,
     TOTAL_STRINGS
  };
-#pragma udata
+
+#pragma idata
 extern rom const char rom *interfaceString[];                 ///< Declaring all of the strings in program memory
 
 
@@ -62,7 +62,7 @@ typedef struct menuNode {
     /// Pointing to the parent menu, null for root
     struct menuNode *parent;                        ///< Points at the parent of the current menu node
     /// Does this menu have child menus, if so, define them    
-    unsigned char childCount;					    ///< Counts the number of children (zero if none)
+    unsigned char childCount;                       ///< Counts the number of children (zero if none)
     union { 
     	struct menuNode *child;                     ///< If there is only one child, we point directly to it
     	struct menuNode *(*children[5]);            ///< If there is more than one child, we point to an array of pointers (to the children)
@@ -72,21 +72,21 @@ typedef struct menuNode {
     unsigned char menuItemCount;                    ///< Stores the number of menu items (zero if none)
     union { 
     	char (*bottomLineReferenceArray)[8];        ///< If we have a menu, we use a pointer to an array of string references
-    	char bottomLineReference;					///< Else we just store the string reference
+    	char bottomLineReference;                   ///< Else we just store the string reference
     } bottomLineReference;  
     /// Handles the display of a number to the user 
     unsigned char hasDisplayValue: 1;               ///< Does the menu need to display a value to the user
     unsigned char hasSuccessFail : 1;               ///< Does the menu need to parse a user input?
-    unsigned char *displayValue; 					///< Points to the value we want to show
-} menuNode;
+    unsigned char *displayValue;                    ///< Points to the value we want to show
+} MenuNode;
 
 /// Declaring all of the local interface pointers
-extern menuNode *rootMenu;                              ///< Points to the root menu node (Home)
-extern menuNode *currentMenu;                           ///< Points at the current menu to follow children
+extern MenuNode *rootMenu;                              ///< Points to the root menu node (Home)
+extern MenuNode *currentMenu;                           ///< Points at the current menu to follow children
 extern unsigned char currentMenuSelection;              ///< Used in menus to select and display a particular item
 
 /// Functions that deal with tree navigation
 void moveToChild( unsigned char childIndex );
 
-#endif	/* LCD_H */
+#endif	/* INTERFACE_H */
 

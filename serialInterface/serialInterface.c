@@ -5,18 +5,12 @@
 **  Created on 2 September 2014, 11:42 PM
 **  Assembled with C18 C Compiler v. 4.36
 ***********************************************************
-**  This program uses an interrupt-driven serial receive
-**  subroutine to receive user inputs, echo it back, and
-**  transmit the entire string of input back to the user
-**  through the serial transmit subroutine when the user
-**  presses 'enter' or has reached the allowable length
+**
 **********************************************************/
 
 
 #include "system.h"
 #include "ConfigRegs.h"
-
-SystemFlags systemFlags;
 
 /* High Priority Interrupt Service Routine */
 #pragma code highISR = 0x0008
