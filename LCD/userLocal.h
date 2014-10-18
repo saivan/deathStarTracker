@@ -11,7 +11,4 @@
 
 void userLocalEventHandler( void );
 
-#pragma udata
-extern rom const char rom *LCDString[];                 ///< Declaring all of the strings in program memory
-
 #endif	/* USERLOCAL_H */

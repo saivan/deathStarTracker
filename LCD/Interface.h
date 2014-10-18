@@ -9,6 +9,46 @@
 #ifndef LCD_H
 #define	LCD_H
 
+
+enum{ 
+    SYSTEM_NAME,
+    PRESS_GO,
+    MAIN_MENU,
+    TARGET_STATUS,
+    TEMPERATURE,
+    GOTO_POSITION,
+    SET_LIMITS,
+    REMOTE_MODE,
+    NOT_FOUND,
+    SEARCHING,
+    ACQUIRED,
+    DIST,
+    AZIM,
+    ELEV,
+    AZIMUTH,
+    ELEVATION,
+    MANUALLY,
+    SET,
+    GOTO,
+    MANUAL_MOVE,
+    USE_ARROWS,
+    ANGLE,
+    SUCCESS,
+    OUT_OF_RANGE,
+    RE_ENTER,
+    DIST_MIN,
+    DIST_MAX,
+    AZIM_MIN,
+    AZIM_MAX,
+    ELEV_MIN,
+    ELEV_MAX,
+    VALUE,
+    TOTAL_STRINGS
+ };
+#pragma udata
+extern rom const char rom *interfaceString[];                 ///< Declaring all of the strings in program memory
+
+
 /**
  *  @brief A structure for creating menu nodes
  *  @struct menuNode
