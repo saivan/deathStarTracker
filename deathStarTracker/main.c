@@ -1,6 +1,11 @@
 
 
 
+typedef struct infraredFlags{
+	gotSomething:1;
+} infraredFlags;
+
+
 void main( void ){
 
 
@@ -13,6 +18,11 @@ void main( void ){
 		/// Handle local mode or remote mode interface actions
 
 		/// Run a tracking step
+
+
+		if( infraredFlags.gotSomething ){
+			/// PROCESS SOMETHING
+		}
 		
 
 	}

@@ -5,82 +5,8 @@ unsigned char currentLCDRow = 0;
 unsigned char currentLCDColumn = 0;
 
 
-displayDigit displayChars = { 0, 0, 0 };
+displayDigit displayChars = { 0, 0, 0, 0 };
 
-
-
-char LCDSWelcomeMessage[] = "DeathStarTracker";
-char LCDSPressGo[] = "Press <GO>";
-char LCDSMainMenu[] = "Main Menu";
-char LCDSStatus[] = "Target Status";
-char LCDSTemperature[] = "Temperature";
-char LCDSGoto[] = "Goto Position";
-char LCDSLimits[] = "Set Limits";
-char LCDSRemote[] = "Remote Mode";
-char LCDSNotFound[] = "Target Not Found";
-char LCDSSearching[] = "  Searching...";
-char LCDSAcquired[] = "Target Acquired";
-char LCDSDist[] = "Dist";
-char LCDSAzim[] = "Azim";
-char LCDSElev[] = "Elev";
-char LCDSAzimuth[] = "Azimuth";
-char LCDSElevation[] = "Elevation";
-char LCDSManually[] = "Manually";
-char LCDSSet[] = "Set ";
-char LCDSGotoPos[] = "Goto ";
-char LCDSMove[] = "Manual Move";
-char LCDSArrows[] = "Use Arrows";
-char LCDSAngle[] = "Angle: ";
-char LCDSSuccess[] = "Entry Successful";
-char LCDSOutOfRange[] = "Out of Range";
-char LCDSReenter[] = "Re-enter Input";
-char LCDSMinDist[] = "Distance Min";
-char LCDSMaxDist[] = "Distance Max";
-char LCDSMinAzim[] = "Azimuth Min";
-char LCDSMaxAzim[] = "Azimuth Max";
-char LCDSMinElev[] = "Elevation Min";
-char LCDSMaxElev[] = "Elevation Max";
-char LCDSValue[] = "Value:";
-
-
-// These are stored in program memory,
-// use the stringToRam function to
-// move the string into data memory when
-// it is needed
-rom const char rom *LCDStrings[] = {
-/*00*/ "DeathStarTracker",
-/*01*/ "Press <GO>",
-/*02*/ "Main Menu",
-/*03*/ "Target Status",
-/*04*/ "Temperature",
-/*05*/ "Goto Position",
-/*06*/ "Set Limits",
-/*07*/ "Remote Mode",
-/*08*/ "Target Not Found",
-/*09*/ "  Searching...",
-/*10*/ "Target Acquired",
-/*11*/ "Dist",
-/*12*/ "Azim",
-/*13*/ "Elev",
-/*14*/ "Azimuth",
-/*15*/ "Elevation",
-/*16*/ "Manually",
-/*17*/ "Set ",
-/*18*/ "Goto ",
-/*19*/ "Manual Move",
-/*20*/ "Use Arrows",
-/*21*/ "Angle: ",
-/*22*/ "Entry Successful",
-/*23*/ "Out of Range",
-/*24*/ "Re-enter Input",
-/*25*/ "Distance Min",
-/*26*/ "Distance Max",
-/*27*/ "Azimuth Min",
-/*28*/ "Azimuth Max",
-/*29*/ "Elevation Min",
-/*30*/ "Elevation Max",
-/*31*/ "Value:"
-};
 
 // This function is used purely in the first initialisation of the LCD
 // It <b>should not be used anywhere else</b> as it stalls the program whilst
@@ -210,6 +136,14 @@ void LCDWriteHere( char *string ){
 }
 
 
+
+/**
+ * @brief Pushes a string to the specified line on the LCD
+ * @details Upon the first Call, the string 
+ * 
+ * @param string Pass the address of the string you want to push
+ * @param char Zero indexed line to push the string to [0,1] 
+ */
 void LCDPushString( char *string, unsigned char line ){
 
     if ( currentLCDRow != line ){
@@ -255,10 +189,10 @@ void intToDisplay( unsigned int displayVal ){
         return;                             ///< If the value to be displayed is to large, exit
     /// Working on the most significant byte
     displayChars.upper = displayVal/100;    ///< Get the highest byte
-    displayVal -= displayChars.upper*100;   ///< Subtract the highest byte from the input
+    displayVal -= (unsigned int)(displayChars.upper)*100;   ///< Subtract the highest byte from the input
     /// Working on the middle byte
     displayChars.middle = displayVal/10;    ///< Get the middle byte
-    displayVal -= displayChars.middle*10;   ///< Subtract the middle byte from the input
+    displayVal -= (unsigned int)(displayChars.middle)*10;   ///< Subtract the middle byte from the input
     /// Working on the low byte
     displayChars.lower = displayVal;        ///< We have the value left alone
 

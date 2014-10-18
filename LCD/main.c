@@ -2,7 +2,7 @@
 
 #include "masterHeader.h"
 
-char topLine[16] = "Mama Jwana";
+char topLine[16] = "Events: ";
 
 //This is a cool
 
@@ -12,8 +12,8 @@ void main( void ){
     char lcdChar2[] = "behaving";
     unsigned char i = 0;
     char *pointToChar = &lcdChar[0];
-
-//    stringToRam( LCDStrings[3], topLine );
+    unsigned int m = 1;
+    //    stringToRam( LCDStrings[3], topLine );
 
     // Set ports to outputs
     TRISD = 0x00;
@@ -22,26 +22,35 @@ void main( void ){
     LCDInitialise();
 
 
-    intToDisplay(35);
-    LCDWriteHere( displayChars.characters );
+//    intToDisplay(35);
+//    LCDMoveCursor(0,7);
+//    delayMs(1);
+//    LCDWriteHere( displayChars.characters );
+//    delayMs(1);
+//    // LCDWriteHere( topLine );
+//    // delayMs(1);
 
-    LCDWriteHere( topLine );
-    delayMs(1);
-    LCDWriteHere( LCDSElevation );
-    delayMs(1);
-    LCDMoveCursor( 1, 1 );
-    delayMs(1);
-
-
-
+        LCDMoveCursor(0,0);
+        delayMs(5);
+        intToDisplay(6);
+//        LCDWriteHere( displayChars.characters );
+        LCDWriteHere( topLine );
+        delayMs(45);
+        // LCDMoveCursor(1,0);
+        // delayMs(4);
+        LCDPushString( LCDSLimits, 1 );
+        delayMs(4);
+        LCDPushString( LCDSLimits, 1 );
+        delayMs(4);
 
     while(1){
-        PORTB = 0xFF;
-        PORTBbits.RB0 = 0;
+        LCDMoveCursor(0,8);
+        delayMs(1);
+        intToDisplay(m);
+        LCDWriteHere( displayChars.characters );
+        m++;
     }
-
 }
-
 
  #pragma config OSC  = HS
  #pragma config PWRT = ON
