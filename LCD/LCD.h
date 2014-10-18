@@ -9,8 +9,6 @@
 #ifndef LCD_H
 #define	LCD_H
 
-#include "masterHeader.h"
-
 // Note that the LCD is being used in four bit mode
 // RD<0:3> are used for the data bytes
 // RD4 is the RS pin
