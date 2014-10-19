@@ -11,21 +11,24 @@
 #include "system.h"
 
 /* Global String Literals */
-unsigned char msgWelcome[] = "\r\nEntered Remote Mode. Welcome!\r\n";
-unsigned char msgUser[] = "\r\n\nuser@";
-unsigned char msgFactory[] = "\r\nfactory@";
-unsigned char msgStarTracker[] = "starTracker";
-unsigned char msgEndPrompt[] = "$ ";
-unsigned char youTyped[] = "\r\nYou Typed: ";
-unsigned char maxReached[] = "\r\n\n\tMaximum Length (100) Reached!\r\n";
+rom char rom msgWelcome[] = "\r\nEntered Remote Mode. Welcome!\r\n";
+rom char rom msgUser[] = "\r\n\nuser@";
+rom char rom msgFactory[] = "\r\nfactory@";
+rom char rom msgStarTracker[] = "starTracker";
+rom char rom msgEndPrompt[] = "$ ";
+rom char rom youTyped[] = "\r\nYou Typed: ";
+rom char rom maxReached[] = "\r\n\n\tMaximum Length (100) Reached!\r\n";
 
 /* Global Variables */
 unsigned char circBuffer[SIZE];     /* This stores the received characters */
+unsigned char transmitBuffer[SIZE];
+//unsigned char* txPtr = transmitBuffer;
 unsigned char* scPtr = circBuffer;  /* This points to locations in the buffer */
-unsigned char* txPtr;
 unsigned char scPosition = 0;
 unsigned char rcPosition = 0;         /* This indexes the buffer */
-
+unsigned char* stringsToTransmit[SIZE];
+unsigned char cuePosition = 0;
+unsigned char printPosition = 0;
 unsigned char rcWord[2] = {'\0', '\0'};
 
 /* 'setup' function: Setup the Configurations for Relevant Registers */
@@ -63,7 +66,7 @@ void serialSetup(void)
     RCONbits.IPEN = 1;  /* Enable priority levels */
 
     /* Initialise: Start the program with a welcome message and prompt */
-    transmit(msgWelcome);
+    cueInRomString(msgWelcome);
     prompt();
 
     /* Config: Interrupt Control Register (Enable Interrupts) */

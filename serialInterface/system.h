@@ -28,11 +28,20 @@
 /* System Flags */
 typedef struct
 {
-  unsigned int remote: 1;
-  unsigned int factory: 1;
+	unsigned int remote : 1;
+	unsigned int factory : 1;
+	unsigned int targetfound : 1;
+	unsigned int userYes : 1;
+	unsigned int optionsShown : 1;
+        unsigned int cueOverflow : 1;
 } SystemFlags;
 
 extern SystemFlags systemFlags;
+extern void toggleFactoryMode(void);
+extern void toggleRemoteMode(void);
+extern void showChildOptions(void);
+extern void showTargetStatus(void);
+extern void showTemperature(void);
 
 #endif	/* SYSTEM_H */
 

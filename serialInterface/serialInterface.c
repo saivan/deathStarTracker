@@ -10,74 +10,46 @@
 
 
 #include "system.h"
-#include "ConfigRegs.h"
 
-/* High Priority Interrupt Service Routine */
-#pragma code highISR = 0x0008
-void gotoHighISR(void)
+void handleReception(void)
 {
-    _asm goto highPriorityISR _endasm   /* Simply go to 'highPriorityISR' */
-}
-
-/* 'highPriorityISR' function: High Priority Interrupt Action */
-#pragma interrupt highPriorityISR
-void highPriorityISR(void)
-{
-    /* Start processing the received inputs if something was received */
-    if(PIR1bits.RCIF == 1)
+    /* Relies on outer loop for multiple bytes */
+    /* In order to save processor time for other stuff */
+    if(scPosition < rcPosition)
     {
-        /* Read the received character into a 2 byte buffer */
-        circBuffer[rcPosition] = RCREG;
-        rcPosition++;
-    }
-}
+        rcWord[0] = circBuffer[scPosition];
 
-#pragma code
-/* 'main' function */
-void main(void)
-{
-    /* Setup and Config the microcontroller */
-    serialSetup();
+        /* Echo what was received */
+        cueInRamString(rcWord);
 
-    /* Wait for reception */
-    for(EVER)
-    {
-        while(scPosition < rcPosition)
+        /* If the character was not a carriage return, then */
+        /* Note the change of position by incrementing and check whether or *
+         * not we have reached the end of our buffer */
+        if(scPosition++ >= MAXPOS)
         {
-            rcWord[0] = circBuffer[scPosition];
+            cueInRomString(maxReached);
+            rcWord[0] = '\r';
+        }
 
-            /* Echo what was received */
-            transmit(rcWord);
+        if(rcWord[0] == '\r')
+        {
+            /* If the character is a carriage return, or if the maximum position of *
+             * the buffer was reached, then do the following:                       */
 
-            /* If the character was not a carriage return, then */
-            /* Note the change of position by incrementing and check whether or *
-             * not we have reached the end of our buffer */
-            if(scPosition++ >= MAXPOS)
-            {
-                transmit(maxReached);
-                rcWord[0] = '\r';
-            }
+            /* Attach LF, and NULL to the end and note the change of position */
+            circBuffer[scPosition] = '\0';
 
-            if(rcWord[0] == '\r')
-            {
-                /* If the character is a carriage return, or if the maximum position of *
-                 * the buffer was reached, then do the following:                       */
+            /* Transmit data back to the user and re-prompt them again */
+            cueInRomString(youTyped);
+            cueInRamString(circBuffer);
+            prompt();
 
-                /* Attach LF, and NULL to the end and note the change of position */
-                circBuffer[scPosition] = '\0';
-
-                /* Transmit data back to the user and re-prompt them again */
-                transmit(youTyped);
-                transmit(circBuffer);
-                prompt();
-
-                scPosition = 0;
-                rcPosition = 0;
-            }
-
+            scPosition = 0;
+            rcPosition = 0;
         }
 
     }
+
 }
 
 /* 'tx232' function: Transmits characters of a given null terminated string */
@@ -98,20 +70,59 @@ void transmit(unsigned char* str)
     }
 }
 
+//void transmitFromRom(static char rom *romMessage)
+//{
+//    stringToRam(romMessage, transmitBuffer);
+//    transmit(transmitBuffer);
+//}
 
+void cueInRamString(unsigned char* ramMessage)
+{
+    stringsToTransmit[cuePosition] = ramMessage;
+    cuePosition++;
+    if(cuePosition > SIZE)
+    {
+        cuePosition = 0;
+    }
+}
+
+void cueInRomString(static char rom *romMessage)
+{
+    stringToRam(romMessage, stringsToTransmit[cuePosition]);
+    cuePosition++;
+    if(cuePosition > SIZE)
+    {
+        cuePosition = 0;
+        systemFlags.cueOverflow = 1;
+    }
+}
+
+void handleTransmission(void)
+{
+    if(systemFlags.cueOverflow || (printPosition < cuePosition))
+    {
+        transmit(stringsToTransmit[printPosition]);
+        printPosition++;
+        if(printPosition > SIZE)
+        {
+            printPosition = 0;
+            systemFlags.cueOverflow = 0;
+        }
+    }
+}
 // ----- functions -----
 void prompt(void)
 {
     
     if(systemFlags.factory)
     {
-        transmit(msgFactory);
+        cueInRomString(msgFactory);
     }
     else
     {
-        transmit(msgUser);
+        cueInRomString(msgUser);
     }
     
-    transmit(msgStarTracker);
-    transmit(msgEndPrompt);
+    cueInRomString(msgStarTracker);
+    cueInRomString(msgEndPrompt);
 }

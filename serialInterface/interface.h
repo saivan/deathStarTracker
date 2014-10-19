@@ -7,20 +7,11 @@
 
 #ifndef INTERFACE_H
 #define	INTERFACE_H
-
-/* For LCD Strings */
 enum{
-	SYSTEM_NAME,
 	PRESS_GO,
-	MAIN_MENU,
-	TARGET_STATUS,
-	TEMPERATURE,
-	GOTO_POSITION,
-	SET_LIMITS,
-	REMOTE_MODE,
 	NOT_FOUND,
 	SEARCHING,
-	ACQUIRED,
+	ACQURIED,
 	DIST,
 	AZIM,
 	ELEV,
@@ -31,9 +22,7 @@ enum{
 	GOTO,
 	MANUAL_MOVE,
 	USE_ARROWS,
-	ANGLE,
-	SUCCESS,
-	OUT_OF_RANGE,
+	ANGLES,
 	RE_ENTER,
 	DIST_MIN,
 	DIST_MAX,
@@ -42,14 +31,9 @@ enum{
 	ELEV_MIN,
 	ELEV_MAX,
 	VALUE,
-	TOTAL_STRINGS
+	EXCLAIM,
+	QUESTION
 };
-
-extern rom const char rom *interfaceString[];                 ///< Declaring all of the strings in program memory
-
-
-typedef struct Node Node;
-
 /* For tree node labels */
 enum{
 	/* User Mode */
@@ -61,12 +45,22 @@ enum{
 	MODE_SWITCH_NODE,
 
 	/* Under GOTO_POSITION_NODE */
-	GOTO_METHOD_SELECT_NODE,
-	MANUAL_CONTROL_NODE,
-	SET_ANGLE_CONTROL_NODE,
+	AZIM_METHOD_SELECT_NODE,
+	ELEV_METHOD_SELECT_NODE,
+
+	AZIM_MANUAL_CONTROL_NODE,
+	AZIM_SET_ANGLE_CONTROL_NODE,
+
+	ELEV_MANUAL_CONTROL_NODE,
+	ELEV_SET_ANGLE_CONTROL_NODE,
 
 	/* Under SET_LIMITS_NODE */
-	ENTER_LIMITS_NODE,
+	DIST_MAX_NODE,
+	DIST_MIN_NODE,
+	AZIM_MAX_NODE,
+	AZIM_MIN_NODE,
+	ELEV_MAX_NODE,
+	ELEV_MIN_NODE,
 
 	/* Under end of both GOTO_POSITION_NODE and SET_LIMITS_NODE */
 	OUT_OF_RANGE_NODE,
@@ -84,12 +78,17 @@ enum{
 	CALI_AZIM_NODE,
 	CALI_ELEV_NODE,
 
-	/* Under both SET_US_NODE and SET_IR_NODE */
-	SAMPLE_PER_EST_NODE,
-	SAMPLE_RATE_NODE,
+	US_SAMPLE_PER_EST_NODE,
+	US_SAMPLE_RATE_NODE,
 
-        TOTAL_NODE_LABELS
+	IR_SAMPLE_PER_EST_NODE,
+	IR_SAMPLE_RATE_NODE,
+
+	TOTAL_NODE_LABELS
 };
+
+typedef struct Node Node;
+typedef void(*NodeFunction)(void);
 
 struct Node {
 
@@ -97,6 +96,8 @@ struct Node {
 	Node *parent;
 	Node *child;    /* child is the only thing that changes */
 	Node *sibling;
+	NodeFunction entryFunction;
+	NodeFunction ownFunction;
 };
 
 void treeNodeLabelSetup(void);
@@ -105,7 +106,15 @@ void updateTreeStructure(void);
 void moveToParentNode(void);
 void moveToChildNode(void);
 void changeChildSelectionNode(void);
+void jumpToSelection(char jumps);
+void executeChildFunction(void);
+void executeOwnFunction(void);
+void linkNodeFunctions(void);
+void interfaceSetup(void);
+void stringToRam(static char rom *source, static char *destination);
 
+extern Node* currentNode;
+extern Node* previousNode;
 
 #endif	/* INTERFACE_H */
 
