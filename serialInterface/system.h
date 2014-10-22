@@ -14,9 +14,18 @@
  * Created on 16 October 2014, 9:14 PM
  */
 
-#include <P18F4520.h>
+#define USING_PIC18F4520
 
-#include "serialInterface.h"
+#ifdef  USING_PIC18F4520
+#include <P18F4520.h>
+#endif
+
+#ifdef  USING_PIC18F452
+#include <P18F452.h>
+#endif
+
+#include "tree.h"
+#include "remoteInterface.h"
 #include "interface.h"
 
 /* Global Defines for Useful Constants */
@@ -34,12 +43,12 @@ typedef struct
 	unsigned int userYes : 1;
 	unsigned int optionsShown : 1;
         unsigned int cueOverflow : 1;
+        unsigned int commandReceived : 1;
+        unsigned int numberInput : 1;
+        unsigned int userError : 1;
 } SystemFlags;
 
 extern SystemFlags systemFlags;
-extern void toggleFactoryMode(void);
-extern void toggleRemoteMode(void);
-extern void showChildOptions(void);
 extern void showTargetStatus(void);
 extern void showTemperature(void);
 

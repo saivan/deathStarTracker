@@ -1,50 +1,100 @@
 #include "system.h"
 
-Node rootNode;
+Node rootNode = {NULL, NULL, NULL, NULL, NULL};
 
-Node targetStatusNode;
-Node temperatureNode;
-Node gotoPositionNode;
-Node setLimitsNode;
-Node modeSwitchNode;
+Node targetStatusNode = {NULL, NULL, NULL, NULL, NULL};
+Node temperatureNode = {NULL, NULL, NULL, NULL, NULL};
+Node gotoPositionNode = {NULL, NULL, NULL, NULL, NULL};
+Node setLimitsNode = {NULL, NULL, NULL, NULL, NULL};
+Node modeSwitchNode = {NULL, NULL, NULL, NULL, NULL};
 
-Node azimNode;
-Node elevNode;
+Node azimNode = {NULL, NULL, NULL, NULL, NULL};
+Node elevNode = {NULL, NULL, NULL, NULL, NULL};
 
-Node azimManualNode;
-Node azimSetAngleNode;
+Node azimManualNode = {NULL, NULL, NULL, NULL, NULL};
+Node azimSetAngleNode = {NULL, NULL, NULL, NULL, NULL};
 
-Node elevManualNode;
-Node elevSetAngleNode;
+Node elevManualNode = {NULL, NULL, NULL, NULL, NULL};
+Node elevSetAngleNode = {NULL, NULL, NULL, NULL, NULL};
 
-Node distMaxNode;
-Node distMinNode;
-Node azimMaxNode;
-Node azimMinNode;
-Node elevMaxNode;
-Node elevMinNode;
+Node distMaxNode = {NULL, NULL, NULL, NULL, NULL};
+Node distMinNode = {NULL, NULL, NULL, NULL, NULL};
+Node azimMaxNode = {NULL, NULL, NULL, NULL, NULL};
+Node azimMinNode = {NULL, NULL, NULL, NULL, NULL};
+Node elevMaxNode = {NULL, NULL, NULL, NULL, NULL};
+Node elevMinNode = {NULL, NULL, NULL, NULL, NULL};
 
-Node outOfRangeNode;
-Node entrySuccessNode;
+Node outOfRangeNode = {NULL, NULL, NULL, NULL, NULL};
+Node entrySuccessNode = {NULL, NULL, NULL, NULL, NULL};
 
-extern Node calibrationNode;
-extern Node setUSNode;
-extern Node setIRNode;
-extern Node showRawNode;
-extern Node showStatNode;
+Node calibrationNode = {NULL, NULL, NULL, NULL, NULL};
+Node setUSNode = {NULL, NULL, NULL, NULL, NULL};
+Node setIRNode = {NULL, NULL, NULL, NULL, NULL};
+Node showRawNode = {NULL, NULL, NULL, NULL, NULL};
+Node showStatNode = {NULL, NULL, NULL, NULL, NULL};
 
-extern Node caliTempNode;
-extern Node caliAzimNode;
-extern Node caliElevNode;
+Node caliTempNode = {NULL, NULL, NULL, NULL, NULL};
+Node caliAzimNode = {NULL, NULL, NULL, NULL, NULL};
+Node caliElevNode = {NULL, NULL, NULL, NULL, NULL};
 
-extern Node usSamplePerEstNode;
-extern Node usSampleRateNode;
+Node usSamplePerEstNode = {NULL, NULL, NULL, NULL, NULL};
+Node usSampleRateNode = {NULL, NULL, NULL, NULL, NULL};
 
-extern Node irSamplePerEstNode;
-extern Node irSampleRateNode;
+Node irSamplePerEstNode = {NULL, NULL, NULL, NULL, NULL};
+Node irSampleRateNode = {NULL, NULL, NULL, NULL, NULL};
 
 Node* currentNode = &rootNode;
 Node* previousNode = &rootNode;
+
+rom char rom *nodeNames[] = {
+	/* User Mode */
+	"DeathStarTracker", //HOME_NODE,
+	"Target Status", //TARGET_STATUS_NODE,
+	"Temperature", //TEMPERATURE_NODE,
+	"Goto Position", //GOTO_POSITION_NODE, /* Select Azim or Elev */
+	"Set Limits", //SET_LIMITS_NODE,
+	"Mode Switch", //MODE_SWITCH_NODE,
+
+	/* Under GOTO_POSITION_NODE */
+	"Azimuth", //AZIM_METHOD_SELECT_NODE,
+	"Elevation", //ELEV_METHOD_SELECT_NODE,
+
+	"Manual (Azim)", //AZIM_MANUAL_CONTROL_NODE,
+	"Set Azim Angle", //AZIM_SET_ANGLE_CONTROL_NODE,
+
+	"Manual (Elev)", //ELEV_MANUAL_CONTROL_NODE,
+	"Set Elev Angle", //ELEV_SET_ANGLE_CONTROL_NODE,
+
+	/* Under SET_LIMITS_NODE */
+	"Distance Max", //DIST_MAX_NODE,
+	"Distance Min", //DIST_MIN_NODE,
+	"Azimuth Max", //AZIM_MAX_NODE,
+	"Azimuth Min", //AZIM_MIN_NODE,
+	"Elevation Max", //ELEV_MAX_NODE,
+	"Elevation Min", //ELEV_MIN_NODE,
+
+	/* Under end of both GOTO_POSITION_NODE and SET_LIMITS_NODE */
+	"Out of Range", //OUT_OF_RANGE_NODE,
+	"Entry Success", //ENTRY_SUCCESS_NODE, /* Child is always home */
+
+	/* Factory Mode */
+	"Calibration", //CALIBRATION_NODE,
+	"Set Ultrasound", //SET_US_NODE,
+	"Set Infrared", //SET_IR_NODE,
+	"Show Raw Data", //SHOW_RAW_NODE,
+	"Show Statistics", //SHOW_STAT_NODE,
+
+	/* Under CALIBRATION_NODE */
+	"Calibrate Temp", //CALI_TEMP_NODE,
+	"Calibrate Azim", //CALI_AZIM_NODE,
+	"Calibrate Elev", //CALI_ELEV_NODE,
+
+	"US: Sample/Est", //US_SAMPLE_PER_EST_NODE,
+	"US: Sample Rate", //US_SAMPLE_RATE_NODE,
+
+	"IR: Sample/Est", //IR_SAMPLE_PER_EST_NODE,
+	"IR: Sample Rate", //IR_SAMPLE_RATE_NODE,
+};
 
 void treeNodeLabelSetup(void)
 {
@@ -92,7 +142,7 @@ void treeNodeLabelSetup(void)
 }
 
 /* Don't need to setup parents! Just default child and fixed sibling! */
-void treeStructureSetup(void)
+void treeNodeStructureSetup(void)
 {
 	rootNode.child = &targetStatusNode;
 
@@ -157,8 +207,6 @@ void treeStructureSetup(void)
 
 	/* Factory */
 
-	modeSwitchNode.child = &rootNode;
-
 	/* Calibration */
 	calibrationNode.child = &caliTempNode;
 
@@ -179,6 +227,15 @@ void treeStructureSetup(void)
 	irSampleRateNode.sibling = &irSamplePerEstNode;
 }
 
+void treeNodeFunctionSetup(void)
+{
+	targetStatusNode.ownFunction = &showTargetStatus;
+	temperatureNode.ownFunction = &showTemperature;
+	modeSwitchNode.ownFunction = &modeSwitch;
+
+        // remember to set systemFlags.numberInput = 1; in modes with number inputs
+}
+
 void updateTreeStructure(void)
 {
 	if (systemFlags.factory)
@@ -191,11 +248,9 @@ void updateTreeStructure(void)
 	}
 }
 
-void linkNodeFunctions(void)
+void treeSetup(void)
 {
-	rootNode.ownFunction = &showChildOptions;
-	targetStatusNode.ownFunction = &showTargetStatus;
-	temperatureNode.ownFunction = &showTemperature;
-	gotoPositionNode.ownFunction = &showChildOptions;
-	modeSwitchNode.ownFunction = &toggleRemoteMode;
+	treeNodeLabelSetup();
+	treeNodeStructureSetup();
+	treeNodeFunctionSetup();
 }

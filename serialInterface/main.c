@@ -8,14 +8,20 @@
 **
 **********************************************************/
 
-
 #include "system.h"
-#include "ConfigRegs.h"
+#ifdef  USING_PIC18F4520
+#include "ConfigPIC18F4520.h"
+#endif
+
+#ifdef  USING_PIC18F452
+#include "ConfigPIC18F452.h"
+#endif
 
 void setup(void)
 {
+    systemFlags.remote = 1;
+    treeSetup();
     serialSetup();
-    interfaceSetup();
 }
 
 /* 'main' function */
@@ -26,12 +32,18 @@ void main(void)
 
     for(EVER)
     {
-        /* Any received bytes will be handled here */
-        handleReception();
+        if(systemFlags.remote)
+        {
+            handleReception();
+        }
 
-        // See C++ test code
-        showChildOptions();
-	executeOwnFunction();
-        handleTransmission();
+        executeCurrentNodeFunction();
+
+        if(systemFlags.commandReceived & systemFlags.remote)
+        {
+            systemFlags.commandReceived = 0;
+            showChildOptions();
+            prompt();
+        }
     }
 }

@@ -10,26 +10,49 @@
 
 #include "system.h"
 
+#ifdef  USING_PIC18F4520
+#define SPBRGvalue  64
+#endif
+
+#ifdef  USING_PIC18F452
+#define SPBRGvalue  25
+#endif
+
 /* Global String Literals */
 rom char rom msgWelcome[] = "\r\nEntered Remote Mode. Welcome!\r\n";
+rom char rom msgBye[] =
+                        "\r\n\n\tLeaving Remote Mode to Local Mode... \r\n";
 rom char rom msgUser[] = "\r\n\nuser@";
 rom char rom msgFactory[] = "\r\nfactory@";
 rom char rom msgStarTracker[] = "starTracker";
 rom char rom msgEndPrompt[] = "$ ";
-rom char rom youTyped[] = "\r\nYou Typed: ";
-rom char rom maxReached[] = "\r\n\n\tMaximum Length (100) Reached!\r\n";
+rom char rom msgMaxReached[] = "\r\n\n\tYour command is too long!!\r\n";
+rom char rom msgSeparatorLine[] = "\r\n------------------------------\r\n";
+rom char rom msgDot[] = ". ";
+rom char rom msgSlash[] = "/";
+rom char rom msgBack[] = "ack";
+rom char rom msgNewLine[] = "\r\n";
+rom char rom msgSpaceBackSpace[] = " \b";
+rom char rom msgBackSpace[] = "\b";
+rom char rom msgSpace[] = " ";
+rom char rom msgDigitError[] =
+                        "\r\n\t<Please Enter Single Digit Number or 'b'>\r\n";
+rom char rom msgWelcomeFactory[] = "\r\nEntered Factory Mode\r\n";
+rom char rom msgNumberError[] = "\r\n\t<Please input a valid number>\r\n";
+char password[] = "e-VADER-s";
 
 /* Global Variables */
-unsigned char circBuffer[SIZE];     /* This stores the received characters */
-unsigned char transmitBuffer[SIZE];
+char userInputBuffer[INPUTSIZE];     /* This stores the received characters */
 //unsigned char* txPtr = transmitBuffer;
-unsigned char* scPtr = circBuffer;  /* This points to locations in the buffer */
-unsigned char scPosition = 0;
-unsigned char rcPosition = 0;         /* This indexes the buffer */
-unsigned char* stringsToTransmit[SIZE];
-unsigned char cuePosition = 0;
-unsigned char printPosition = 0;
-unsigned char rcWord[2] = {'\0', '\0'};
+char* scPtr = userInputBuffer;  /* This points to locations in the buffer */
+char scPosition = 0;
+char rcPosition = 0;         /* This indexes the buffer */
+char cuePosition = 0;
+char printPosition = 0;
+char rcWord[2] = {'\0', '\0'};
+char cursorPosition = 0;
+
+char numberOfChildren = 0;
 
 /* 'setup' function: Setup the Configurations for Relevant Registers */
 void serialSetup(void)
@@ -48,7 +71,7 @@ void serialSetup(void)
     RCSTAbits.CREN = 1; /* Continuous Receive Enable */
 
     /* Config: USART Baud Rate Generator Register */
-    SPBRG = 64;         /* Load SPBRG with 64 for approximately 9600 BAUD */
+    SPBRG = SPBRGvalue;  /* Load SPBRG with 64 for approximately 9600 BAUD */
 
     /* Config: Peripheral Interrupt Enable Register */
     PIE1bits.RCIE = 1;  /* Enable USART Receive  Interrupt */
@@ -56,7 +79,7 @@ void serialSetup(void)
     /* Config: Peripheral Interrupt Request (Flag) Register */
     IPR1 = ZERO;
     IPR2 = ZERO;
-    IPR1bits.RCIP = 1;  /* Make USART Receive  Interrupt a High Priority */
+    IPR1bits.RCIP = 0;  /* Make USART Receive  Interrupt a Low Priority */
 
     /* Config: PORTC [Make PORTC<7:6> our serial I/O pins] */
     TRISCbits.RC6 = 0;  /* Make RC6 an output as TX */
@@ -66,7 +89,8 @@ void serialSetup(void)
     RCONbits.IPEN = 1;  /* Enable priority levels */
 
     /* Initialise: Start the program with a welcome message and prompt */
-    cueInRomString(msgWelcome);
+    printRomString(msgWelcome);
+    showChildOptions();
     prompt();
 
     /* Config: Interrupt Control Register (Enable Interrupts) */
