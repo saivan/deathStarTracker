@@ -1,4 +1,3 @@
-
 #include "system.h"
 
 SystemFlags systemFlags = {0, 0, 0, 0, 0, 0, 0, 0, 0};
