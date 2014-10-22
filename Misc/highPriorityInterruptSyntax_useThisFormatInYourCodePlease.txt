@@ -1,0 +1,19 @@
+/* High Priority Interrupt Service Routine */
+#pragma code highISR = 0x0008
+void gotoHighISR(void)
+{
+    _asm goto highPriorityISR _endasm   /* Simply go to 'highPriorityISR' */
+}
+
+/* 'highPriorityISR' function: High Priority Interrupt Action */
+#pragma interrupt highPriorityISR
+void highPriorityISR(void)
+{
+    /* Start processing the received inputs if something was received */
+    if(PIR1bits.RCIF == 1)
+    {
+        /* Read the received character into a 2 byte buffer */
+        circBuffer[rcPosition] = RCREG;
+        rcPosition++;
+    }
+}
