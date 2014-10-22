@@ -1,51 +1,93 @@
 
-#include "masterHeader.h"
-
+#include "Header.h"
 
 #define     HIGH 1
 #define     LOW 0
 #define     OUTPUT 0
 #define     INPUT  0xff
+#define     DOWNBUTTON   10
+#define     UPBUTTON     11
+#define     GOBUTTON     12
+#define     BACKBUTTON   13
+//#define CLEARB PortBbits.RB3 = 0;
 
-volatile int interuptCount = 0;
+#define BUTTONBUFFERSIZE 4
+unsigned char buttonBuffer[BUTTONBUFFERSIZE] = { 0, 0, 0, 0 };
 
-int buttonPressValue = 0;
-int bufferLocation = 0;
-char buttonBuffer[4];
-//ButtonFlags buttonFlags;        //type is ButtonFlags and name is buttonFlags. don't want to call same thing
+typedef struct buttonFlags{
+/// Execution Flags
+unsigned char buttonPressed : 1; ///< A button has been pressed and we need to handle it
+unsigned char acceptingInput : 1; ///< The keypad is active and buttons can be pressed
+unsigned char numericalInput : 1; ///< The progam is expecting numerical input (up and down disabled)
+/// Specific Button Flags
+unsigned char upPressed : 1;
+unsigned char downPressed : 1;
+unsigned char goPressed : 1;
+unsigned char backPressed : 1;
+unsigned char bufferFull : 1;
+} buttonFlags;
 
-char RC6pin = LOW;
+unsigned char buttonPressValue = 0;
+unsigned char bufferLocation = 0;
+unsigned char interruptCount = 0;
 
 void buttonsInitialisation(void){
-   
-    TRISCbits.RC4 = OUTPUT;                   ///< set RC7 to output for TEST
     TRISB = INPUT;
-    TRISBbits.RB4 = INPUT;
-    
-   
+
     ///< Interrupt initialisation
     RCONbits.IPEN = HIGH;                       ///< enable priority interrupts
-    INTCONbits.GIEH = HIGH;                     ///< enables all high priority interrupts
-    INTCONbits.RBIE = HIGH;
-    INTCONbits.RBIF = LOW;
-    INTCON2bits.RBIP = HIGH;
+    INTCONbits.GIEH = HIGH;                     ///< enables all high priority interrupts. MAYBE NEED GIEL IF NOT WORKING?
+    INTCONbits.GIEL = HIGH;
+    INTCON2bits.INTEDG1 = HIGH;
+    INTCONbits.RBIE = LOW;
+    INTCON3bits.INT1IP = HIGH;
+    INTCON3bits.INT1IE = HIGH;
+    INTCON3bits.INT1IF = LOW;
 
-    PORTC = LOW;
+    //< Don't have to enable INT0 priority as it is always high priority
+
 }
-///< remove jumpers 20 and 21 (These were misfiring our digital port b interrupts. RB5 connected to TXD and TXD connected to RC6 abnd RC6 is whatever it was last time and happened to be high and was triggering interrupt
+
+///< remove jumpers 20 and 21 on the PICDEM (These were misfiring our digital port b interrupts. RB5 connected to TXD and TXD connected to RC6 abnd RC6 is whatever it was last time and happened to be high and was triggering interrupt
 #pragma interrupt highPriorityISR          /*define receive interrupt service routine*/
 void highPriorityISR(void){
     if (INTCONbits.RBIF){                   ///< if evaluates to 0, doesnt run. If evaluates to anything else, will run it
-        buttonPressValue = PORTB & 0x0F;
-        if (bufferLocation <= 4){
-        buttonBuffer[bufferLocation] = buttonPressValue;
-        bufferLocation++;
+        buttonPressValue = PORTB >> 2;
+        buttonPressValue = buttonPressValue & 0x0F;
+        if (bufferLocation < 5){ //< use < if possible otherwise doing unnecessary condition
+            buttonBuffer[bufferLocation] = buttonPressValue;
+            bufferLocation++;
         } else {
-            // FORCE AN ENTER PRESS
+            buttonFlags.bufferFull = 1; //< THIS SHOULD THEN PROMPT A MESSAGE TO THE USER TO PRESS ENTER
+            // do nothing and FORCE AN ENTER PRESS
         }
-        interuptCount++;
+//        interruptCount++;
         INTCONbits.RBIF = LOW;
-        gotShit = 1;
+        buttonFlags.buttonPressed = 1;
     }
-
 }
+
+void buttonHandling (void){
+//    buttonBuffer1 = buttonBuffer[0];
+//    buttonBuffer2 = buttonBuffer[1];
+//    buttonBuffer3 = buttonBuffer[2];
+//    buttonBuffer4 = buttonBuffer[3];
+//
+//    if (buttonBuffer1 = 10){
+//        buttonFlags
+//    }
+
+    // ECHO
+    if(buttonPressValue < 10)
+    {
+        //ECHO TO LCD. lcdWrite(buttonPressValue);
+    }
+    else
+    {
+    
+    }
+    
+}
+
+
+
