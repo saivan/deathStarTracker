@@ -8,8 +8,9 @@
 #ifndef MASTERHEADER_H
 #define	MASTERHEADER_H
 
-#include <p18f452.h>
+#include <p18f4520.h>
 #include "LCD.h"
+#include "buttons.h"
 
 #define TRUE 1
 #define FALSE 0
