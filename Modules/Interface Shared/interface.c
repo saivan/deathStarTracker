@@ -1,3 +1,4 @@
+
 /**********************************************************
 **  File: interface.c
 ***********************************************************
@@ -120,5 +121,10 @@ void modeSwitch(void)
  */
 void stringToRam(static char rom *source, static char *destination)
 {
+<<<<<<< HEAD:serialInterface/interface.c
     while( (*destination++ = *source++) ){}
 }
+=======
+    while( (*destination++ = *source++) != NULL ){}
+}
+>>>>>>> d266af9f48fecfe4d64518f6614a8ef0c4e96240:Modules/Interface Shared/interface.c
