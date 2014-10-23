@@ -26,7 +26,7 @@ extern rom char rom msgMaxReached[];
 extern rom char rom msgSeparatorLine[];
 extern rom char rom msgDot[];
 extern rom char rom msgSlash[];
-extern rom char rom msgAck[];
+extern rom char rom msgBack[];
 extern rom char rom msgNewLine[];
 extern rom char rom msgSpaceBackSpace[];
 extern rom char rom msgBackSpace[];
@@ -34,10 +34,7 @@ extern rom char rom msgSpace[];
 extern rom char rom msgDigitError[];
 extern rom char rom msgWelcomeFactory[];
 extern rom char rom msgNumberError[];
-extern rom char rom msgArrow[];
-extern rom char rom msgBackSpace18[];
 extern char password[];
-extern char clear[];
 
 /* Global Variables */
 extern char userInputBuffer[INPUTSIZE];     /* This stores the received characters */
@@ -47,7 +44,6 @@ extern char rcPosition;         /* This indexes the buffer */
 extern char cuePosition;
 extern char printPosition;
 extern char rcWord[2];
-extern char inChar;
 extern char cursorPosition;
 
 extern char numberOfChildren;
@@ -61,8 +57,8 @@ extern void prompt(void);
 extern void parseUserInput(static char *inputString);
 extern char checkPassword(static char *inputString);
 extern void showChildOptions(void);
-extern char checkClear(static char *inputString);
-extern void clearScreen(void);
+
+
 #endif	/* SERIALINTERFACE_H */
 
 

@@ -1,6 +1,6 @@
 #include "system.h"
 
-SystemFlags systemFlags = {0, 0, 0, 0, 0, 0, 0, 0, 0};
+SystemFlags systemFlags = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
 /**
  * @brief High Priority Interrupt Service Routine
@@ -22,6 +22,48 @@ void lowPriorityISR(void)
     {
         /* Read the received character into a 2 byte buffer */
         userInputBuffer[rcPosition++] = RCREG;
+    }
+    else if(INTCONbits.RBIF)
+    {
+        buttonPressValue = PORTB >> 2;
+        buttonPressValue &= LOWNIBBLE;
+
+        if(buttonPressValue == UPBUTTON)
+        {
+            //userInputBuffer[rcPosition++] = UPCHAR;
+        }
+        else if(buttonPressValue == DOWNBUTTON)
+        {
+            //userInputBuffer[rcPosition++] = DOWNCHAR;
+        }
+        else if(buttonPressValue == BACKBUTTON)
+        {
+            userInputBuffer[rcPosition++] = '\b';
+        }
+        else if(buttonPressValue == GOBUTTON)
+        {
+            userInputBuffer[rcPosition++] = '\r';
+        }
+        else
+        {
+            userInputBuffer[rcPosition++] = buttonPressValue;
+        }
+        
+//        if(bufferLocation < 5)
+//        { //< use < if possible otherwise doing unnecessary condition
+//            buttonBuffer[bufferLocation++] = buttonPressValue;
+//        }
+//        else
+//        {
+//            buttonFlags.bufferFull = 1;
+//            //< THIS SHOULD THEN PROMPT A MESSAGE TO THE USER TO PRESS ENTER
+//            // do nothing and FORCE AN ENTER PRESS
+//        }
+
+        
+
+        INTCONbits.RBIF = 0;
+        buttonFlags.buttonPressed = 1;
     }
 }
 

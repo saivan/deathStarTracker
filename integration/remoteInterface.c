@@ -17,58 +17,13 @@ void handleReception(void)
     /* In order to save processor time for other stuff */
     if(scPosition < rcPosition)
     {
-        inChar = userInputBuffer[scPosition];
+        rcWord[0] = userInputBuffer[scPosition];
 
-        if(scPosition >= 2)
-        {
-            if((userInputBuffer[scPosition - 2] == ESC) && (userInputBuffer[scPosition - 1] == 0x5B))
-            {
-                if(!systemFlags.userChosen)
-                {
-                    rcPosition = 0;
-                    scPosition = 0;
-                    scPtr = userInputBuffer;
-                    return;
-                }
-                else if(inChar == 0x41)
-                {
-                    systemFlags.upPressed = 1;
-                    systemFlags.downPressed = 0;
-                }
-                else if(inChar == 0x42)
-                {
-                    systemFlags.downPressed = 1;
-                    systemFlags.upPressed = 0;
-                }
-            }
-        }
-
-        if((systemFlags.userChosen == 1) && (((inChar - '0') < numberOfChildren) && ((inChar - '0') >= 0)))
-        {
-            printRomString(msgBackSpace18);
-        }
+        /* Echo what was received */
+        printRamString(rcWord);
         
-        rcWord[0] = inChar;
-        /// Only echo if in remote or we are inputting numbers
-        if(inChar == ESC || inChar == 0x5B)
-        {
-            scPosition++;
-            return;
-        }
-        else if(!systemFlags.upPressed & !systemFlags.downPressed)
-        {
-            if(systemFlags.remote)
-            {
-                printRamString(rcWord);
-            }
-            else if(systemFlags.numberInput)
-            {
-                LCDMoveCursor(1, scPosition + 1);
-                printRamString(rcWord);
-            }
-        }
-
-        if(inChar == '\b')
+        // backspace handle
+        if(rcWord[0] == '\b')
         {
             if(scPosition > 0) // if not at the first one we can backspace
             {
@@ -79,60 +34,36 @@ void handleReception(void)
             else
             {
                 userInputBuffer[scPosition] = BACK;
-                inChar = BACK;
-                rcWord[0] = inChar;
+                rcWord[0] = BACK;
                 printRomString(msgSpace);
                 printRamString(rcWord);
             }
+            printRomString(msgSpaceBackSpace);
         }
-
 
         if(!systemFlags.numberInput)
         {
-            if(systemFlags.upPressed)
-            {
-                rcPosition = 0;
-                scPosition = 0;
-                scPtr = userInputBuffer;
-                userInputBuffer[rcPosition++] =
-                        (userInputBuffer[0] == '0') ?
-                            (numberOfChildren - 1 + '0') : (userInputBuffer[0] - 1);
-                systemFlags.upPressed = 0;
-                //printRomString(msgBackSpace18);
-                return;
-            }
-            else if(systemFlags.downPressed)
-            {
-                rcPosition = 0;
-                scPosition = 0;
-                scPtr = userInputBuffer;
-                userInputBuffer[rcPosition++] =
-                        (userInputBuffer[0] == (numberOfChildren - 1 + '0')) ?
-                            '0' : (userInputBuffer[0] + 1);
-                systemFlags.downPressed = 0;
-                //printRomString(msgBackSpace18);
-                return;
-            }
-            else if(((inChar - '0') < numberOfChildren) && ((inChar - '0') >= 0))
+            if((rcWord[0] - '0') < numberOfChildren && (rcWord[0] - '0') >= 0)
             {
 
                 Node* currentChild = currentNode->child;
-
-                selectChild(inChar - '0');
-
+                selectChild(rcWord[0] - '0');
                 printRomString(msgDot);
                 printRomString(nodeNames[(currentNode->child)->label]);
                 currentNode->child = currentChild;
-                systemFlags.userChosen = 1;
-                
+                scPtr++;
+                rcPosition++;
+                scPosition++;
+                userInputBuffer[scPosition] = '\r';
+                systemFlags.commandReceived = 1;
             }
-            else if(inChar == BACK)
+            else if(rcWord[0] == BACK)
             {
                 scPtr++;
                 rcPosition++;
                 scPosition++;
                 userInputBuffer[scPosition] = '\r';
-                printRomString(msgAck);
+                printRomString(msgBack);
                 systemFlags.commandReceived = 1;
             }
         }
@@ -146,7 +77,7 @@ void handleReception(void)
             systemFlags.commandReceived = 1;
         }
 
-        if(inChar == '\r')
+        if(rcWord[0] == '\r')
         {
             systemFlags.commandReceived = 1;
         }
@@ -158,19 +89,15 @@ void handleReception(void)
             /* Attach LF, and NULL to the end and note the change of position */
             userInputBuffer[scPosition] = '\0';
 
-            if(!checkClear(userInputBuffer))
+            if(!checkPassword(userInputBuffer))
             {
-                if(!checkPassword(userInputBuffer))
-                {
-                    parseUserInput(userInputBuffer);
-                }
+                parseUserInput(userInputBuffer);
             }
 
             scPosition = 0;
             rcPosition = 0;
             scPtr = userInputBuffer;
             systemFlags.numberInput = 0;
-            systemFlags.userChosen = 0;
         }
         
     }
@@ -178,20 +105,12 @@ void handleReception(void)
 
 void printRamString(static char *ramMessage)
 {
-    if(systemFlags.remote)
+    /* Transmit the message while the character is not a NULL character */
+    while(*ramMessage)
     {
-        /* Transmit the message while the character is not a NULL character */
-        while(*ramMessage)
-        {
-            /// Transmit the message once TXIF is empty
-            while(!PIR1bits.TXIF) {}
-            TXREG = *ramMessage++;
-        }
-    }
-    else
-    {
-//        LCDMoveCursor(1, 1);
-        LCDWriteHere(ramMessage);
+        /// Transmit the message once TXIF is empty
+        while(!PIR1bits.TXIF) {}
+        TXREG = *ramMessage++;
     }
 }
 
@@ -253,22 +172,14 @@ void prompt(void)
 //    return 1;
 //}
 
-int convertToNumber(static char *inputString)
+unsigned int convertToNumber(static char *inputString)
 {
-    int number = 0;
+    unsigned int number = 0;
     unsigned char i = 0;
 
-    unsigned int maxParseLength = 3;
-    
-    if(inputString[i] == '-')
-    {
-        i++;
-        maxParseLength++;
-    }
-    
     while(inputString[i] != '\r')
     {
-        if((inputString[i] < '0') || (inputString[i] > '9') || (i > maxParseLength))
+        if((inputString[i] < '0') || (inputString[i] > '9'))
         {
             systemFlags.userError = 1;
             return i; // for error detection
@@ -276,11 +187,6 @@ int convertToNumber(static char *inputString)
         number = (number * 10) + (inputString[i++] - '0');
     }
 
-    if(inputString[i] == '-')
-    {
-        number = 0 - number;
-    }
-    
     systemFlags.userError = 0;
     return number;
     // works!
@@ -288,8 +194,6 @@ int convertToNumber(static char *inputString)
 
 void parseUserInput(static char *inputString)
 {
-
-    char charToCheck = inputString[scPosition - 2];
     if(systemFlags.numberInput)
     {
         unsigned int inputValue = convertToNumber(inputString);
@@ -317,22 +221,21 @@ void parseUserInput(static char *inputString)
         
     }
     
-//    if(inputString[1] != '\r')
-//    {
-//
-//        printRomString(msgDigitError);
-//
-//        return;
-//    }
-   
-    
-    if(charToCheck == BACK)
+    if(inputString[1] != '\r')
+    {
+        
+        printRomString(msgDigitError);
+        
+        return;
+    }
+
+    if(inputString[0] == BACK)
     {
         moveToParentNode();
     }
     else
     {
-        char digit = charToCheck - '0';
+        char digit = inputString[0] - '0';
 
         if(digit >= numberOfChildren || digit < 0)
         {
@@ -368,28 +271,6 @@ char checkPassword(static char *inputString)
     printRomString(msgSeparatorLine);
     printRomString(msgWelcomeFactory);
     printRomString(msgSeparatorLine);
-    systemFlags.optionsShown = 0;
-    return 1;
-}
-
-char checkClear(static char *inputString)
-{
-    int i = 0;
-    while(clear[i])
-    {
-        if(clear[i] != inputString[i])
-        {
-            return 0;
-        }
-        i++;
-    }
-
-    if(inputString[i] != '\r')
-    {
-        return 0;
-    }
-
-    clearScreen();
     systemFlags.optionsShown = 0;
     return 1;
 }
@@ -436,9 +317,9 @@ void showChildOptions(void)
 
             selectNextChild();
 
+            numberOfChildren++;
+
 	} while (currentNode->child != originalOptionNode);
 
-        numberOfChildren = i++ - '0';
-        
 	systemFlags.optionsShown = 1;
 }

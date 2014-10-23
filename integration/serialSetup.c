@@ -19,10 +19,10 @@
 #endif
 
 /* Global String Literals */
-rom char rom msgDeathStarTracker1[] = "\r\n________  ___________   ___________________ ___     _________________________ __________  _____________________    _____  _________  ____  __._____________________ \r\n";
-rom char rom msgDeathStarTracker2[] = "\\______ \\ \\_   _____/  /  _  \\__    ___/   |   \\   /   _____/\\__    ___/  _  \\\\______   \\ \\__    ___/\\______   \\  /  _  \\ \\_   ___ \\|    |/ _|\\_   _____/\\______   \\\r\n";
-rom char rom msgDeathStarTracker3[] = " |    \\  \\ |    __)_  /  /_\\  \\|    | /    ~    \\  \\_____  \\   |    | /  /_\\  \\|       _/   |    |    |       _/ /  /_\\  \\/    \\  \\/|      <   |    __)_  |       _/\r\n";
-rom char rom msgDeathStarTracker4[] = " |____|   \\|        \\/    |    \\    | \\    Y    /  /        \\  |    |/    |    \\    |   \\   |    |    |    |   \\/    |    \\     \\___|    |  \\ |        \\ |    |   \\\r\n";
+rom char rom msgDeathStarTracker1[] = "________  ___________   ___________________ ___     _________________________ __________  _____________________    _____  _________  ____  __._____________________ \r\n";
+rom char rom msgDeathStarTracker2[] = "\\______ \\ \\_   _____/  /  _  \\__    ___/   |   \\   /   _____/\\__    ___/  _  \\\\______   \\ \\__    ___/\\______   \\  /  _  \\ \\_   ___ \\|    |/ _|\\_   _____/\\______   \\r\n";
+rom char rom msgDeathStarTracker3[] = " |    |  \\ |    __)_  /  /_\\  \\|    | /    ~    \\  \\_____  \\   |    | /  /_\\  \\|       _/   |    |    |       _/ /  /_\\  \\/    \\  \\/|      <   |    __)_  |       _/\r\n";
+rom char rom msgDeathStarTracker4[] = " |    `   \\|        \\/    |    \\    | \\    Y    /  /        \\  |    |/    |    \\    |   \\   |    |    |    |   \\/    |    \\     \\___|    |  \\ |        \\ |    |   \\r\n";
 rom char rom msgDeathStarTracker5[] = "/_______  /_______  /\\____|__  /____|  \\___|_  /  /_______  /  |____|\\____|__  /____|_  /   |____|    |____|_  /\\____|__  /\\______  /____|__ \\/_______  / |____|_  /\r\n";
 rom char rom msgDeathStarTracker6[] = "        \\/        \\/         \\/              \\/           \\/                 \\/       \\/                     \\/         \\/        \\/        \\/        \\/         \\/ \r\n";
 rom char rom msgWelcome[] = "\r\nEntered Remote Mode. Welcome!\r\n";
@@ -32,66 +32,33 @@ rom char rom msgUser[] = "\r\n\nuser@";
 rom char rom msgFactory[] = "\r\nfactory@";
 rom char rom msgStarTracker[] = "starTracker";
 rom char rom msgEndPrompt[] = "$ ";
-rom char rom msgMaxReached[] = "\r\n\n\tYou don't need to type that much!\r\n";
+rom char rom msgMaxReached[] = "\r\n\n\tYour command is too long!!\r\n";
 rom char rom msgSeparatorLine[] = "\r\n------------------------------\r\n";
 rom char rom msgDot[] = ". ";
 rom char rom msgSlash[] = "/";
-rom char rom msgAck[] = "ack";
+rom char rom msgBack[] = "ack";
 rom char rom msgNewLine[] = "\r\n";
 rom char rom msgSpaceBackSpace[] = " \b";
 rom char rom msgBackSpace[] = "\b";
 rom char rom msgSpace[] = " ";
-rom char rom msgArrow[] = ">";
 rom char rom msgDigitError[] =
                         "\r\n\t<Please Enter Single Digit Number or 'b'>\r\n";
 rom char rom msgWelcomeFactory[] = "\r\nEntered Factory Mode\r\n";
 rom char rom msgNumberError[] = "\r\n\t<Please input a valid number>\r\n";
-rom char rom msgBackSpace18[] = "\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b";
 char password[] = "e-VADER-s";
-char clear[] = "clear";
 
 /* Global Variables */
-char userInputBuffer[INPUTSIZE] = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};     /* This stores the received characters */
+char userInputBuffer[INPUTSIZE];     /* This stores the received characters */
+//unsigned char* txPtr = transmitBuffer;
 char* scPtr = userInputBuffer;  /* This points to locations in the buffer */
 char scPosition = 0;
 char rcPosition = 0;         /* This indexes the buffer */
 char cuePosition = 0;
 char printPosition = 0;
 char rcWord[2] = {'\0', '\0'};
-char inChar = '\0';
 char cursorPosition = 0;
 
 char numberOfChildren = 0;
-
-// Apparently you just do this to clear screen:
-// http://stackoverflow.com/questions/10105666/clearing-the-terminal-screen
-
-void clearScreen(void)
-{
-    char str1[] = "[2J";
-    char str2[] = "[H";
-    rcWord[0] = 27;
-    
-    printRamString(rcWord);
-    printRamString(str1);
-    printRamString(rcWord);
-    printRamString(str2);
-
-    /* Initialise: Start the program with a welcome message and prompt */
-    printRomString(msgDeathStarTracker1);
-    printRomString(msgDeathStarTracker2);
-    printRomString(msgDeathStarTracker3);
-    printRomString(msgDeathStarTracker4);
-    printRomString(msgDeathStarTracker5);
-    printRomString(msgDeathStarTracker6);
-}
-
-void welcomeRemoteMode(void)
-{
-    clearScreen();
-    showChildOptions();
-    prompt();
-}
 
 /* 'setup' function: Setup the Configurations for Relevant Registers */
 void serialSetup(void)
@@ -127,7 +94,17 @@ void serialSetup(void)
     /* Config: Reset Control Register */
     RCONbits.IPEN = 1;  /* Enable priority levels */
 
-    welcomeRemoteMode();
+    /* Initialise: Start the program with a welcome message and prompt */
+    printRomString(msgDeathStarTracker1);
+    printRomString(msgDeathStarTracker2);
+    printRomString(msgDeathStarTracker3);
+    printRomString(msgDeathStarTracker4);
+    printRomString(msgDeathStarTracker5);
+    printRomString(msgDeathStarTracker6);
+    printRomString(msgWelcome);
+
+    showChildOptions();
+    prompt();
 
     /* Config: Interrupt Control Register (Enable Interrupts) */
     INTCONbits.GIEH = 1;/* Enable global interrupts */

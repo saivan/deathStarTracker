@@ -79,37 +79,30 @@ void executeCurrentNodeFunction(void)
 	(*fp)();
 }
 
-void enterRemoteMode(void)
+void enterUserMode(void)
 {
     systemFlags.factory = 0;
-    systemFlags.remote = 1;
     updateTreeStructure();
     systemFlags.optionsShown = 0;
 }
 
 void enterLocalMode(void)
 {
-    printRomString(msgBye);
-    systemFlags.factory = 0;
     systemFlags.remote = 0;
     systemFlags.optionsShown = 0;
+    printRomString(msgBye);
     // ... back to local interface
 }
-
 void modeSwitch(void)
 {
 
     if(systemFlags.factory)
     {
-        enterRemoteMode();
+        enterUserMode();
     }
     else if(systemFlags.remote)
     {
         enterLocalMode();
-    }
-    else // Otherwise we are in local mode
-    {
-        enterRemoteMode();
     }
 
     currentNode = &rootNode;

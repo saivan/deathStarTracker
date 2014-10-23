@@ -22,9 +22,6 @@ void setup(void)
     systemFlags.remote = 1;
     treeSetup();
     serialSetup();
-    buttonsSetup();
-    LCDSetup();
-    LCDOnOff(HIGH);
 }
 
 /* 'main' function */

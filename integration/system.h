@@ -27,21 +27,12 @@
 #include "tree.h"
 #include "remoteInterface.h"
 #include "interface.h"
-#include "buttons.h"
-#include "LCD.h"
 
 /* Global Defines for Useful Constants */
 #define FULL    0xFF
 #define ZERO    0x00
 #define NULL    0x00
 #define EVER    ;;
-
-#define HIGH    1
-#define LOW     0
-#define OUTPUT  ZERO
-#define INPUT   FULL
-#define LOWNIBBLE   0x0F
-#define HIGHNIBBLE  0xF0
 
 /* System Flags */
 typedef struct
@@ -55,9 +46,6 @@ typedef struct
         unsigned int commandReceived : 1;
         unsigned int numberInput : 1;
         unsigned int userError : 1;
-        unsigned int upPressed : 1;
-        unsigned int downPressed : 1;
-        unsigned int userChosen : 1;
 } SystemFlags;
 
 extern SystemFlags systemFlags;

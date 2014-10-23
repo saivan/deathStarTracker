@@ -8,12 +8,6 @@
 #ifndef INTERFACE_H
 #define	INTERFACE_H
 
-#define     DOWNBUTTON   10
-#define     UPBUTTON     11
-#define     GOBUTTON     12
-#define     BACKBUTTON   13
-#define     ESC          0x1B
-
 extern void moveToParentNode(void);
 extern void moveToChildNode(void);
 extern void selectNextChild(void);
