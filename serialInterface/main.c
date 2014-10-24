@@ -39,16 +39,28 @@ void main(void)
         {
             handleReception();
         }
+        else
+        {
+            handleReceptionLocal();
+        }
 
         executeCurrentNodeFunction();
 
-        if(systemFlags.commandReceived & systemFlags.remote)
+        if(systemFlags.commandReceived)
         {
             systemFlags.commandReceived = 0;
-            showChildOptions();
-            printRomString(msgNewLine);
-            printRomString(msgNewLine);
-            prompt();
+
+            if(systemFlags.remote)
+            {
+                showChildOptions();
+                printRomString(msgNewLine);
+                printRomString(msgNewLine);
+                prompt();
+            }
+            else
+            {
+                updateLocalInterface();
+            }
         }
     }
 }

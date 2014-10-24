@@ -85,6 +85,7 @@ void enterRemoteMode(void)
     systemFlags.remote = 1;
     updateTreeStructure();
     systemFlags.optionsShown = 0;
+    LCDOnOff(0);
 }
 
 void enterLocalMode(void)
@@ -93,6 +94,7 @@ void enterLocalMode(void)
     systemFlags.factory = 0;
     systemFlags.remote = 0;
     systemFlags.optionsShown = 0;
+    LCDOnOff(1);
     // ... back to local interface
 }
 

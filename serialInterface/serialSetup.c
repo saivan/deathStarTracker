@@ -43,7 +43,7 @@ rom char rom msgBackSpace[] = "\b";
 rom char rom msgSpace[] = " ";
 rom char rom msgArrow[] = ">";
 rom char rom msgDigitError[] =
-                        "\r\n\t<Please Enter Single Digit Number or 'b'>\r\n";
+                        "\r\n\t<Invalid Command! Try entering option names or numbers!>\r\n";
 rom char rom msgWelcomeFactory[] = "\r\nEntered Factory Mode\r\n";
 rom char rom msgNumberError[] = "\r\n\t<Please input a valid number>\r\n";
 rom char rom msgBigBackSpace[] = "\b";

@@ -27,40 +27,27 @@ void lowPriorityISR(void)
     {
         buttonPressValue = PORTB >> 2;
         buttonPressValue &= LOWNIBBLE;
-
-        if(buttonPressValue == UPBUTTON)
-        {
-            //userInputBuffer[rcPosition++] = UPCHAR;
-        }
-        else if(buttonPressValue == DOWNBUTTON)
-        {
-            //userInputBuffer[rcPosition++] = DOWNCHAR;
-        }
-        else if(buttonPressValue == BACKBUTTON)
-        {
-            userInputBuffer[rcPosition++] = '\b';
-        }
-        else if(buttonPressValue == GOBUTTON)
-        {
-            userInputBuffer[rcPosition++] = '\r';
-        }
-        else
-        {
-            userInputBuffer[rcPosition++] = buttonPressValue;
-        }
-        
-//        if(bufferLocation < 5)
-//        { //< use < if possible otherwise doing unnecessary condition
-//            buttonBuffer[bufferLocation++] = buttonPressValue;
+        userInputBuffer[rcPosition++] = buttonPressValue;
+//        if(buttonPressValue == UPBUTTON)
+//        {
+//            //userInputBuffer[rcPosition++] = UPCHAR;
+//        }
+//        else if(buttonPressValue == DOWNBUTTON)
+//        {
+//            //userInputBuffer[rcPosition++] = DOWNCHAR;
+//        }
+//        else if(buttonPressValue == BACKBUTTON)
+//        {
+//            userInputBuffer[rcPosition++] = '\b';
+//        }
+//        else if(buttonPressValue == GOBUTTON)
+//        {
+//            userInputBuffer[rcPosition++] = '\r';
 //        }
 //        else
 //        {
-//            buttonFlags.bufferFull = 1;
-//            //< THIS SHOULD THEN PROMPT A MESSAGE TO THE USER TO PRESS ENTER
-//            // do nothing and FORCE AN ENTER PRESS
+//            userInputBuffer[rcPosition++] = buttonPressValue;
 //        }
-
-        
 
         INTCONbits.RBIF = 0;
         buttonFlags.buttonPressed = 1;

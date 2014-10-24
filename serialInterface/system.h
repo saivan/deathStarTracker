@@ -29,6 +29,7 @@
 #include "interface.h"
 #include "buttons.h"
 #include "LCD.h"
+#include "localInterface.h"
 
 /* Global Defines for Useful Constants */
 #define FULL    0xFF
