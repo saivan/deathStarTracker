@@ -11,109 +11,210 @@
 
 #include "system.h"
 
+char isCharSelectionDigit(char character)
+{
+    if( ((character - '0') < numberOfChildren) && ((character - '0') >= 0) )
+    {
+        return 1;
+    }
+
+    return 0;
+}
+
+/**
+ * @brief Check whether or not an up or down is pressed, and deal with it
+ * 
+ * @details Note that this function depends on 'scPosition' and can also change
+ * 'scPosition'
+ * 
+ * @return Returns 1 to stop handling received bytes
+ */
+char checkAndDealWithUpDown(void)
+{
+    /// If we have scanned more than 2 characters (so that the position
+    /// is equal to 2 or more), we can determine if it was an up or down
+    /// character sequence
+    /// Note that an up character sequence is {ESC, '[', 'A'}
+    /// and a down character sequence is {ESC, '[', 'B'}
+    if(scPosition >= 2)
+    {
+        /// Hence, to check it, check if the previous two characters are
+        /// {ESC, '['}
+        if((userInputBuffer[scPosition - 2] == ESC)
+                && (userInputBuffer[scPosition - 1] == '['))
+        {
+
+            /// At this stage, we definitely know that the user has pressed
+            /// an arrow control button. However, if the user has not
+            /// chosen at least one option yet, we do not have a reference
+            /// option so that the up/down buttons should take no effect
+            if(!systemFlags.userChosen)
+            {
+                /// If that case, just ignore the user input and pretend
+                /// that we have not received anything
+                rcPosition = 0;
+                scPosition = 0;
+                return 1;
+            }
+
+            /// Otherwise, if the user has chosen something, we can check
+            /// which key press it is and signal the system which one
+            /// has been pressed
+
+            else if(userInputBuffer[scPosition] == 'A')
+            {
+                systemFlags.upPressed = 1;
+                systemFlags.downPressed = 0;
+            }
+            else if(userInputBuffer[scPosition] == 'B')
+            {
+                systemFlags.downPressed = 1;
+                systemFlags.upPressed = 0;
+            }
+        }
+    }
+
+    return 0;
+}
+
+/**
+ * @brief Echo the received bytes if it is deemed okay to
+ *
+ * @details Note that this function can change 'scPosition'
+ *
+ * @return Returns 1 to stop handling received bytes
+ */
+char echoIfOkay(char inChar)
+{
+    /// If we have received characters that lead up to the up and down
+    /// character sequence, simply keep them in the buffer and stop
+    if((inChar == ESC) || (inChar == '['))
+    {
+        scPosition++;
+        return 1;
+    }
+    else if(systemFlags.upPressed | systemFlags.downPressed)
+    {
+        scPosition++;
+    }
+    else if (!((inChar == 'b') && (systemFlags.numberInput == 0)))
+    {
+        rcWord[0] = inChar;
+        printRamString(rcWord);
+    }
+
+    return 0;
+}
+
 void handleReception(void)
 {
-    /* Relies on outer loop for multiple bytes */
-    /* In order to save processor time for other stuff */
+    /// Check if we have not scanned everything that was received
     if(scPosition < rcPosition)
     {
-        inChar = userInputBuffer[scPosition];
+        /// Scan any un-scanned characters
+        char inChar = userInputBuffer[scPosition];
 
-        if(scPosition >= 2)
+        if((inChar == '\r') && (scPosition == 0))
         {
-            if((userInputBuffer[scPosition - 2] == ESC) && (userInputBuffer[scPosition - 1] == 0x5B))
+            userInputBuffer[scPosition] = '0';
+            inChar = '0';
+        }
+        else if((inChar == '\t') && (scPosition > 0))
+        {
+            userInputBuffer[scPosition] = '\r';
+            if(tryAutoComplete(userInputBuffer))
             {
-                if(!systemFlags.userChosen)
-                {
-                    rcPosition = 0;
-                    scPosition = 0;
-                    scPtr = userInputBuffer;
-                    return;
-                }
-                else if(inChar == 0x41)
-                {
-                    systemFlags.upPressed = 1;
-                    systemFlags.downPressed = 0;
-                }
-                else if(inChar == 0x42)
-                {
-                    systemFlags.downPressed = 1;
-                    systemFlags.upPressed = 0;
-                }
+                scPosition = 0;
+                rcPosition = 0;
+                systemFlags.numberInput = 0;
+                systemFlags.userChosen = 0;
+                systemFlags.commandReceived = 1;
             }
+            else
+            {
+                userInputBuffer[scPosition] = '\0';
+                rcPosition--;             
+            }
+            return;        
         }
-
-        if((systemFlags.userChosen == 1) && (((inChar - '0') < numberOfChildren) && ((inChar - '0') >= 0)))
+        /// This checks if we have received an up or down button and deals
+        /// with it
+        if(checkAndDealWithUpDown())
         {
-            printRomString(msgBackSpace18);
-        }
-        
-        rcWord[0] = inChar;
-        /// Only echo if in remote or we are inputting numbers
-        if(inChar == ESC || inChar == 0x5B)
-        {
-            scPosition++;
             return;
         }
-        else if(!systemFlags.upPressed & !systemFlags.downPressed)
+
+        /// If the received byte was a number and the user has chosen something,
+        /// clear the prompt so that we replace the user's previous choice
+        /// with the current choice later on
+        if(systemFlags.userChosen & isCharSelectionDigit(inChar))
         {
-            if(systemFlags.remote)
-            {
-                printRamString(rcWord);
-            }
-            else if(systemFlags.numberInput)
-            {
-                LCDMoveCursor(1, scPosition + 1);
-                printRamString(rcWord);
-            }
+            /// Note that this reprompts the user at the same line!
+            prompt();
+        }
+
+        /// Echo the user input if it is okay
+        if(echoIfOkay(inChar))
+        {
+            return;
         }
 
         if(inChar == '\b')
         {
-            if(scPosition > 0) // if not at the first one we can backspace
+            /// We can only back-space if things have been typed
+            if((scPosition > 0) && (systemFlags.userChosen == 0))
             {
-                scPosition -= 2; // one for \b one for the thing to delete
+                /// If so, to back-space, delete the '\b' that was received
+                /// and also the character to be deleted, which is a total of
+                /// 2 characters
+                scPosition -= 2;
                 rcPosition -= 2;
-                scPtr -= 2;
+                
+                /// Replace the character with a space to create a back-space
+                /// effect
+                printRomString(msgSpaceBackSpace);
             }
+
+            /// Otherwise, if nothing has been typed, we will treat it like a
+            /// back command
             else
             {
+                /// Pretend we have received the back command
                 userInputBuffer[scPosition] = BACK;
                 inChar = BACK;
-                rcWord[0] = inChar;
+
+                /// Print a space to compensate for the user's backspace
                 printRomString(msgSpace);
-                printRamString(rcWord);
             }
         }
 
-
+        /// If we are not inputting numbers, we can respond to the special
+        /// commands
         if(!systemFlags.numberInput)
         {
+            /// If an up has been pressed, do the following
             if(systemFlags.upPressed)
             {
+                /// 
                 rcPosition = 0;
                 scPosition = 0;
-                scPtr = userInputBuffer;
                 userInputBuffer[rcPosition++] =
                         (userInputBuffer[0] == '0') ?
                             (numberOfChildren - 1 + '0') : (userInputBuffer[0] - 1);
                 systemFlags.upPressed = 0;
-                //printRomString(msgBackSpace18);
                 return;
             }
             else if(systemFlags.downPressed)
             {
                 rcPosition = 0;
                 scPosition = 0;
-                scPtr = userInputBuffer;
                 userInputBuffer[rcPosition++] =
                         (userInputBuffer[0] == (numberOfChildren - 1 + '0')) ?
                             '0' : (userInputBuffer[0] + 1);
                 systemFlags.downPressed = 0;
-                //printRomString(msgBackSpace18);
                 return;
             }
-            else if(((inChar - '0') < numberOfChildren) && ((inChar - '0') >= 0))
+            else if(isCharSelectionDigit(inChar))
             {
 
                 Node* currentChild = currentNode->child;
@@ -122,25 +223,33 @@ void handleReception(void)
 
                 printRomString(msgDot);
                 printRomString(nodeNames[(currentNode->child)->label]);
+                printRomString(msgSpace);
+                printRomString(msgDeleteInFront);
                 currentNode->child = currentChild;
-                systemFlags.userChosen = 1;
-                
+                systemFlags.userChosen = 1;      
             }
             else if(inChar == BACK)
             {
-                scPtr++;
-                rcPosition++;
-                scPosition++;
-                userInputBuffer[scPosition] = '\r';
-                printRomString(msgAck);
-                systemFlags.commandReceived = 1;
+                if(!((scPosition > 0) && (userInputBuffer[scPosition - 1] == 'i')))
+                {
+                    rcPosition++;
+                    scPosition++;
+                    userInputBuffer[scPosition] = '\r';
+                    printRomString(msgBack);
+                    systemFlags.commandReceived = 1;
+                }
+                else
+                {
+                    rcWord[0] = BACK;
+                    printRamString(rcWord);
+                }
             }
         }
         
         /* If the character was not a carriage return, then */
         /* Note the change of position by incrementing and check whether or *
          * not we have reached the end of our buffer */
-        if(scPosition++ >= MAXPOS)
+        if(scPosition++ > MAXPOS)
         {
             printRomString(msgMaxReached);
             systemFlags.commandReceived = 1;
@@ -158,17 +267,17 @@ void handleReception(void)
             /* Attach LF, and NULL to the end and note the change of position */
             userInputBuffer[scPosition] = '\0';
 
-            if(!checkClear(userInputBuffer))
+            if(checkClear(userInputBuffer)){}
+            else if(checkPassword(userInputBuffer)){}
+            else if(checkIfNodeNameTyped(userInputBuffer)){}
+            else
             {
-                if(!checkPassword(userInputBuffer))
-                {
-                    parseUserInput(userInputBuffer);
-                }
+                checkReset(userInputBuffer);
+                parseUserInput(userInputBuffer);
             }
 
             scPosition = 0;
             rcPosition = 0;
-            scPtr = userInputBuffer;
             systemFlags.numberInput = 0;
             systemFlags.userChosen = 0;
         }
@@ -346,12 +455,12 @@ void parseUserInput(static char *inputString)
     }
 }
 
-char checkPassword(static char *inputString)
+char stringCompare(static char *inputString, static char *ramString)
 {
     int i = 0;
-    while(password[i])
+    while(ramString[i])
     {
-        if(password[i] != inputString[i])
+        if(ramString[i] != inputString[i])
         {
             return 0;
         }
@@ -363,35 +472,99 @@ char checkPassword(static char *inputString)
         return 0;
     }
 
-    systemFlags.factory = 1;
-    updateTreeStructure();
-    printRomString(msgSeparatorLine);
-    printRomString(msgWelcomeFactory);
-    printRomString(msgSeparatorLine);
-    systemFlags.optionsShown = 0;
     return 1;
+}
+char checkPassword(static char *inputString)
+{
+    if(stringCompare(inputString, password))
+    {
+        systemFlags.factory = 1;
+        updateTreeStructure();
+        printRomString(msgSeparatorLine);
+        printRomString(msgWelcomeFactory);
+        printRomString(msgSeparatorLine);
+        systemFlags.optionsShown = 0;
+        return 1;
+    }
+    return 0;
 }
 
 char checkClear(static char *inputString)
 {
-    int i = 0;
-    while(clear[i])
+    if(stringCompare(inputString, msgClear))
     {
-        if(clear[i] != inputString[i])
+        clearScreen();
+        systemFlags.optionsShown = 0;
+        return 1;
+    }
+    return 0;
+}
+
+char tryAutoComplete(static char *inputString)
+{
+    if(numberOfChildren)
+    {
+        Node *originalOptionNode = currentNode->child;
+        char romToRamBuffer[INPUTSIZE];
+        int i = 0;
+        do
         {
-            return 0;
+            selectNextChild();
+            stringToRam(nodeNames[(currentNode->child)->label], romToRamBuffer);
+
+            for(i = 0; inputString[i] == romToRamBuffer[i]; i++) 
+            {
+                if(inputString[i] == '\r')
+                {
+                    break;
+                }
+            }
+
+            /// IF NULL, it means everything is the same until now
+            if(inputString[i] == '\r')
+            {
+                prompt();
+                printRamString(romToRamBuffer);
+                moveToChildNode();
+                systemFlags.optionsShown = 0;
+                return 1;
+            }          
         }
-        i++;
+        while(currentNode->child != originalOptionNode);
     }
 
-    if(inputString[i] != '\r')
+    return 0;
+}
+
+char checkIfNodeNameTyped(static char *inputString)
+{
+    if(numberOfChildren)
     {
-        return 0;
+        Node *originalOptionNode = currentNode->child;
+        char romToRamBuffer[INPUTSIZE];
+        do
+        {
+            selectNextChild();
+            stringToRam(nodeNames[(currentNode->child)->label], romToRamBuffer);
+            if(stringCompare(inputString, romToRamBuffer))
+            {
+                moveToChildNode();
+                systemFlags.optionsShown = 0;
+                return 1;
+            }
+        }
+        while(currentNode->child != originalOptionNode);
     }
 
-    clearScreen();
-    systemFlags.optionsShown = 0;
-    return 1;
+    return 0;
+}
+
+void checkReset(static char *inputString)
+{
+    if(stringCompare(inputString, msgReset))
+    {
+        systemReset();
+    }
 }
 
 void showChildOptions(void)

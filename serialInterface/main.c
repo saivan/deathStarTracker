@@ -46,6 +46,8 @@ void main(void)
         {
             systemFlags.commandReceived = 0;
             showChildOptions();
+            printRomString(msgNewLine);
+            printRomString(msgNewLine);
             prompt();
         }
     }

@@ -49,50 +49,50 @@ Node* previousNode = &rootNode;
 rom char rom *nodeNames[] = {
 	/* User Mode */
 	"DeathStarTracker", //HOME_NODE,
-	"Target Status  ", //TARGET_STATUS_NODE,
-	"Temperature    ", //TEMPERATURE_NODE,
-	"Goto Position  ", //GOTO_POSITION_NODE, /* Select Azim or Elev */
-	"Set Limits     ", //SET_LIMITS_NODE,
-	"Mode Switch    ", //MODE_SWITCH_NODE,
+	"Target Status", //TARGET_STATUS_NODE,
+	"Temperature", //TEMPERATURE_NODE,
+	"Goto Position", //GOTO_POSITION_NODE, /* Select Azim or Elev */
+	"Set Limits", //SET_LIMITS_NODE,
+	"Mode Switch", //MODE_SWITCH_NODE,
 
 	/* Under GOTO_POSITION_NODE */
-	"Azimuth        ", //AZIM_METHOD_SELECT_NODE,
-	"Elevation      ", //ELEV_METHOD_SELECT_NODE,
+	"Azimuth", //AZIM_METHOD_SELECT_NODE,
+	"Elevation", //ELEV_METHOD_SELECT_NODE,
 
-	"Manual (Azim)  ", //AZIM_MANUAL_CONTROL_NODE,
-	"Set Azim Angle ", //AZIM_SET_ANGLE_CONTROL_NODE,
+	"Manual (Azim)", //AZIM_MANUAL_CONTROL_NODE,
+	"Set Azim Angle", //AZIM_SET_ANGLE_CONTROL_NODE,
 
-	"Manual (Elev)  ", //ELEV_MANUAL_CONTROL_NODE,
-	"Set Elev Angle ", //ELEV_SET_ANGLE_CONTROL_NODE,
+	"Manual (Elev)", //ELEV_MANUAL_CONTROL_NODE,
+	"Set Elev Angle", //ELEV_SET_ANGLE_CONTROL_NODE,
 
 	/* Under SET_LIMITS_NODE */
-	"Distance Max   ", //DIST_MAX_NODE,
-	"Distance Min   ", //DIST_MIN_NODE,
-	"Azimuth Max    ", //AZIM_MAX_NODE,
-	"Azimuth Min    ", //AZIM_MIN_NODE,
-	"Elevation Max  ", //ELEV_MAX_NODE,
-	"Elevation Min  ", //ELEV_MIN_NODE,
+	"Distance Max", //DIST_MAX_NODE,
+	"Distance Min", //DIST_MIN_NODE,
+	"Azimuth Max", //AZIM_MAX_NODE,
+	"Azimuth Min", //AZIM_MIN_NODE,
+	"Elevation Max", //ELEV_MAX_NODE,
+	"Elevation Min", //ELEV_MIN_NODE,
 
 	/* Under end of both GOTO_POSITION_NODE and SET_LIMITS_NODE */
-	"Out of Range   ", //OUT_OF_RANGE_NODE,
-	"Entry Success  ", //ENTRY_SUCCESS_NODE, /* Child is always home */
+	"Out of Range", //OUT_OF_RANGE_NODE,
+	"Entry Success", //ENTRY_SUCCESS_NODE, /* Child is always home */
 
 	/* Factory Mode */
-	"Calibration    ", //CALIBRATION_NODE,
-	"Set Ultrasound ", //SET_US_NODE,
-	"Set Infrared   ", //SET_IR_NODE,
-	"Show Raw Data  ", //SHOW_RAW_NODE,
+	"Calibration", //CALIBRATION_NODE,
+	"Set Ultrasound", //SET_US_NODE,
+	"Set Infrared", //SET_IR_NODE,
+	"Show Raw Data", //SHOW_RAW_NODE,
 	"Show Statistics", //SHOW_STAT_NODE,
 
 	/* Under CALIBRATION_NODE */
-	"Calibrate Temp ", //CALI_TEMP_NODE,
-	"Calibrate Azim ", //CALI_AZIM_NODE,
-	"Calibrate Elev ", //CALI_ELEV_NODE,
+	"Calibrate Temp", //CALI_TEMP_NODE,
+	"Calibrate Azim", //CALI_AZIM_NODE,
+	"Calibrate Elev", //CALI_ELEV_NODE,
 
-	"US: Sample/Est ", //US_SAMPLE_PER_EST_NODE,
+	"US: Sample/Est", //US_SAMPLE_PER_EST_NODE,
 	"US: Sample Rate", //US_SAMPLE_RATE_NODE,
 
-	"IR: Sample/Est ", //IR_SAMPLE_PER_EST_NODE,
+	"IR: Sample/Est", //IR_SAMPLE_PER_EST_NODE,
 	"IR: Sample Rate", //IR_SAMPLE_RATE_NODE,
 };
 

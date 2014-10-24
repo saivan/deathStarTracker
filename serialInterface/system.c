@@ -84,7 +84,10 @@ void gotoLowISR(void)
 #pragma code
 // These functions need to be put in the correct file when other modules are integrated
 
-
+void systemReset(void)
+{
+    _asm reset _endasm
+}
 
 
 

@@ -63,6 +63,6 @@ typedef struct
 extern SystemFlags systemFlags;
 extern void showTargetStatus(void);
 extern void showTemperature(void);
-
+extern void systemReset(void);
 #endif	/* SYSTEM_H */
 

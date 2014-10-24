@@ -10,9 +10,9 @@
 
 
 /* Global Defines for ASCII Characters */
-#define INPUTSIZE    15     /* The reserved size of the string we can store */
+#define INPUTSIZE    25     /* The reserved size of the string we can store */
 #define STRINGSIZE   170
-#define MAXPOS       10
+#define MAXPOS       16
 #define BACK         'b'
 
 /* Global String Literals */
@@ -26,7 +26,7 @@ extern rom char rom msgMaxReached[];
 extern rom char rom msgSeparatorLine[];
 extern rom char rom msgDot[];
 extern rom char rom msgSlash[];
-extern rom char rom msgAck[];
+extern rom char rom msgBack[];
 extern rom char rom msgNewLine[];
 extern rom char rom msgSpaceBackSpace[];
 extern rom char rom msgBackSpace[];
@@ -35,9 +35,11 @@ extern rom char rom msgDigitError[];
 extern rom char rom msgWelcomeFactory[];
 extern rom char rom msgNumberError[];
 extern rom char rom msgArrow[];
-extern rom char rom msgBackSpace18[];
+extern rom char rom msgBigBackSpace[];
+extern rom char rom msgDeleteInFront[];
 extern char password[];
-extern char clear[];
+extern char msgClear[];
+extern char msgReset[];
 
 /* Global Variables */
 extern char userInputBuffer[INPUTSIZE];     /* This stores the received characters */
@@ -47,7 +49,6 @@ extern char rcPosition;         /* This indexes the buffer */
 extern char cuePosition;
 extern char printPosition;
 extern char rcWord[2];
-extern char inChar;
 extern char cursorPosition;
 
 extern char numberOfChildren;
@@ -62,7 +63,10 @@ extern void parseUserInput(static char *inputString);
 extern char checkPassword(static char *inputString);
 extern void showChildOptions(void);
 extern char checkClear(static char *inputString);
+extern void checkReset(static char *inputString);
 extern void clearScreen(void);
+extern char checkIfNodeNameTyped(static char *inputString);
+extern char tryAutoComplete(static char *inputString);
 #endif	/* SERIALINTERFACE_H */
 
 

@@ -28,15 +28,15 @@ rom char rom msgDeathStarTracker6[] = "        \\/        \\/         \\/       
 rom char rom msgWelcome[] = "\r\nEntered Remote Mode. Welcome!\r\n";
 rom char rom msgBye[] =
                         "\r\n\n\tLeaving Remote Mode to Local Mode... \r\n";
-rom char rom msgUser[] = "\r\n\nuser@";
-rom char rom msgFactory[] = "\r\nfactory@";
+rom char rom msgUser[] = "\ruser@";
+rom char rom msgFactory[] = "\rfactory@";
 rom char rom msgStarTracker[] = "starTracker";
 rom char rom msgEndPrompt[] = "$ ";
 rom char rom msgMaxReached[] = "\r\n\n\tYou don't need to type that much!\r\n";
 rom char rom msgSeparatorLine[] = "\r\n------------------------------\r\n";
 rom char rom msgDot[] = ". ";
 rom char rom msgSlash[] = "/";
-rom char rom msgAck[] = "ack";
+rom char rom msgBack[] = "back";
 rom char rom msgNewLine[] = "\r\n";
 rom char rom msgSpaceBackSpace[] = " \b";
 rom char rom msgBackSpace[] = "\b";
@@ -46,9 +46,12 @@ rom char rom msgDigitError[] =
                         "\r\n\t<Please Enter Single Digit Number or 'b'>\r\n";
 rom char rom msgWelcomeFactory[] = "\r\nEntered Factory Mode\r\n";
 rom char rom msgNumberError[] = "\r\n\t<Please input a valid number>\r\n";
-rom char rom msgBackSpace18[] = "\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b";
+rom char rom msgBigBackSpace[] = "\b";
+rom char rom msgDeleteInFront[] =
+                        "                \b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b";
 char password[] = "e-VADER-s";
-char clear[] = "clear";
+char msgClear[] = "clear";
+char msgReset[] = "reset";
 
 /* Global Variables */
 char userInputBuffer[INPUTSIZE] = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};     /* This stores the received characters */
@@ -58,7 +61,6 @@ char rcPosition = 0;         /* This indexes the buffer */
 char cuePosition = 0;
 char printPosition = 0;
 char rcWord[2] = {'\0', '\0'};
-char inChar = '\0';
 char cursorPosition = 0;
 
 char numberOfChildren = 0;
@@ -90,6 +92,8 @@ void welcomeRemoteMode(void)
 {
     clearScreen();
     showChildOptions();
+    printRomString(msgNewLine);
+    printRomString(msgNewLine);
     prompt();
 }
 
