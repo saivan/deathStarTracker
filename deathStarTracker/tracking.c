@@ -1,4 +1,5 @@
 
+#include "masterHeader.h"
 
 /**
  * @brief Performs tracking by embedding other functions
@@ -23,7 +24,7 @@ void trackingWrapper( void ){
 	} else if (	processIncrementor == RUN_MOTION ){
 		// Run a move step ( Move data points based on current prediction - with noise )	
 		// 
-	} else if ( processIncrementor == DETERMINE_POSITON ){
+	} else if ( processIncrementor == DETERMINE_POSITION ){
 		// Estimate new position and velocity
 			// Average across all data points (an int will do)	
 		processIncrementor = 0;
