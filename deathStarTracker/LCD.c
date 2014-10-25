@@ -129,7 +129,7 @@ void LCDWriteHere( char *string ){
     while( *string ){
         LCDInstruction( *string, CHARACTER_LCD );           ///< Write out each character to the current cursor location
         string++;                                           ///< Advance to the next character
-        Delay10TCYx(2);
+        Delay10TCYx(2);                                     ///< Add in a 20 cycle delay before sending out the next character
     }
 }
 
