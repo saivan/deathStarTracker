@@ -28,7 +28,10 @@ void highPriorityISR( void ){
         // }
     }
     /// Handling the timer
-
+    if( INTCONbits.TMR0IF ){        
+        time.updatesRequired++;         ///< Flag another update for the main
+        INTCONbits.TMR0IF = 0;          ///< Clear the interrupt flag
+    }
     /// Handing the 
 }
 
