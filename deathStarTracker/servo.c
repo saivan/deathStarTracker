@@ -1,8 +1,9 @@
 
 #include "masterHeader.h"
 
+
 /// Declaring the servo flags for opperation
-// ServoFlags servoFlags = { 0, 0 };
+volatile ServoFlags servoFlags = { 0, 0 };
 
 // The defined on and off times for the servo
 unsigned int servoOffTime;
@@ -34,7 +35,6 @@ void setupServos( void ){
     PIE1bits.CCP1IE = 1;                // Enable the capture compare interrupt
     INTCONbits.GIEH = 1;                // Enable high priority interrupts
 }
-
 
 // Calculate the CCP times for the servo controls
 void updateServoCCP( unsigned char azimuthAngle, unsigned char elevationAngle ){

@@ -22,7 +22,7 @@
 #define SERVO_CCP_MIN (CLOCK_FREQ/4000)
 // Finding the Mapping gradient and Intercept
 #define SERVO_MAPPING_GRAD (SERVO_CCP_MIN/180)
-#define SERVO_MAPPING_YINT (SERVO_CCP_MIN) - 4 ///< We subtract 4 for a single clock cycle
+#define SERVO_MAPPING_YINT (SERVO_CCP_MIN) + 4 ///< We subtract 4 for a single clock cycle
 
 
 // Flags to help us keep track of when to turn each servo on
@@ -30,7 +30,7 @@ typedef struct ServoFlags{
     unsigned char azimuthFired : 1;
     unsigned char elevationFired : 1;
 } ServoFlags;
-extern ServoFlags servoFlags;
+extern volatile ServoFlags servoFlags;
 
 // The defined on and off times for the servo
 extern unsigned int servoOffTime;

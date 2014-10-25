@@ -18,13 +18,13 @@ void LCDInitialise( void ){
     TRISD = 0x00;
     PORTD = 0x00;                                   ///< Clear PortD
     Delay10KTCYx(10);                                    ///< Wait for 15ms
-    LCDInstruction( 0x30, COMMAND_LCD );            ///< Four bit mode - 2 line - standard font
+    LCDInstruction( CLEAR_LCD, COMMAND_LCD );            ///< Four bit mode - 2 line - standard font
     Delay10KTCYx(1);                                    ///< Wait for 10ms
-    LCDInstruction( 0x30, COMMAND_LCD );            ///< Four bit mode - 2 line - standard font 
+    LCDInstruction( CLEAR_LCD, COMMAND_LCD );            ///< Four bit mode - 2 line - standard font 
     Delay10KTCYx(1);                                     ///< Wait for 1ms
-    LCDInstruction( 0x30, COMMAND_LCD );            ///< Four bit mode - 2 line - standard font 
+    LCDInstruction( CLEAR_LCD, COMMAND_LCD );            ///< Four bit mode - 2 line - standard font 
     Delay10KTCYx(1);                                     ///< Wait for 1ms
-    LCDInstruction( 0x20, COMMAND_LCD );            ///< Four bit mode - 2 line - standard font 
+    LCDInstruction( FOURBITMODE_LCD, COMMAND_LCD );            ///< Four bit mode - 2 line - standard font 
     Delay10KTCYx(1);                                     ///< Wait for 1ms
 
     // Now in Four bit mode, commands can be executed
@@ -131,50 +131,6 @@ void LCDWriteHere( char *string ){
         string++;                                           ///< Advance to the next character
         Delay10TCYx(2);                                     ///< Add in a 20 cycle delay before sending out the next character
     }
-}
-
-
-/**
- * @brief Pushes a string to the specified line on the LCD
- * @details Upon the first Call, the string 
- * 
- * @param string Pass the address of the string you want to push
- * @param char Zero indexed line to push the string to [0,1] 
- */
-void LCDPushString( char *string, unsigned char line ){
-
-    if ( currentLCDRow != line ){
-        if ( line == 0 ){
-            LCDMoveCursor( line, 0 );
-        } else if ( line == 1 ) {
-            LCDMoveCursor( line, 0 );
-        }
-        // else // Error
-
-        // Setup next time to run this function
-        return; // quit  the function
-    }
-
-    while( *string ){
-        LCDInstruction( *string, CHARACTER_LCD );
-        string++;
-    }
-    // Turn off the sending flag
-    // finished sending
-}
-
-
-/**
- * @brief Moves a string from Program to data Memory
- * @details Fetches a requested string from data memory and places it in the
- *          destination variable. Use specifically for strings, as the function
- *          terminates when it reaches a null character.
- * 
- * @param source The source of the string in program memory
- * @param destination The position to place the characters in data memory
- */
-void stringToRam( static char rom *source, static char *destination ){
-    while( (*destination++ = *source++) != '\0' ){}
 }
 
 

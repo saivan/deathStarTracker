@@ -15,11 +15,17 @@ void high_interrupt( void ){
 // }
 
 
-unsigned int m = 0;
+unsigned char m = 0;
+unsigned char n = 0;
+unsigned int seed1 = 0;
+unsigned int seed2 = 0;
+unsigned int seed3 = 0;
+
 char Hello[] = "DeathStarTracker";
 timeTag doThingo = { 0, 0, 0, 0 };
 timeTag LCDUpdate = { 0, 0, 0, 2 };
-
+timeTag ServoPositionUpdate = { 0, 0, 0, 2 };
+timeTag moveServo = { 0, 0, 0, 2 };
 
 void main( void ){
 
@@ -30,31 +36,42 @@ void main( void ){
 	/// Setup Routines go here
 	LCDInitialise();   
 	setupRealTimeTimer();
+        setupServos();
 
         LCDWriteHere( Hello );
         LCDMoveCursor(1,0);
 
 	while(1){
-            updateTime();
+        
+        updateTime();
 
+        /// Update the LCD
         if( eventDue(&LCDUpdate) ){
-			/// Display stuff to the screen
-			intToDisplay(m);
+        	/// Display stuff to the screen
+			intToDisplay((unsigned int)(m));
 			LCDWriteHere(displayChars.characters);
 			setTimeTag(15,&LCDUpdate);
 			LCDMoveCursor(1,0);
-			m++;
-	        if( m == 999){
-	             m = 0;
-	             PORTCbits.RC7 ^= 1;
-	        }
 		}
 
         /// Make the LED Blink
         if(eventDue(&doThingo)){
-        	PORTCbits.RC7 ^= 1;
-        	setTimeTag(500,&doThingo);
+        	PORTCbits.RC6 ^= 1;
+        	setTimeTag(999,&doThingo);
         }
+
+		/// Move the servos
+		if( eventDue(&moveServo) ){
+                    m+=2;
+			
+			n+=2;
+
+			updateServoCCP(m,n);
+			setTimeTag(10,&moveServo);
+		}
+
+
+
 
 		/// Update the time
 
