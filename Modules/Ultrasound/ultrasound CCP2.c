@@ -18,7 +18,7 @@
 #include <p18f452.h>
 #include "realTimer.h"
 #include "LCD.h"
-#include <ConfigRegs.h> //make sure CCP2MUX is set to RC1
+//#include <ConfigRegs.h> //make sure CCP2MUX is set to RC1
 
 
 #define     INITPIN     PORTCbits.RC2
@@ -27,21 +27,18 @@
 #define     ECHOTRIS    TRISCbits.RC1
 #define     OVERFCONST  0xFF
 
-unsigned int  TMR0StartMilli;
-unsigned int  TMR0StartSubMilli;
-unsigned int  TMR0EndMilli;
-unsigned int  TMR0EndSubMilli;
 unsigned int  milliTime;
 unsigned int  subMilliTime;
-unsigned char done;
-unsigned char i;
+unsigned char USStatus;
+unsigned char USArrayPosition;
+volatile unsigned char USOverF;
 unsigned int distance;
+unsigned int tempDistance;
 unsigned int speed;
 unsigned int distPerMs;
 unsigned int distPerSubMs;
-unsigned int capturedValue;
-timeTag echoStartTime = {0,0,0,0};
-timeTag echoEndTime = {0,0,0,0};
+unsigned int UScapturedValue[10];
+unsigned char i;
 timeTag echo = {0,0,0,0};
 unsigned char test;
 
@@ -71,29 +68,27 @@ void setup(void) {
     INTCONbits.PEIE_GIEL = 1;
 
     PIR2bits.CCP2IF = 0;
-    CCP2CON = 0x05; ///<capture mode, every rising edge
+    CCP2CON = 0x00; ///<capture mode, every rising edge
     T3CONbits.RD16 = 0; ///<set to 8 bit mode
     T3CONbits.T3CCP2 = 0;
     T3CONbits.T3CCP1 = 1; ///<timer 3 used for CCP2
-    T3CONbits.T3CKPS1 = 1;
-    T3CONbits.T3CKPS0 = 1; ///<prescaler is 1:8
-
-    T3CONbits.T3SYNC = 1;
-    T3CONbits.TMR3CS = 1; //external clock selected
-    ///<NOTE THAT TIMER 1 NEEDS TO BE THE EXTERNAL CLOCK - TMR3 CANNOT TAKE FROM TMR 0. This is currently just using timer 1's clock so the calculations are no longer correct
+    T3CONbits.T3CKPS1 = 0;
+    T3CONbits.T3CKPS0 = 0; ///<prescaler is 1:1
     T3CONbits.TMR3ON = 1;
 
-    TMR0StartMilli = 0;
-    TMR0EndMilli = 0;
-    TMR0StartSubMilli = 0;
-    TMR0EndSubMilli = 0;
+    PIR2bits.TMR3IF = 0;
+    PIE2bits.TMR3IE = 0;
+
     milliTime = 0;
     subMilliTime = 0;
     distance = 0;
     setupRealTimeTimer();
     speed = 34000;
-    distPerMs = speed/2000;
-    distPerSubMs = speed/16000;
+    distPerMs = speed/200;
+    distPerSubMs = speed/4000;
+    USOverF = 0;
+    USStatus = 0;
+    USArrayPosition = 0;
 }
 
 void main(void) {
@@ -106,75 +101,64 @@ void main(void) {
         test++;
     }
     fireEcho();
-    done = 2;
     while (1)
     {
-//        char string[] =  "bah humbug";
-//        updateTime();
-//        intToDisplay(0);
-//        LCDMoveCursor(0,0);
-//        delayMs(1);
-//        LCDWriteHere( string );
-//        delayMs(1);
-//        intToDisplay(distPerMs);
-//        LCDMoveCursor(1,0);
-//        delayMs(1);
-//        LCDWriteHere(displayChars.characters);
-        if (PIR2bits.CCP2IF && done == 0) {
-            PIR2bits.CCP2IF = 0;
-            capturedValue = CCPR2H;
-
-            ///<Here there must be some conversion from the captured value of CCPR2 to a millisecond time and submillisecond time for the current calc funvtion to work
-            ///<Or the function can be scrapped and the entire calculations can be made from this new timer
-            ///<Note that no overflow counting for tmr3 is currently in use and must be implemented
-
-            //updateTime();
-            //TMR0EndSubMilli = ReadTimer0();            ///<check submilli interval
-            //storeCurrentTime(&echoEndTime);             ///<store final time
-            done = 1;
-            echoCalc();
+        if (TMR3H > 0x07 && USStatus) {
+            CCP2CON = 0x05; ///<capture mode, every rising edge
         }
 
+        if (PIR2bits.CCP2IF && USStatus) {
+            PIR2bits.CCP2IF = 0;
+            UScapturedValue[USArrayPosition] = ReadTimer3();
+            USArrayPosition++;
+            if (USArrayPosition == 5) {
+                echoCalc();
+                Delay10KTCYx(1);
+                intToDisplay(distance);
+                LCDMoveCursor(1,0);
+                Delay10KTCYx(1);
+                LCDWriteHere(displayChars.characters);
+                }
+            USStatus = 2;
+        }
+        if (USOverF > 0) {
+            fireEcho();
+        }
     }
 }
 
 void fireEcho (void) {
     INITPIN = 0;
-    done = 0;
+    CCP2CON = 0x00;
+    USStatus = 1;
     distance = 0;
     milliTime = 0;
-    updateTime();
-    TMR0StartSubMilli = ReadTimer0(); ///this still stores correct starting times
-    storeCurrentTime(&echoStartTime);
-    storeCurrentTime(&echo);
     TMR3L = 0;
     TMR3H = 0;
-    INITPIN = 1;                    //Start transmitting echos*/                 
-    setTimeTag(2,&echo);
+    USOverF = 0;
+    PIR2bits.TMR3IF = 0;
+    PIE2bits.TMR3IE = 1;
+    INITPIN = 1;                    //Start transmitting echos*/
 }
 
 void echoCalc (void) {
-    
-//    INTCONbits.INT0IE = 0;
-    INTCON3bits.INT1IE = 0;
-    TMR0StartMilli = echoStartTime.milliseconds;
-    TMR0EndMilli = echoEndTime.milliseconds;
-    if (TMR0StartMilli > TMR0EndMilli) { ///<checking for overflows
-        TMR0EndMilli = TMR0EndMilli + 0x3E8; ///<adds 1000 to the end so calculation still works
+    i = 0;
+    distance = 0;
+    while (i < USArrayPosition) {
+        milliTime = UScapturedValue[i]/1000;
+        subMilliTime = (UScapturedValue[i] - milliTime*1000)/50;
+        if ((subMilliTime*50 + 25) < (UScapturedValue[i] - milliTime*1000)) {
+            subMilliTime = subMilliTime + 1;
+        }
+        tempDistance = milliTime*distPerMs/10 + subMilliTime*distPerSubMs/10;
+        if (tempDistance < 45 || tempDistance > 210) {
+            tempDistance = 0;
+        }
+        i++;
+        distance += tempDistance;
     }
-    milliTime = TMR0EndMilli - TMR0StartMilli; ///<gives the time taken in milliseconds
-    if (TMR0StartSubMilli >= TMR0EndSubMilli) { ///<case where the start is a higher value then the end
-        subMilliTime = 0xFF - (TMR0StartSubMilli - TMR0EndSubMilli); ///< gives the correct value without going above FF
-    }
-    else {
-        subMilliTime = TMR0EndSubMilli - TMR0StartSubMilli; ///<case where the end is a higher value then the start
-    }
-    i = subMilliTime >> 5;                ///<bit shift to store 3 most sig bits
-    distance = i*distPerSubMs;                         ///<simplification of distance from submilliseconds
-    distance = distance + milliTime*distPerMs;     ///<simplification of distance from milliseconds
-    INITPIN = 0;
-    //storeCurrentTime(echo);
-    //setTimeTag(900,echo);
+    distance = distance/USArrayPosition;
+    USArrayPosition = 0;
 }
 
 #pragma interrupt highPriorityIsr
@@ -183,6 +167,10 @@ void highPriorityIsr (void) {
         time.updatesRequired++;	///< Flag another update for the main
         INTCONbits.TMR0IF = 0; ///< Clear the interrupt flag
     }
+     if(PIR2bits.TMR3IF && PIE2bits.TMR3IE) {
+         USOverF++;
+         PIR2bits.TMR3IF = 0;
+     }
 }
 
 #pragma config OSC = HS
@@ -193,3 +181,4 @@ void highPriorityIsr (void) {
 #pragma config CP0 = OFF,CP1 = OFF,CP2 = OFF,CP3 = OFF,CPB = OFF,CPD = OFF
 #pragma config WRT0 = OFF,WRT1 = OFF,WRT2 = OFF,WRT3 = OFF,WRTB = OFF,WRTC = OFF,WRTD = OFF
 #pragma config EBTR0 = OFF,EBTR1 = OFF,EBTR2 = OFF,EBTR3 = OFF,EBTRB = OFF
+#pragma config CCP2MUX = ON
