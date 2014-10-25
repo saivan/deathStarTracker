@@ -2,12 +2,12 @@
 
 #include "masterHeader.h"
 
-//#pragma code highPriorityInterruptAddress=0x08
-//void high_interrupt( void ){
-//    if( PIR1bits.CCP1IF )
-//        WriteTimer1(0);                             // Reset the Timer
-//    _asm GOTO highPriorityISR _endasm
-//}
+#pragma code highPriorityInterruptAddress=0x08
+void high_interrupt( void ){
+  if( PIR1bits.CCP1IF )
+      WriteTimer1(0);                             // Reset the Timer
+  _asm GOTO highPriorityISR _endasm
+}
 
 // #pragma code lowPriorityInterruptAddress=0x18
 // void high_interrupt( void ){
@@ -16,23 +16,45 @@
 
 
 unsigned int m = 0;
-char Hello[] = "hello";
+char Hello[] = "DeathStarTracker";
+timeTag doThingo = { 0, 0, 0, 0 };
+timeTag LCDUpdate = { 0, 0, 0, 2 };
+
 
 void main( void ){
 
+	// Test code to test shit...
+	TRISC = 0x00;
+
+
 	/// Setup Routines go here
-	LCDInitialise();    
+	LCDInitialise();   
+	setupRealTimeTimer();
+
+        LCDWriteHere( Hello );
+        LCDMoveCursor(1,0);
 
 	while(1){
+            updateTime();
 
-		intToDisplay(m);
-		LCDWriteHere(displayChars.characters);
-		Delay10KTCYx(5);
-		LCDMoveCursor(0,0);
-		m++;
-                if( m == 999){
-                    m = 0;
-                }
+        if( eventDue(&LCDUpdate) ){
+			/// Display stuff to the screen
+			intToDisplay(m);
+			LCDWriteHere(displayChars.characters);
+			setTimeTag(15,&LCDUpdate);
+			LCDMoveCursor(1,0);
+			m++;
+	        if( m == 999){
+	             m = 0;
+	             PORTCbits.RC7 ^= 1;
+	        }
+		}
+
+        /// Make the LED Blink
+        if(eventDue(&doThingo)){
+        	PORTCbits.RC7 ^= 1;
+        	setTimeTag(500,&doThingo);
+        }
 
 		/// Update the time
 
