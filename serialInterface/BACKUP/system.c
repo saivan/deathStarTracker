@@ -17,25 +17,21 @@ void highPriorityISR(void)
 #pragma interrupt lowPriorityISR
 void lowPriorityISR(void)
 {
-    
     /* Start processing the received inputs if something was received */
     if(PIR1bits.RCIF)
     {
         /* Read the received character into a 2 byte buffer */
         userInputBuffer[rcPosition++] = RCREG;
-
     }
     else if(PIR1bits.TXIF)
     {
-        PIE1bits.RCIE = 0;
-        if(romIndicator[toPrintIndex - 1])
+        if(romramIndicator & BIT(toPrintIndex))
         {
             TXREG = *txPtrRom++;
 
             if(*txPtrRom == '\0')
             {
                 PIE1bits.TXIE = 0;
-                PIE1bits.RCIE = 1;
             }
         }
         else
@@ -45,10 +41,8 @@ void lowPriorityISR(void)
             if(*txPtrRam == '\0')
             {
                 PIE1bits.TXIE = 0;
-                PIE1bits.RCIE = 1;
             }
         }
-        
     }
     else if(INTCONbits.RBIF)
     {
@@ -79,7 +73,6 @@ void lowPriorityISR(void)
         INTCONbits.RBIF = 0;
         buttonFlags.buttonPressed = 1;
     }
-    
 }
 
 /* High Priority Interrupt Service Routine */

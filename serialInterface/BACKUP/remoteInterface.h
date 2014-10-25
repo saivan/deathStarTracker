@@ -12,7 +12,7 @@
 /* Global Defines for ASCII Characters */
 #define INPUTSIZE    25     /* The reserved size of the string we can store */
 #define STRINGSIZE   170
-#define TOPRINTSIZE  50
+#define TOPRINTSIZE  25
 #define MAXPOS       16
 #define BACK         'b'
 
@@ -48,7 +48,6 @@ extern char password[];
 extern char msgClear[];
 extern char msgReset[];
 
-extern rom char rom *numberChars[];
 /* Global Variables */
 extern char userInputBuffer[INPUTSIZE];     /* This stores the received characters */
 extern char romToRamBuffer[STRINGSIZE];
@@ -64,10 +63,9 @@ extern char * txPtrRam;
 extern rom char rom * txPtrRom;
 extern char cueIntoIndex;
 extern char toPrintIndex;
-extern union RamRomPointer toPrintStrings[TOPRINTSIZE];
-//extern char * toPrintStringsRam[TOPRINTSIZE];
-//extern rom char rom * toPrintStringsRom[TOPRINTSIZE];
-extern char romIndicator[TOPRINTSIZE];
+//extern union RamRomPointer toPrintStrings[TOPRINTSIZE];
+extern char * toPrintStringsRam[TOPRINTSIZE];
+extern char * toPrintStringsRom[TOPRINTSIZE];
 extern unsigned long romramIndicator;
 
 extern char numberOfChildren;

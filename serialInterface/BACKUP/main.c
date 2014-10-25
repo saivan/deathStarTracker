@@ -46,7 +46,6 @@ void main(void)
         
         if(!PIE1bits.TXIE)
         {
-            PIE1bits.RCIE = 1;
             if(toPrintIndex == cueIntoIndex)
             {
                 cueIntoIndex = 0;
@@ -54,25 +53,16 @@ void main(void)
             }
             if(toPrintIndex < cueIntoIndex)
             {
-                if(romIndicator[toPrintIndex])
+                if(romramIndicator & BIT(toPrintIndex))
                 {
-                    txPtrRom = toPrintStrings[toPrintIndex++].romPtr;
+                    txPtrRom = toPrintStringsRom[toPrintIndex++];
                 }
                 else
                 {
-                    txPtrRam = toPrintStrings[toPrintIndex++].ramPtr;
+                    txPtrRam = toPrintStringsRam[toPrintIndex++];
                 }
-//                if(romramIndicator & BIT(toPrintIndex))
-//                {
-//                    txPtrRom = toPrintStringsRom[toPrintIndex++];
-//                }
-//                else
-//                {
-//                    txPtrRam = toPrintStringsRam[toPrintIndex++];
-//                }
                 PIE1bits.TXIE = 1;
             }
-            PIE1bits.RCIE = 1;
         }
 
         executeCurrentNodeFunction();

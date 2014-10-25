@@ -86,13 +86,11 @@ char checkAndDealWithUpDown(void)
  */
 char echoIfOkay(char inChar)
 {
-    PIE1bits.RCIE = 0;
     /// If we have received characters that lead up to the up and down
     /// character sequence, simply keep them in the buffer and stop
     if((inChar == ESC) || (inChar == '['))
     {
         scPosition++;
-        PIE1bits.RCIE = 1;
         return 1;
     }
     else if(systemFlags.upPressed | systemFlags.downPressed)
@@ -104,7 +102,7 @@ char echoIfOkay(char inChar)
         rcWord[0] = inChar;
         printRamString(rcWord);
     }
-    PIE1bits.RCIE = 1;
+
     return 0;
 }
 
@@ -115,7 +113,7 @@ void handleReception(void)
     {
         /// Scan any un-scanned characters
         char inChar = userInputBuffer[scPosition];
-        
+
         if((inChar == '\r') && (scPosition == 0))
         {
             userInputBuffer[scPosition] = '0';
@@ -220,7 +218,7 @@ void handleReception(void)
             {
 
                 Node* currentChild = currentNode->child;
-                PIE1bits.RCIE = 0;
+
                 selectChild(inChar - '0');
 
                 printRomString(msgDot);
@@ -232,7 +230,6 @@ void handleReception(void)
             }
             else if(inChar == BACK)
             {
-                PIE1bits.RCIE = 0;
                 if(!((scPosition > 0) && (userInputBuffer[scPosition - 1] == 'i')))
                 {
                     rcPosition++;
@@ -283,32 +280,28 @@ void handleReception(void)
             rcPosition = 0;
             systemFlags.numberInput = 0;
             systemFlags.userChosen = 0;
-            
         }
-        PIE1bits.RCIE = 1;
+        
     }
 }
 
 void printRamString(static char *ramMessage)
 {
-    PIE1bits.RCIE = 0;
-    romIndicator[cueIntoIndex] = 0;
-    toPrintStrings[cueIntoIndex++].ramPtr = ramMessage;
+    romramIndicator &= !(BIT(cueIntoIndex));
+    toPrintStringsRam[cueIntoIndex++] = ramMessage;
 }
 
 void printRomString(static char rom *romMessage)
 {
-    PIE1bits.RCIE = 0;
-    romIndicator[cueIntoIndex] = 1;
-    toPrintStrings[cueIntoIndex++].romPtr = romMessage;
+    romramIndicator |= (BIT(cueIntoIndex));
+    toPrintStringsRom[cueIntoIndex++] = romMessage;
 }
 
 
 void prompt(void)
 {
     Node *followNodePath = &rootNode;
-
-    PIE1bits.RCIE = 0;
+    
     if(systemFlags.factory)
     {
         printRomString(msgFactory);
@@ -327,7 +320,6 @@ void prompt(void)
     }  
     
     printRomString(msgEndPrompt);
-    PIE1bits.RCIE = 1;
 }
 
 //char isCharDigit(static char letter)
@@ -518,7 +510,7 @@ char tryAutoComplete(static char *inputString)
             if(inputString[i] == '\r')
             {
                 prompt();
-                printRomString(nodeNames[(currentNode->child)->label]);
+                printRamString(romToRamBuffer);
                 moveToChildNode();
                 systemFlags.optionsShown = 0;
                 return 1;
@@ -563,15 +555,14 @@ void checkReset(static char *inputString)
 
 void showChildOptions(void)
 {
-        char i = 0;
+        char i = '0';
+
+        char iString[] = {i, '\0'};
 
         Node *originalOptionNode = currentNode->child;
 
-        PIE1bits.RCIE = 0;
-        
 	if (systemFlags.optionsShown)
 	{
-                PIE1bits.RCIE = 1;
 		return;
 	}
 
@@ -584,7 +575,6 @@ void showChildOptions(void)
 
 	if (currentNode->child == NULL)
 	{
-                PIE1bits.RCIE = 1;
 		return;
 	}
 
@@ -592,14 +582,13 @@ void showChildOptions(void)
                 ((currentNode->child)->label == ENTRY_SUCCESS_NODE) ||
                 ((currentNode->child)->label == HOME_NODE))
 	{
-                PIE1bits.RCIE = 1;
 		return;
         }
 
 	do
-	{   
-            printRomString(numberChars[i]);
-            i++;
+	{
+            iString[0] = i++;
+            printRamString(iString);
             printRomString(msgDot);
             printRomString(nodeNames[(currentNode->child)->label]);
             printRomString(msgNewLine);
@@ -608,8 +597,7 @@ void showChildOptions(void)
 
 	} while (currentNode->child != originalOptionNode);
 
-        numberOfChildren = i++;
+        numberOfChildren = i++ - '0';
         
 	systemFlags.optionsShown = 1;
-        PIE1bits.RCIE = 1;
 }

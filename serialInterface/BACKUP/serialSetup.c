@@ -49,13 +49,6 @@ rom char rom msgNumberError[] = "\r\n\t<Please input a valid number>\r\n";
 rom char rom msgBigBackSpace[] = "\b";
 rom char rom msgDeleteInFront[] =
                         "                \b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b";
-
-rom char rom *numberChars[] = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"};
-rom char rom clearChars1[] = "[2J";
-rom char rom clearESC[] = {ESC, NULL};
-rom char rom clearChars2[] = "[H";
-
-
 char password[] = "e-VADER-s";
 char msgClear[] = "clear";
 char msgReset[] = "reset";
@@ -75,10 +68,9 @@ char * txPtrRam = NULL;
 rom char rom * txPtrRom = NULL;
 char cueIntoIndex = 0;
 char toPrintIndex = 0;
-union RamRomPointer toPrintStrings[TOPRINTSIZE];
-//char * toPrintStringsRam[TOPRINTSIZE];
-//rom char rom * toPrintStringsRom[TOPRINTSIZE];
-char romIndicator[TOPRINTSIZE];
+//union RamRomPointer toPrintStrings[TOPRINTSIZE];
+char * toPrintStringsRam[TOPRINTSIZE];
+char * toPrintStringsRom[TOPRINTSIZE];
 unsigned long romramIndicator = NULL;
 
 char numberOfChildren = 0;
@@ -87,11 +79,15 @@ char numberOfChildren = 0;
 // http://stackoverflow.com/questions/10105666/clearing-the-terminal-screen
 
 void clearScreen(void)
-{   
-    printRomString(clearESC);
-    printRomString(clearChars1);
-    printRomString(clearESC);
-    printRomString(clearChars2);
+{
+    char str1[] = "[2J";
+    char str2[] = "[H";
+    rcWord[0] = 27;
+    
+    printRamString(rcWord);
+    printRamString(str1);
+    printRamString(rcWord);
+    printRamString(str2);
 
     /* Initialise: Start the program with a welcome message and prompt */
     printRomString(msgDeathStarTracker1);

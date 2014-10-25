@@ -32,7 +32,7 @@
 #include "localInterface.h"
 
 /* Global Defines for Useful Constants */
-#define	BIT(x)	(1 << (x))
+#define	BIT(x)			(1 << (x))
 #define FULL    0xFF
 #define ZERO    0x00
 #define NULL    0x00
