@@ -42,7 +42,6 @@ extern displayDigit displayChars;
 void LCDEventHandler( void );
 
 void LCDInitialise( void );
-void delayMs( unsigned int miliseconds );
 void intToDisplay( unsigned int displayVal );
 void stringToRam( static char rom *source, static char *destination );
 void LCDInstruction( char data , unsigned char isCommand );

@@ -6,18 +6,6 @@ unsigned char currentLCDColumn = 0;
 
 displayDigit displayChars = { 0, 0, 0, 0 };
 
-
-/** 
- * This function is used purely in the first initialisation of the LCD
- * It <b>should not be used anywhere else</b> as it stalls the program whilst
- * it is opperating. Use only if absolutely necessary or during setup. 
- */
-void delayMs( unsigned int miliseconds ){
-    unsigned int cycles = miliseconds * 500;
-    for ( ; cycles > 0 ; cycles-- ){}
-}
-
-
 /**
  * @brief Initialises the LCD module
  * @details Call this function before using any of the LCD module functions
@@ -27,28 +15,29 @@ void delayMs( unsigned int miliseconds ){
 void LCDInitialise( void ){
 
     // Setup to work in four bit mode
+    TRISD = 0x00;
     PORTD = 0x00;                                   ///< Clear PortD
-    delayMs(15);                                    ///< Wait for 15ms
+    Delay10KTCYx(10);                                    ///< Wait for 15ms
     LCDInstruction( 0x30, COMMAND_LCD );            ///< Four bit mode - 2 line - standard font
-    delayMs(10);                                    ///< Wait for 10ms
+    Delay10KTCYx(1);                                    ///< Wait for 10ms
     LCDInstruction( 0x30, COMMAND_LCD );            ///< Four bit mode - 2 line - standard font 
-    delayMs(1);                                     ///< Wait for 1ms
+    Delay10KTCYx(1);                                     ///< Wait for 1ms
     LCDInstruction( 0x30, COMMAND_LCD );            ///< Four bit mode - 2 line - standard font 
-    delayMs(1);                                     ///< Wait for 1ms
+    Delay10KTCYx(1);                                     ///< Wait for 1ms
     LCDInstruction( 0x20, COMMAND_LCD );            ///< Four bit mode - 2 line - standard font 
-    delayMs(1);                                     ///< Wait for 1ms
+    Delay10KTCYx(1);                                     ///< Wait for 1ms
 
     // Now in Four bit mode, commands can be executed
     LCDInstruction( 0x28, COMMAND_LCD );            ///< Four bit mode - 2 line - standard font
-    delayMs(1);
+    Delay10KTCYx(1);
     LCDInstruction( 0x0C, COMMAND_LCD );            ///< No cursor and no blinking
-    delayMs(1);
+    Delay10KTCYx(1);
     LCDInstruction( 0x06, COMMAND_LCD );            ///< Automatic increment when character is added
-    delayMs(1);
+    Delay10KTCYx(1);
     LCDInstruction( 0x80, COMMAND_LCD );            ///< Move to origin address of the DDRAM
-    delayMs(1);
+    Delay10KTCYx(1);
     LCDInstruction( 0x01, COMMAND_LCD );            ///< Move to first digit
-    delayMs(1);
+    Delay10KTCYx(1);
 
 }
 
@@ -140,6 +129,7 @@ void LCDWriteHere( char *string ){
     while( *string ){
         LCDInstruction( *string, CHARACTER_LCD );           ///< Write out each character to the current cursor location
         string++;                                           ///< Advance to the next character
+        Delay10TCYx(2);
     }
 }
 
