@@ -51,10 +51,8 @@ void main( void ){
         updateTime();
 
         /// Update the LCD
-        Nop();
         if( eventDue(&LCDUpdate) ){
         	/// Display stuff to the screen
-            Nop();
         	if( LCDState == 0 ){        		
         		LCDInstruction(CLEAR_LCD,COMMAND_LCD);
         		setTimeTag(5,&LCDUpdate);
@@ -70,13 +68,11 @@ void main( void ){
        			LCDMoveCursor(1,0);
                 LCDState++;
        		} else if ( LCDState == 4 ){
-       			intToDisplay(35,4);
+       			intToDisplay(m,1);
        			LCDWriteHere(displayChars.characters);
                 LCDState=0;
        		}
 		}
-
-        Nop();
 
         /// Make the LED Blink
         if(eventDue(&doThingo)){
@@ -86,10 +82,10 @@ void main( void ){
 
 		/// Move the servos
 		if( eventDue(&moveServo) ){
-           	m+=20;
+//           	m+=20;
 			n+=20;
 
-			if( m > 1800 ){
+			if( m > 900 ){
 				m = 0;
 			}
 

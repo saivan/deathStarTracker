@@ -7,6 +7,7 @@ int digitDivisors[4] = { 1000, 100, 10, 1 };     ///< Avoids an un-necessary div
 
 displayDigit displayChars = { { 0, 0, 0, 0 } , { 0, 0, 0, 0, 0, 0, 0 } };
 
+
 /**
  * @brief Initialises the LCD module
  * @details Call this function before using any of the LCD module functions
@@ -135,6 +136,7 @@ void LCDWriteHere( char *string ){
     }
 }
 
+
 /**
  * @brief Converts an int to a display string
  * @details After converting the int, it is stored in the displayChars.characters
@@ -160,7 +162,7 @@ void intToDisplay( int displayVal , unsigned char decimalPlace ){
         isNegative = TRUE;                                                          ///< If the variable is negative, note it
         displayVal = -displayVal;                                                   ///< Then make it positive for further processing
     }
-
+        
     /// Check for oversized Numbers, exit if oversized
     if( displayVal > 9999 )
         return;                                                                     ///< If the value to be displayed is too large, exit
@@ -171,26 +173,28 @@ void intToDisplay( int displayVal , unsigned char decimalPlace ){
 
     /// Itterate over the characters and find their values
     for( i = 0 ; i < 4 ; i++ ){
-
         displayChars.digit[i] = displayVal/digitDivisors[i];                        ///< Divide out the most significant byte
-        displayVal -= displayChars.digit[i]*digitDivisors[i];                       ///< Subtract off the most significant byte
-        
-        /// Cull out any leading zeros by marking the first non-zero number
-        if( displayChars.digit[i] )
-            hadNonZero = TRUE;
-    
-        if( hadNonZero ){    
-            if( charPos == decimalPlace ){
-                displayChars.characters[charPos++] = '.';                               ///< Add in the decimal Place and advance
-                displayChars.characters[charPos++] = displayChars.digit[i] + 0x30;      ///< Register the current character
-            } else {
-                displayChars.characters[charPos++] = displayChars.digit[i] + 0x30;      ///< Register the current character and advance
-            }
+        displayVal -= displayChars.digit[i]*digitDivisors[i];                       ///< Subtract off the most significant byte        
+        if( displayChars.digit[i] )                                                 ///< Cull out any leading zeros by marking the first non-zero number
+            hadNonZero = TRUE;        
+        if( hadNonZero ){                                                            ///< Add the character to the string 
+            displayChars.characters[charPos++] = displayChars.digit[i] + 0x30;  ///< Register the current character        
+        } else {
+            displayChars.characters[charPos++] = ' ';
         }
     }
 
-    /// Add in the null character at the end
-    displayChars.characters[charPos] = '\0';
+    if( decimalPlace ){
+        displayChars.characters[charPos+1] = '\0';
+        for( i = 0 ; i < decimalPlace ; i++ ){
+            displayChars.characters[charPos] = displayChars.characters[charPos-1];  ///< Move the current character over by one
+            charPos--;                                                              ///< Move back one character
+        }
+        displayChars.characters[charPos] = '.';
+    } else {
+        displayChars.characters[charPos] = '\0';
+    }
 }
+
 
 

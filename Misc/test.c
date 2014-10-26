@@ -11,7 +11,7 @@ typedef struct displayDigit{
     char characters[7];
 } displayDigit;
 
-displayDigit displayChars = { {8,9}, {2,3,41,37} };
+displayDigit displayChars = { {8,9}, {2,3,5} };
 
 int digitDivisors[4] = { 1000, 100, 10, 1 };     ///< Avoids an un-necessary division
 
@@ -58,13 +58,13 @@ void intToDisplay( int displayVal , unsigned char decimalPlace ){
     }
 
     /// Add in the null character at the end
-    displayChars.characters[charPos] = '\0';
+    displayChars.characters[charPos++] = '\0';
 }
 
 
 
 int main(void){
-	int elevationAngle = 36;
+	int elevationAngle = 2236;
 	intToDisplay(elevationAngle,3);
 	printf("%s\n", displayChars.characters );	
 
