@@ -29,24 +29,29 @@
 
 unsigned int  milliTime;
 unsigned int  subMilliTime;
-unsigned char USStatus;
+unsigned char USFireStatus;
+unsigned char USSampleSize;
 unsigned char USArrayPosition;
-volatile unsigned char USOverF;
-unsigned int distance;
+
+unsigned int USDistance;
+unsigned int USMaxRange;
+unsigned int USMinRange;
 unsigned int tempDistance;
 unsigned int speed;
 unsigned int distPerMs;
 unsigned int distPerSubMs;
 unsigned int UScapturedValue[10];
+unsigned char voidUSData;
 unsigned char i;
-timeTag echo = {0,0,0,0};
-unsigned char test;
+timeTag echoCanFire = {0,0,0,0};
+unsigned int test;
 
 
 void high_interrupt(void);
 void highPriorityIsr(void);
 void fireEcho (void);
 void echoCalc (void);
+void testUSState (void);
 void low_interrupt(void);
 
 #pragma code lowerPriorityInterruptAddress=0x0008
@@ -76,18 +81,17 @@ void setup(void) {
     T3CONbits.T3CKPS0 = 0; ///<prescaler is 1:1
     T3CONbits.TMR3ON = 1;
 
-    PIR2bits.TMR3IF = 0;
-    PIE2bits.TMR3IE = 0;
-
     milliTime = 0;
     subMilliTime = 0;
-    distance = 0;
+    USDistance = 0;                         ///<holds current value of calc distance
     setupRealTimeTimer();
-    speed = 34000;
-    distPerMs = speed/200;
-    distPerSubMs = speed/4000;
-    USOverF = 0;
-    USStatus = 0;
+    speed = 34000;                          ///<speed in cm/s
+    distPerMs = speed/200;                  ///<divides by 2 for travel, 100 to be mm/ms
+    distPerSubMs = speed/4000;              ///<divides by 20 times to get 20 subsections
+    USFireStatus = 0;                       ///<status of 0 means nothing is occuring, 1 means echo is incoming and has not been calculated yet
+    USSampleSize = 2;                       ///<starting values
+    USMinRange = 45;
+    USMaxRange = 210;
     USArrayPosition = 0;
 }
 
@@ -95,70 +99,115 @@ void main(void) {
 
     setup();
     LCDInitialise();
-    test = 1;
-    while (test != 0) //delay for device to ready
-    {
-        test++;
-    }
     fireEcho();
     while (1)
     {
-        if (TMR3H > 0x07 && USStatus) {
-            CCP2CON = 0x05; ///<capture mode, every rising edge
+        test = 0;
+        while (test < 10000) {
+            test++;             ///<delay to simulate other
         }
+        testUSState();
+    }
+}
+/**
+ * @brief Tests the current state of the US
+ * @details Call this function to test what
+ *          the state is and what needs to
+ *          be done. The If statements:
+ *      1)  Turns on the CCP2 if the noise threshold
+ *          has been passed.
+ *      2)  If an echo has not been recieved by then
+ *          it is out of range,calls calc passing 0
+ *      3)  Echo recieved, calls calc passing captured
+ *          cycle value
+ *      4)  If 80ms has passed, fire the next echo
+ */
+void testUSState (void){
+    if (TMR3H > 0x07 && USFireStatus) {  ///< change to 0x0D
+        CCP2CON = 0x05; ///<capture mode, every rising edge
+    }
+    if (TMR3H > 0x3B && USFireStatus) {  ///<change to 0x58
+        UScapturedValue[USArrayPosition] = 0x00;
+        echoCalc();
+        CCP2CON = 0x00;                         ///<turn of ccp since no value is coming
+        USFireStatus = 0;                       ///<reset status
+    }
 
-        if (PIR2bits.CCP2IF && USStatus) {
-            PIR2bits.CCP2IF = 0;
-            UScapturedValue[USArrayPosition] = ReadTimer3();
-            USArrayPosition++;
-            if (USArrayPosition == 5) {
-                echoCalc();
-                Delay10KTCYx(1);
-                intToDisplay(distance);
-                LCDMoveCursor(1,0);
-                Delay10KTCYx(1);
-                LCDWriteHere(displayChars.characters);
-                }
-            USStatus = 2;
-        }
-        if (USOverF > 0) {
-            fireEcho();
-        }
+    if (PIR2bits.CCP2IF && USFireStatus) {
+        PIR2bits.CCP2IF = 0;
+        UScapturedValue[USArrayPosition] = ReadTimer3();    ///<store captured time into array
+        echoCalc();
+
+        Delay10KTCYx(1);                                    //display block, remove when needed
+        intToDisplay(USDistance);
+        LCDMoveCursor(1,0);
+        Delay10KTCYx(1);
+        LCDWriteHere(displayChars.characters);
+
+        CCP2CON = 0x00;
+        USFireStatus = 0;
+    }
+
+    if (eventDue(&echoCanFire)){                            ///<this flag must be true for the US to fire again
+        fireEcho(); //this currently fires the echo every 80ms
     }
 }
 
+/**
+ * @brief Call this function to start an echo
+ *        transmission.
+ * @details Clears timer 3, sets initpin high
+ *          and sets the time tag for next echo
+ *          to be in 80 ms
+ */
 void fireEcho (void) {
     INITPIN = 0;
-    CCP2CON = 0x00;
-    USStatus = 1;
-    distance = 0;
-    milliTime = 0;
+    PIR2bits.CCP2IF = 0;
+    USFireStatus = 1;               ///<change status to be waiting for echos
+    updateTime();
+    storeCurrentTime(&echoCanFire);
+    setTimeTag(&echoCanFire,80);    ///<time tag for when next echo can be sent
     TMR3L = 0;
     TMR3H = 0;
-    USOverF = 0;
-    PIR2bits.TMR3IF = 0;
-    PIE2bits.TMR3IE = 1;
-    INITPIN = 1;                    //Start transmitting echos*/
+    INITPIN = 1;                    ///<Start transmitting echos*/
 }
 
+/**
+ * @brief This function deals with data processing from US input
+ * @details it updates USDistance to contain the latest moving average
+ *          calculations. Any value that is above or below the min/max range
+ *          is treated as void,and given a value of 0.
+ *
+ */
 void echoCalc (void) {
-    i = 0;
-    distance = 0;
-    while (i < USArrayPosition) {
-        milliTime = UScapturedValue[i]/1000;
-        subMilliTime = (UScapturedValue[i] - milliTime*1000)/50;
-        if ((subMilliTime*50 + 25) < (UScapturedValue[i] - milliTime*1000)) {
+    USDistance = 0;
+    voidUSData = 0;
+    if (UScapturedValue[USArrayPosition] != 0) {
+        milliTime = UScapturedValue[USArrayPosition]/1000; //divide by 2500
+        subMilliTime = (UScapturedValue[USArrayPosition] - milliTime*1000)/50; //multiply by 2500
+        if ((subMilliTime*50 + 25) < (UScapturedValue[USArrayPosition] - milliTime*1000)) { //multiply by 2500
             subMilliTime = subMilliTime + 1;
         }
-        tempDistance = milliTime*distPerMs/10 + subMilliTime*distPerSubMs/10;
-        if (tempDistance < 45 || tempDistance > 210) {
-            tempDistance = 0;
-        }
-        i++;
-        distance += tempDistance;
+        UScapturedValue[USArrayPosition] = milliTime*distPerMs/10 + subMilliTime*distPerSubMs/10;
     }
-    distance = distance/USArrayPosition;
-    USArrayPosition = 0;
+    i = 0;
+    while (i < USSampleSize) {  ///<checks for void values
+        tempDistance = UScapturedValue[i];
+        if (tempDistance < USMinRange || tempDistance > USMaxRange) {
+            tempDistance = 0;
+            voidUSData++;
+        }
+        USDistance += tempDistance;
+        i++;
+    }
+
+    if (voidUSData != USSampleSize) {
+        USDistance = USDistance/(USSampleSize-voidUSData); ///<average distance values
+    }
+    USArrayPosition++;
+    if (USArrayPosition >= USSampleSize) {
+        USArrayPosition = 0; ///<reset poisition if over buffer
+    }
 }
 
 #pragma interrupt highPriorityIsr
@@ -167,10 +216,6 @@ void highPriorityIsr (void) {
         time.updatesRequired++;	///< Flag another update for the main
         INTCONbits.TMR0IF = 0; ///< Clear the interrupt flag
     }
-     if(PIR2bits.TMR3IF && PIE2bits.TMR3IE) {
-         USOverF++;
-         PIR2bits.TMR3IF = 0;
-     }
 }
 
 #pragma config OSC = HS
