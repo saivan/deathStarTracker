@@ -30,8 +30,7 @@ timeTag moveServo = { 0, 0, 0, 2 };
 void main( void ){
 
 
-	// Test code to test shit...
-	TRISC = 0x00;
+
 
 
 	/// Setup Routines go here
@@ -42,6 +41,9 @@ void main( void ){
         LCDWriteHere( Hello );
         LCDMoveCursor(1,0);
 
+        // Test code to test shit...
+	TRISC = 0x00;
+        
 	while(1){
         
         updateTime();
@@ -49,27 +51,31 @@ void main( void ){
         /// Update the LCD
         if( eventDue(&LCDUpdate) ){
         	/// Display stuff to the screen
-        	if( LCDState == 0 ){
-        		intToDisplay((unsigned int)(m));	
-        		
-        		setTimeTag(15,&LCDUpdate);
+        	if( LCDState == 0 ){        		
+        		LCDInstruction(CLEAR_LCD,COMMAND_LCD);
+        		setTimeTag(5,&LCDUpdate);
+        		LCDState++;
         	} else if ( LCDState == 1 ){
-        		LCDMoveCursor(1,0);
-        	} else if ( LCDState == 2 ){
-
-        	}
-
-
-			
-			LCDWriteHere(displayChars.characters);
-			
-			
-		}
+       			LCDMoveCursor(0,0);
+       			setTimeTag(2,&LCDUpdate);
+                        LCDState++;
+       		} else if ( LCDState == 2 ){
+       			LCDWriteHere( Hello );
+                        LCDState++;
+       		} else if ( LCDState == 3 ){
+       			LCDMoveCursor(1,0);
+                        LCDState++;
+       		} else if ( LCDState == 4 ){
+       			intToDisplay((unsigned int)(m));
+       			LCDWriteHere(displayChars.characters);
+                        LCDState=0;
+       		}
+	}
 
         /// Make the LED Blink
         if(eventDue(&doThingo)){
         	PORTCbits.RC6 ^= 1;
-        	setTimeTag(999,&doThingo);
+        	setTimeTag(500,&doThingo);
         }
 
 		/// Move the servos
@@ -86,7 +92,7 @@ void main( void ){
 			}
 
 			updateCCPServoAngle(m,n);
-			setTimeTag(10,&moveServo);
+			setTimeTag(50,&moveServo);
 		}
 
 

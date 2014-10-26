@@ -22,7 +22,7 @@
 #define SERVO_CCP_MIN (CLOCK_FREQ/4000)
 // Finding the Mapping gradient and Intercept
 #define SERVO_MAPPING_GRAD (SERVO_CCP_MIN/180)
-#define SERVO_MAPPING_YINT (SERVO_CCP_MIN) + 4 ///< We subtract 4 for a single clock cycle
+#define SERVO_MAPPING_YINT (SERVO_CCP_MIN) + 4 ///< We add four to correct the servo frequency
 
 
 // Flags to help us keep track of when to turn each servo on
