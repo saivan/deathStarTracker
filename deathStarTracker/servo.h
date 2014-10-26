@@ -45,7 +45,7 @@ extern unsigned char elevationMax;
 
 
 
-void updateServoCCP( unsigned char azimuthAngle, unsigned char elevationAngle );
+void updateCCPServoAngle( unsigned char azimuthAngle, unsigned char elevationAngle );
 void setupServos( void );
 
 #endif	/* SERVOS_H */

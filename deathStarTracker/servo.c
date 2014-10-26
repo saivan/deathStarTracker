@@ -25,7 +25,7 @@ void setupServos( void ){
     T1CONbits.RD16 = 1;                 // Latch in 16 bit values for CCPR1L and CCPR1H
     T1CONbits.TMR1ON = 1;               // Turn on timer 1
     // Setup the initial Servo position
-    updateServoCCP( 90, 90 );
+    updateCCPServoAngle( 180, 180 );
     // Setup the capture Compare module
     CCPR1 = servoOffTime;               // Write the initial delay
     CCP1CONbits.CCP1M = 0b1010;         // Setup the compare interrupt
@@ -37,7 +37,7 @@ void setupServos( void ){
 }
 
 // Calculate the CCP times for the servo controls
-void updateServoCCP( unsigned char azimuthAngle, unsigned char elevationAngle ){
+void updateCCPServoAngle( unsigned char azimuthAngle, unsigned char elevationAngle ){
     // Stop any entries greater than the defined limits
     if ( ( azimuthAngle > azimuthMax ) || ( elevationAngle > elevationMax ) ||
             ( azimuthAngle < azimuthMin) || ( elevationAngle < elevationMin) ){

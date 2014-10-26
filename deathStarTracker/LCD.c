@@ -97,6 +97,7 @@ void LCDInstruction( char data , unsigned char isCommand ){
 }
 
 
+
 /**
  * @brief Moves the write position on the display
  * @details This function moves the write head to a new position so that
@@ -132,7 +133,6 @@ void LCDWriteHere( char *string ){
         Delay10TCYx(2);                                     ///< Add in a 20 cycle delay before sending out the next character
     }
 }
-
 
 /**
  * @brief Converts an int to a display string

@@ -17,9 +17,9 @@ void high_interrupt( void ){
 
 unsigned char m = 0;
 unsigned char n = 0;
-unsigned int seed1 = 0;
-unsigned int seed2 = 0;
-unsigned int seed3 = 0;
+
+static char LCDState = 0;
+
 
 char Hello[] = "DeathStarTracker";
 timeTag doThingo = { 0, 0, 0, 0 };
@@ -28,6 +28,7 @@ timeTag ServoPositionUpdate = { 0, 0, 0, 2 };
 timeTag moveServo = { 0, 0, 0, 2 };
 
 void main( void ){
+
 
 	// Test code to test shit...
 	TRISC = 0x00;
@@ -48,10 +49,21 @@ void main( void ){
         /// Update the LCD
         if( eventDue(&LCDUpdate) ){
         	/// Display stuff to the screen
-			intToDisplay((unsigned int)(m));
+        	if( LCDState == 0 ){
+        		intToDisplay((unsigned int)(m));	
+        		
+        		setTimeTag(15,&LCDUpdate);
+        	} else if ( LCDState == 1 ){
+        		LCDMoveCursor(1,0);
+        	} else if ( LCDState == 2 ){
+
+        	}
+
+
+			
 			LCDWriteHere(displayChars.characters);
-			setTimeTag(15,&LCDUpdate);
-			LCDMoveCursor(1,0);
+			
+			
 		}
 
         /// Make the LED Blink
@@ -62,11 +74,18 @@ void main( void ){
 
 		/// Move the servos
 		if( eventDue(&moveServo) ){
-                    m+=2;
-			
+           	m+=2;
 			n+=2;
 
-			updateServoCCP(m,n);
+			if( m > 180 ){
+				m = 0;
+			}
+
+			if( n > 180 ){
+				n = 0;
+			}
+
+			updateCCPServoAngle(m,n);
 			setTimeTag(10,&moveServo);
 		}
 
