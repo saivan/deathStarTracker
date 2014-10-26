@@ -5,8 +5,6 @@
  * Created on October 12, 2014, 4:59 PM
  */
 
- ///// DECLARE STUFF IN INTERRUPTS VOLATILEEEEEE
-
 #ifndef SERVOS_H
 #define	SERVOS_H
 
@@ -20,8 +18,7 @@
 #define SERVO_CCP_PERIOD (CLOCK_FREQ/200)
 #define SERVO_CCP_MAX (CLOCK_FREQ/2000)
 #define SERVO_CCP_MIN (CLOCK_FREQ/4000)
-// Finding the Mapping gradient and Intercept
-#define SERVO_MAPPING_GRAD (SERVO_CCP_MIN/180)
+// Finding the Mapping Intercept
 #define SERVO_MAPPING_YINT (SERVO_CCP_MIN) + 4 ///< We add four to correct the servo frequency
 
 
@@ -32,20 +29,22 @@ typedef struct ServoFlags{
 } ServoFlags;
 extern volatile ServoFlags servoFlags;
 
+/// Store the current azimuth and elevation
+extern unsigned int currentAzimuth;
+extern unsigned int currentElevation;
+
 // The defined on and off times for the servo
 extern unsigned int servoOffTime;
 extern unsigned int elevationServoOnTime;
 extern unsigned int azimuthServoOnTime;
 
 // Set up the angular limits
-extern unsigned char azimuthMin;
-extern unsigned char azimuthMax;
-extern unsigned char elevationMin;
-extern unsigned char elevationMax;
+extern unsigned int azimuthMin;
+extern unsigned int azimuthMax;
+extern unsigned int elevationMin;
+extern unsigned int elevationMax;
 
-
-
-void updateCCPServoAngle( unsigned char azimuthAngle, unsigned char elevationAngle );
+void updateCCPServoAngle( unsigned int azimuthAngle, unsigned int elevationAngle );
 void setupServos( void );
 
 #endif	/* SERVOS_H */

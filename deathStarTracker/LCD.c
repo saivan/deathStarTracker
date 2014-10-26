@@ -3,8 +3,9 @@
 
 unsigned char currentLCDRow = 0;
 unsigned char currentLCDColumn = 0;
+int digitDivisors[4] = { 1000, 100, 10, 1 };     ///< Avoids an un-necessary division
 
-displayDigit displayChars = { 0, 0, 0, 0 };
+displayDigit displayChars = { { 0, 0, 0, 0 } , { 0, 0, 0, 0, 0, 0, 0 } };
 
 /**
  * @brief Initialises the LCD module
@@ -58,6 +59,7 @@ void LCDOnOff( unsigned char turnOn ){
     }
 }
 
+
 /**
  * @brief Send an instruction to the LCD
  * @details The instruction can either be a command or 
@@ -97,7 +99,6 @@ void LCDInstruction( char data , unsigned char isCommand ){
 }
 
 
-
 /**
  * @brief Moves the write position on the display
  * @details This function moves the write head to a new position so that
@@ -107,8 +108,8 @@ void LCDInstruction( char data , unsigned char isCommand ){
  *          the first line is accessed by line = 0 and the first character by
  *          character = 0. Remember to <b> delay for 1ms </b> after calling.           
  * 
- * @param line [0,1] - The line to move to
- * @param character [0,15] - The pixel to move to
+ * @param line [0,1] - The zero indexed row to move to
+ * @param character [0,15] - The zero indexed column to move to
  */
 void LCDMoveCursor( unsigned char line, unsigned char character ){
     currentLCDRow = line;                                                ///< Keep track of the current line
@@ -139,25 +140,57 @@ void LCDWriteHere( char *string ){
  * @details After converting the int, it is stored in the displayChars.characters
  *          variable as a string. This function <b>does not pipe the string to the 
  *          LCD</b>, it merely moves the result to the 
+ * @todo ommiting the leading zeros is currently buggy. Works for four digit numbers
  * 
- * @param displayVal Is the unsigned int that you want displayed to the screen,
+ * @param displayVal Is the int that you want displayed to the screen,
  *                   cast the variable to an int if you need any other type first.
+ * @param decimalPlace [0-4] The digit from the right to display the decimal place.  
+ *                   Make it 4 if you want no decimal place. Ie decimalPlace = 3 for
+ *                   displayVal = 2341 will produce 234.1 etc...
  */
-void intToDisplay( unsigned int displayVal ){
-    if( displayVal > 999 )
-        return;                                             ///< If the value to be displayed is to large, exit
-    /// Working on the most significant byte
-    displayChars.upper = displayVal/100;                    ///< Get the highest byte
-    displayVal -= (unsigned int)(displayChars.upper)*100;   ///< Subtract the highest byte from the input
-    /// Working on the middle byte
-    displayChars.middle = displayVal/10;                    ///< Get the middle byte
-    displayVal -= (unsigned int)(displayChars.middle)*10;   ///< Subtract the middle byte from the input
-    /// Working on the low byte
-    displayChars.lower = displayVal;                        ///< We have the value left alone
+void intToDisplay( int displayVal , unsigned char decimalPlace ){
+    unsigned char isNegative = 0;
+    unsigned char hadNonZero = 0;
+    int multiplier = 1000;
+    int i;                                                                          ///< Iterrating over the digits
+    int charPos = 0;                                                                ///< Iterrating over the characters
 
-    /// Now we copy the characters into the string and add 0x30 to convert them to ascii values
-    displayChars.characters[0] = displayChars.upper + 0x30;
-    displayChars.characters[1] = displayChars.middle + 0x30;
-    displayChars.characters[2] = displayChars.lower + 0x30;
+    /// Check for negative numbers
+    if( displayVal < 0 ){
+        isNegative = TRUE;                                                          ///< If the variable is negative, note it
+        displayVal = -displayVal;                                                   ///< Then make it positive for further processing
+    }
+
+    /// Check for oversized Numbers, exit if oversized
+    if( displayVal > 9999 )
+        return;                                                                     ///< If the value to be displayed is too large, exit
+
+    /// If the number was negative, add the negative sign
+    if( isNegative )
+        displayChars.characters[charPos++] = '-';
+
+    /// Itterate over the characters and find their values
+    for( i = 0 ; i < 4 ; i++ ){
+
+        displayChars.digit[i] = displayVal/digitDivisors[i];                        ///< Divide out the most significant byte
+        displayVal -= displayChars.digit[i]*digitDivisors[i];                       ///< Subtract off the most significant byte
+        
+        /// Cull out any leading zeros by marking the first non-zero number
+        if( displayChars.digit[i] )
+            hadNonZero = TRUE;
+    
+        if( hadNonZero ){    
+            if( charPos == decimalPlace ){
+                displayChars.characters[charPos++] = '.';                               ///< Add in the decimal Place and advance
+                displayChars.characters[charPos++] = displayChars.digit[i] + 0x30;      ///< Register the current character
+            } else {
+                displayChars.characters[charPos++] = displayChars.digit[i] + 0x30;      ///< Register the current character and advance
+            }
+        }
+    }
+
+    /// Add in the null character at the end
+    displayChars.characters[charPos] = '\0';
 }
+
 

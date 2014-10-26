@@ -15,8 +15,8 @@ void high_interrupt( void ){
 // }
 
 
-unsigned char m = 0;
-unsigned char n = 0;
+int m = 0;
+int n = 0;
 
 static char LCDState = 0;
 
@@ -35,13 +35,15 @@ void main( void ){
 
 	/// Setup Routines go here
 	LCDInitialise();   
+	USSetup();
 	setupRealTimeTimer();
-        setupServos();
+    setupServos();
 
-        LCDWriteHere( Hello );
-        LCDMoveCursor(1,0);
 
-        // Test code to test shit...
+    LCDWriteHere( Hello );
+    LCDMoveCursor(1,0);
+
+    // Test code to test shit...
 	TRISC = 0x00;
         
 	while(1){
@@ -49,8 +51,10 @@ void main( void ){
         updateTime();
 
         /// Update the LCD
+        Nop();
         if( eventDue(&LCDUpdate) ){
         	/// Display stuff to the screen
+            Nop();
         	if( LCDState == 0 ){        		
         		LCDInstruction(CLEAR_LCD,COMMAND_LCD);
         		setTimeTag(5,&LCDUpdate);
@@ -58,19 +62,21 @@ void main( void ){
         	} else if ( LCDState == 1 ){
        			LCDMoveCursor(0,0);
        			setTimeTag(2,&LCDUpdate);
-                        LCDState++;
+                LCDState++;
        		} else if ( LCDState == 2 ){
        			LCDWriteHere( Hello );
-                        LCDState++;
+                LCDState++;
        		} else if ( LCDState == 3 ){
        			LCDMoveCursor(1,0);
-                        LCDState++;
+                LCDState++;
        		} else if ( LCDState == 4 ){
-       			intToDisplay((unsigned int)(m));
+       			intToDisplay(35,4);
        			LCDWriteHere(displayChars.characters);
-                        LCDState=0;
+                LCDState=0;
        		}
-	}
+		}
+
+        Nop();
 
         /// Make the LED Blink
         if(eventDue(&doThingo)){
@@ -80,14 +86,14 @@ void main( void ){
 
 		/// Move the servos
 		if( eventDue(&moveServo) ){
-           	m+=2;
-			n+=2;
+           	m+=20;
+			n+=20;
 
-			if( m > 180 ){
+			if( m > 1800 ){
 				m = 0;
 			}
 
-			if( n > 180 ){
+			if( n > 1800 ){
 				n = 0;
 			}
 

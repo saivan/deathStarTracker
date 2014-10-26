@@ -28,8 +28,6 @@ timeTag echoCanFire = {0,0,0,0};
 USFlagType USFlags = {0, 0};
 USValueType USValues = {0,0,0,0,0};
 
-
-
 /**
  * @brief [sets up the US]
  * @details [configures timer 3 and sets initial status of
@@ -51,8 +49,7 @@ void USSetup(void) {
     T3CONbits.T3CKPS0 = 0; ///<prescaler is 1:1
     T3CONbits.TMR3ON = 1;
 
-    USValues.distance = 0;                         ///<holds current value of calc distance
-    setupRealTimeTimer();
+    USValues.distance = 0;                         ///<holds current value of calc distance    
     speedOfSound = 34000;                          ///<speed in cm/s
     distPerMs = speedOfSound/200;                  ///<divides by 2 for travel, 100 to be mm/ms
     distPerSubMs = speedOfSound/4000;              ///<divides by 20 times to get 20 subsections
@@ -116,10 +113,10 @@ void setUSFrequency (unsigned char frequency){
  *          cycle value
  */
 void testUSState (void){
-    if (TMR3H > 0x07 && USFlags.fireStatus) {  ///< change to 0x0D
+    if (TMR3H > 0x0D && USFlags.fireStatus) {  ///< change to 0x0D
         CCP2CON = 0x05; ///<capture mode, every rising edge
     }
-    if (TMR3H > 0x3B && USFlags.fireStatus) {  ///<change to 0x58
+    if (TMR3H > 0x58 && USFlags.fireStatus) {  ///<change to 0x58
         UScapturedValue[USArrayPosition] = 0x00;
         echoCalc();
         CCP2CON = 0x00;                         ///<turn of ccp since no value is coming
@@ -148,7 +145,7 @@ void fireEcho (void) {
     USFlags.fireStatus = 1;               ///<change status to be waiting for echos
     updateTime();
     storeCurrentTime(&echoCanFire);
-    setTimeTag(&echoCanFire,USValues.freq_ms);    ///<time tag for when next echo can be sent
+    setTimeTag(USValues.freq_ms,&echoCanFire);    ///<time tag for when next echo can be sent
     TMR3L = 0;
     TMR3H = 0;
     INITPIN = 1;                    ///<Start transmitting echos*/
@@ -170,9 +167,9 @@ void echoCalc (void) {
     USValues.distance = 0;
     voidUSData = 0;
     if (UScapturedValue[USArrayPosition] != 0) {
-        milliTime = UScapturedValue[USArrayPosition]/1000;                      ///<divides into millisec           //divide by 2500
-        subMilliTime = (UScapturedValue[USArrayPosition] - milliTime*1000)/50;  ///<divides into millisec/20        //multiply by 2500
-        if ((subMilliTime*50 + 25) < (UScapturedValue[USArrayPosition] - milliTime*1000)) {                         //multiply by 2500
+        milliTime = UScapturedValue[USArrayPosition]/2500;                      ///<divides into millisec           //divide by 2500
+        subMilliTime = (UScapturedValue[USArrayPosition] - milliTime*2500)/50;  ///<divides into millisec/20        //multiply by 2500
+        if ((subMilliTime*50 + 25) < (UScapturedValue[USArrayPosition] - milliTime*2500)) {                         //multiply by 2500
             subMilliTime = subMilliTime + 1;
         }
         UScapturedValue[USArrayPosition] = milliTime*distPerMs/10 + subMilliTime*distPerSubMs/10;   ///<gives a distance in cm (remove the /10 for mm)

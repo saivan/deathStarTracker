@@ -29,12 +29,11 @@
 
 extern unsigned char currentLCDRow;
 extern unsigned char currentLCDColumn;
+extern int digitDivisors[4];
 
 typedef struct displayDigit{
-    unsigned char upper;
-    unsigned char middle;
-    unsigned char lower;
-    char characters[4];
+    int digit[4];
+    char characters[7];
 } displayDigit;
 
 extern displayDigit displayChars;
@@ -42,7 +41,7 @@ extern displayDigit displayChars;
 extern void LCDEventHandler( void );
 
 extern void LCDInitialise( void );
-extern void intToDisplay( unsigned int displayVal );
+extern void intToDisplay( int displayVal , unsigned char decimalPlace );
 extern void LCDInstruction( char data , unsigned char isCommand );
 extern void LCDMoveCursor( unsigned char line, unsigned char character );
 extern void LCDWriteHere( char *string );

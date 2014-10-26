@@ -88,6 +88,15 @@ void setTimeTag( unsigned int msToNextEvent, timeTag *eventTag ){
 }
 
 
+void storeCurrentTime( timeTag *eventTag ){
+	/// Copy all of the current time information to the eventTag
+	eventTag->milliseconds = time.milliseconds;	
+	eventTag->seconds = time.seconds;
+	eventTag->minutes = time.minutes;
+	eventTag->hours = time.hours;
+}
+
+
 /**
  * @brief Checks if the time for an event has been reached 
  * @param eventTag The event to check, should use a timeTag
