@@ -15,6 +15,7 @@
 #include <delays.h>
 
 #include "realTimer.h"
+#include "ultrasound.h"
 #include "servo.h"
 #include "LCD.h"
 //#include "tracking.h"

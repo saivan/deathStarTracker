@@ -114,18 +114,3 @@ void main( void ){
  #pragma config WRT0 = OFF,WRT1 = OFF,WRT2 = OFF,WRT3 = OFF,WRTB = OFF,WRTC = OFF,WRTD = OFF
  #pragma config EBTR0 = OFF,EBTR1 = OFF,EBTR2 = OFF,EBTR3 = OFF,EBTRB = OFF
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
