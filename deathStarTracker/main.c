@@ -15,46 +15,90 @@ void high_interrupt( void ){
 // }
 
 
-unsigned int m = 0;
+int m = 0;
+int n = 0;
+
+static char LCDState = 0;
+
+
 char Hello[] = "DeathStarTracker";
 timeTag doThingo = { 0, 0, 0, 0 };
 timeTag LCDUpdate = { 0, 0, 0, 2 };
-
+timeTag ServoPositionUpdate = { 0, 0, 0, 2 };
+timeTag moveServo = { 0, 0, 0, 2 };
 
 void main( void ){
 
-	// Test code to test shit...
-	TRISC = 0x00;
+
+
 
 
 	/// Setup Routines go here
 	LCDInitialise();   
+	USSetup();
 	setupRealTimeTimer();
+    setupServos();
 
-        LCDWriteHere( Hello );
-        LCDMoveCursor(1,0);
 
+    LCDWriteHere( Hello );
+    LCDMoveCursor(1,0);
+
+    // Test code to test shit...
+	TRISC = 0x00;
+        
 	while(1){
-            updateTime();
+        
+        updateTime();
 
+        /// Update the LCD
         if( eventDue(&LCDUpdate) ){
-			/// Display stuff to the screen
-			intToDisplay(m);
-			LCDWriteHere(displayChars.characters);
-			setTimeTag(15,&LCDUpdate);
-			LCDMoveCursor(1,0);
-			m++;
-	        if( m == 999){
-	             m = 0;
-	             PORTCbits.RC7 ^= 1;
-	        }
+        	/// Display stuff to the screen
+        	if( LCDState == 0 ){        		
+        		LCDInstruction(CLEAR_LCD,COMMAND_LCD);
+        		setTimeTag(5,&LCDUpdate);
+        		LCDState++;
+        	} else if ( LCDState == 1 ){
+       			LCDMoveCursor(0,0);
+       			setTimeTag(2,&LCDUpdate);
+                LCDState++;
+       		} else if ( LCDState == 2 ){
+       			LCDWriteHere( Hello );
+                LCDState++;
+       		} else if ( LCDState == 3 ){
+       			LCDMoveCursor(1,0);
+                LCDState++;
+       		} else if ( LCDState == 4 ){
+       			intToDisplay(m,1);
+       			LCDWriteHere(displayChars.characters);
+                LCDState=0;
+       		}
 		}
 
         /// Make the LED Blink
         if(eventDue(&doThingo)){
-        	PORTCbits.RC7 ^= 1;
+        	PORTCbits.RC6 ^= 1;
         	setTimeTag(500,&doThingo);
         }
+
+		/// Move the servos
+		if( eventDue(&moveServo) ){
+//           	m+=20;
+			n+=20;
+
+			if( m > 900 ){
+				m = 0;
+			}
+
+			if( n > 1800 ){
+				n = 0;
+			}
+
+			updateCCPServoAngle(m,n);
+			setTimeTag(50,&moveServo);
+		}
+
+
+
 
 		/// Update the time
 
@@ -77,19 +121,4 @@ void main( void ){
  #pragma config CP0  = OFF,CP1 = OFF,CP2 = OFF,CP3 = OFF,CPB = OFF,CPD = OFF
  #pragma config WRT0 = OFF,WRT1 = OFF,WRT2 = OFF,WRT3 = OFF,WRTB = OFF,WRTC = OFF,WRTD = OFF
  #pragma config EBTR0 = OFF,EBTR1 = OFF,EBTR2 = OFF,EBTR3 = OFF,EBTRB = OFF
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

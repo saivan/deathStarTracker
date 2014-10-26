@@ -37,6 +37,7 @@ typedef struct timeTag {
 void setupRealTimeTimer( void );
 void updateTime( void );
 void setTimeTag( unsigned int msToNextEvent , timeTag *eventTag );
+void storeCurrentTime( timeTag *eventTag );
 char eventDue( timeTag *eventTag );
 
 /// Declare the time for the system to use

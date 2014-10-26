@@ -27,18 +27,17 @@
 #define     ECHOTRIS    TRISCbits.RC1
 #define     OVERFCONST  0xFF
 
-unsigned int  milliTime;
-unsigned int  subMilliTime;
-unsigned char USStatus;
-unsigned char USArrayPosition;
-volatile unsigned char USOverF;
-unsigned int distance;
-unsigned int tempDistance;
-unsigned int speed;
-unsigned int distPerMs;
-unsigned int distPerSubMs;
+unsigned int  milliTime = 0;
+unsigned int  subMilliTime = 0;
+unsigned char USStatus = 0;
+unsigned char USArrayPosition = 0;
+volatile unsigned char USOverF = 0;
+unsigned int distance = 0;
+unsigned int tempDistance = 0;
+unsigned int speed = 0;
+unsigned int distPerMs = 0;
+unsigned int distPerSubMs = 0;
 unsigned int UScapturedValue[10];
-unsigned char i;
 timeTag echo = {0,0,0,0};
 unsigned char test;
 
@@ -142,7 +141,7 @@ void fireEcho (void) {
 }
 
 void echoCalc (void) {
-    i = 0;
+    unsigned char i = 0;
     distance = 0;
     while (i < USArrayPosition) {
         milliTime = UScapturedValue[i]/1000;

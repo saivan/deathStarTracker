@@ -16,6 +16,7 @@ void trackingWrapper( void ){
 		// Average of eight IR measurements ( SHORT TIME )
 		// Average of two US measurements ( LONG TIME )
 		processIncrementor++;				///< On the next loop, we run the next process
+		return;
 	} else if ( processIncrementor == RUN_SENSE ){
 		// Run a sense step 
 			// Rank Measurements from 1-5 based on measurement agreement
