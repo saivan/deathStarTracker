@@ -15,8 +15,8 @@ void high_interrupt( void ){
 // }
 
 
-int m = 0;
-int n = 0;
+int m = 1800;
+int n = 1800;
 
 static char LCDState = 0;
 
@@ -27,19 +27,20 @@ timeTag LCDUpdate = { 0, 0, 0, 2 };
 timeTag ServoPositionUpdate = { 0, 0, 0, 2 };
 timeTag moveServo = { 0, 0, 0, 2 };
 
+
+void setup( void ){
+	/// Setup Routines go here
+	setupRealTimeTimer();
+	LCDInitialise();   
+    setupServos();
+	USSetup();
+}
+
+
 void main( void ){
 
 
-
-
-
-	/// Setup Routines go here
-	LCDInitialise();   
-	USSetup();
-	setupRealTimeTimer();
-    setupServos();
-
-
+	setup();
     LCDWriteHere( Hello );
     LCDMoveCursor(1,0);
 
@@ -54,24 +55,27 @@ void main( void ){
         if( eventDue(&LCDUpdate) ){
         	/// Display stuff to the screen
         	if( LCDState == 0 ){        		
-        		LCDInstruction(CLEAR_LCD,COMMAND_LCD);
-        		setTimeTag(5,&LCDUpdate);
+        		LCDInstruction(EMPTY_DISPLAY,COMMAND_LCD);
+        		setTimeTag(2,&LCDUpdate);
         		LCDState++;
-        	} else if ( LCDState == 1 ){
-       			LCDMoveCursor(0,0);
+       		} else if ( LCDState == 1 ){
+       			LCDWriteHere( Hello );
+       			LCDMoveCursor(1,0);
        			setTimeTag(2,&LCDUpdate);
                 LCDState++;
        		} else if ( LCDState == 2 ){
-       			LCDWriteHere( Hello );
-                LCDState++;
-       		} else if ( LCDState == 3 ){
-       			LCDMoveCursor(1,0);
-                LCDState++;
-       		} else if ( LCDState == 4 ){
        			intToDisplay(m,1);
        			LCDWriteHere(displayChars.characters);
-                LCDState=0;
+       			LCDMoveCursor(1,10);
+       			setTimeTag(2,&LCDUpdate);
+                LCDState++;
+       		} else if( LCDState == 3 ){
+       			intToDisplay(n,1);
+       			LCDWriteHere(displayChars.characters);       			
+       			setTimeTag(50,&LCDUpdate);
+       			LCDState = 0;
        		}
+
 		}
 
         /// Make the LED Blink
@@ -82,8 +86,8 @@ void main( void ){
 
 		/// Move the servos
 		if( eventDue(&moveServo) ){
-//           	m+=20;
-			n+=20;
+          	// m+=20;
+			// n+=20;
 
 			if( m > 900 ){
 				m = 0;
@@ -96,18 +100,6 @@ void main( void ){
 			updateCCPServoAngle(m,n);
 			setTimeTag(50,&moveServo);
 		}
-
-
-
-
-		/// Update the time
-
-		/// Update display values if required
-
-		/// Handle local mode or remote mode interface actions
-
-		/// Run a tracking step
-		
 
 	}
 }

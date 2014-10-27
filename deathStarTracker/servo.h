@@ -19,7 +19,8 @@
 #define SERVO_CCP_MAX (CLOCK_FREQ/2000)
 #define SERVO_CCP_MIN (CLOCK_FREQ/4000)
 // Finding the Mapping Intercept
-#define SERVO_MAPPING_YINT (SERVO_CCP_MIN) + 4 ///< We add four to correct the servo frequency
+#define SERVO_AZIMUTH_YINT (SERVO_CCP_MIN) + 4 - 1100 ///< We add four to correct the servo frequency
+#define SERVO_ELEVATION_YINT (SERVO_CCP_MIN) + 4 - 1000 ///< We add four to correct the servo frequency
 
 
 // Flags to help us keep track of when to turn each servo on
