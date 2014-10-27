@@ -6,6 +6,8 @@
 #define TRUE 1
 #define FALSE 0
 
+extern int temperaturemV;
+
 #ifndef TEMPSENSOR_H
 #define	TEMPSENSOR_H
 

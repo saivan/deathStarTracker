@@ -1,27 +1,40 @@
 #include "tempSensor.h"
+#include "LCD.h"
 #define     SUPPLY_VOLTAGE 5
+#include <delays.h>
 
 
-char temperatureReading = 0;
-unsigned int temperature_mV = 0;                                //Define a variables
-unsigned int temperature_DegC = 25;
+int temperatureReading = 0;
+int temperaturemV = 0;                                //Define a variables
+int temperatureDegC = 25;
+
+//< unsigned just makes program run faster
 
 //#define TEMP_READING ADRES        ///< Location that the ADC stores the converted values
 //#define ADCON0_TEMP_SETTING 0x51     ///< Value that ADCON0 must be set to for operation
 //#define ADCON1_TEMP_SETTING 0x0E     ///< Value that ADCON1 must be set to for operation
 
 void tempSensor(void){
-   ADCON0bits.GO=1;                            // STart A/D conversion
+    ADCON0bits.GO=1;                            // STart A/D conversion
 
 /*Wait for AD conversion*/
-    while (PIR1bits.ADIF != 1){                 //set up loop to wait for the AD conversion complete flag to set
-        temperatureReading = ADRESH;                             // Write digital result value to variable Voltage
-        temperature_mV = SUPPLY_VOLTAGE*1000;
-        temperature_mV = temperature_mV/255;
-        temperature_mV = temperatureReading*temperature_mV;
-        temperature_DegC = temperature_mV/10;
+    while (PIR1bits.ADIF != 1){}                                ///< set up loop to wait for the AD conversion complete flag to set
+        temperatureReading = ADRES;                            ///< Store our ADC value in ADRESH (wiping off the 2 bits stored in ADRESH as we can get away with 8bit resolution)
+        //temperaturemV = temperatureReading;
+        temperaturemV = 500;                    ///< Multiply the supply voltage my 1000 to put it in mV
+        temperaturemV = temperaturemV/1024;                      ///<
+        //temperaturemV = temperatureReading*temperaturemV;
+
+        intToDisplay(temperaturemV,0);       //< This saves it in displaychars.characters
+        LCDWriteHere(displayChars.characters);
+        LCDMoveCursor(1,0);
+        Delay10KTCYx(10);                                    ///< Wait for 15ms. this allows for it to write
+        intToDisplay(temperaturemV,1);       //< This saves it in displaychars.characters
+        LCDWriteHere(displayChars.characters);
+        LCDMoveCursor(0,0);
+        Delay10KTCYx(10);                                    ///< Wait for 15ms. this allows for it to write
+
         PIR1bits.ADIF = 0;
-    }
 }
 
 
