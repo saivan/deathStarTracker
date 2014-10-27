@@ -61,18 +61,18 @@ void main( void ){
        		} else if ( LCDState == 1 ){
        			LCDWriteHere( Hello );
        			LCDMoveCursor(1,0);
-       			setTimeTag(2,&LCDUpdate);
+       			setTimeTag(1,&LCDUpdate);
                 LCDState++;
        		} else if ( LCDState == 2 ){
        			intToDisplay(m,1);
        			LCDWriteHere(displayChars.characters);
        			LCDMoveCursor(1,10);
-       			setTimeTag(2,&LCDUpdate);
+       			setTimeTag(1,&LCDUpdate);
                 LCDState++;
        		} else if( LCDState == 3 ){
        			intToDisplay(n,1);
        			LCDWriteHere(displayChars.characters);       			
-       			setTimeTag(50,&LCDUpdate);
+       			setTimeTag(35,&LCDUpdate);
        			LCDState = 0;
        		}
 
@@ -100,6 +100,10 @@ void main( void ){
 			updateCCPServoAngle(m,n);
 			setTimeTag(50,&moveServo);
 		}
+
+
+		/// Run a tracking step
+
 
 	}
 }

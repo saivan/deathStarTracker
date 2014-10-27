@@ -35,9 +35,9 @@ extern unsigned int currentAzimuth;
 extern unsigned int currentElevation;
 
 // The defined on and off times for the servo
-extern unsigned int servoOffTime;
-extern unsigned int elevationServoOnTime;
-extern unsigned int azimuthServoOnTime;
+extern unsigned int servoOffTime;				///< Remainder to produce a cycle of 50Hz
+extern unsigned int elevationServoOnTime;		///< Ranges from [1400,6000]OSC/4 for [0,180]deg
+extern unsigned int azimuthServoOnTime;			///< Ranges from [1400,6000]OSC/4 for [0,180]deg
 
 // Set up the angular limits
 extern unsigned int azimuthMin;

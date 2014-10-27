@@ -17,8 +17,6 @@
 
 
 /// The external variables are all declared here
-
-
 unsigned char USArrayPosition = 0;
 unsigned int speedOfSound = 0;
 unsigned int distPerMs = 0;
@@ -29,33 +27,33 @@ USFlagType USFlags = {0, 0};
 USValueType USValues = {0,0,0,0,0};
 
 /**
- * @brief [sets up the US]
+ * @brief sets up the US]
  * @details [configures timer 3 and sets initial status of
  *			 US variables]
  */
 void USSetup(void) {
     INITPIN = 0;
-    ECHOTRIS = 1;                   ///<Input for Echo
-    INITTRIS = 0;                   ///<Output for INIT
-    INTCONbits.GIE_GIEH = 1;        ///<Turn on interrupts
+    ECHOTRIS = 1;                                   ///<Input for Echo
+    INITTRIS = 0;                                   ///<Output for INIT
+    INTCONbits.GIE_GIEH = 1;                        ///<Turn on interrupts
     INTCONbits.PEIE_GIEL = 1;
 
     PIR2bits.CCP2IF = 0;
-    CCP2CON = 0x00; ///<capture mode, every rising edge
-    T3CONbits.RD16 = 0; ///<set to 8 bit mode
+    CCP2CON = 0x00;                                 ///< Capture mode, every rising edge
+    T3CONbits.RD16 = 0;                             ///< Set to 8 bit mode
     T3CONbits.T3CCP2 = 0;
-    T3CONbits.T3CCP1 = 1; ///<timer 3 used for CCP2
+    T3CONbits.T3CCP1 = 1;                           ///< Timer 3 used for CCP2
     T3CONbits.T3CKPS1 = 0;
-    T3CONbits.T3CKPS0 = 0; ///<prescaler is 1:1
+    T3CONbits.T3CKPS0 = 0;                          ///< Prescaler is 1:1
     T3CONbits.TMR3ON = 1;
 
-    USValues.distance = 0;                         ///<holds current value of calc distance    
-    speedOfSound = 34000;                          ///<speed in cm/s
-    distPerMs = speedOfSound/200;                  ///<divides by 2 for travel, 100 to be mm/ms
-    distPerSubMs = speedOfSound/4000;              ///<divides by 20 times to get 20 subsections
-    USFlags.fireStatus = 0;                       ///<status of 0 means nothing is occuring, 1 means echo is incoming and has not been calculated yet
-    USFlags.distanceReady = 0;                    ///<whether the new distance has been read
-    USValues.sampleSize = 2;                       ///<starting values
+    USValues.distance = 0;                          ///< Holds current value of calc distance    
+    speedOfSound = 34000;                           ///< Speed in cm/s
+    distPerMs = speedOfSound/200;                   ///< Divides by 2 for travel, 100 to be mm/ms
+    distPerSubMs = speedOfSound/4000;               ///< Divides by 20 times to get 20 subsections
+    USFlags.fireStatus = 0;                         ///< Status of 0 means nothing is occuring, 1 means echo is incoming and has not been calculated yet
+    USFlags.distanceReady = 0;                      ///< Whether the new distance has been read
+    USValues.sampleSize = 2;                        ///< Starting values
     USValues.minRange = 450;
     USValues.maxRange = 2100;
     USValues.freq_ms = 80;
@@ -92,7 +90,7 @@ void setUSSamplePerEstimate (unsigned char samples){
 
 /**
  * @brief [sets up the US fire frequency]
- * cannot be set faster than 12 Hz
+ * Cannot be set faster than 12Hz or less than 1Hz
  */
 void setUSFrequency (unsigned char frequency){
     if (frequency > 1 && frequency < 13) {

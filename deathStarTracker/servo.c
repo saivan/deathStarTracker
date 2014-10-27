@@ -17,8 +17,7 @@ unsigned int azimuthServoOnTime;
 unsigned int azimuthMin = 0;
 unsigned int azimuthMax = 1800;
 unsigned int elevationMin = 0;
-unsigned int elevationMax = 1800;
-
+unsigned int elevationMax = 900;
 
 /**
  * @brief Setup the servos to start moving when powered
@@ -30,9 +29,9 @@ void setupServos( void ){
     DDR_AZIMUTH = 0;
     DDR_ELEVATION = 0;
     // Set up timer 1 : Prescaler 1 for max resolution
-    WriteTimer1(0);                           // Clear Timer 1
-    T1CONbits.RD16 = 1;                 // Latch in 16 bit values for CCPR1L and CCPR1H
-    T1CONbits.TMR1ON = 1;               // Turn on timer 1
+    WriteTimer1(0);                             ///< Clear Timer 1
+    T1CONbits.RD16 = 1;                         ///< Latch in 16 bit values for CCPR1L and CCPR1H
+    T1CONbits.TMR1ON = 1;                       ///< Turn on timer 1
     // Setup the initial Servo position
     updateCCPServoAngle( 1800, 1800 );
     // Setup the capture Compare module
@@ -55,20 +54,20 @@ void setupServos( void ){
  * @param elevationAngle [0-1800] The desired elevation angle in tenths of degrees from the origin
  */
 void updateCCPServoAngle( unsigned int azimuthAngle, unsigned int elevationAngle ){
-    /// Stop any entries greater than the defined limits
-    if ( ( azimuthAngle > azimuthMax ) || ( elevationAngle > elevationMax ) ||
-            ( azimuthAngle < azimuthMin) || ( elevationAngle < elevationMin) ){
-        return;
-    }
-    /// Storing the new azimuth and elevation
-    currentAzimuth = azimuthAngle;
-    currentElevation = elevationAngle;   
-    /// Calculate the CCPTime by using $ \text{time} = {2000\over 1800}\theta + 2000 $
-    azimuthServoOnTime = ((5*azimuthAngle)>>1) + SERVO_AZIMUTH_YINT;
-    elevationServoOnTime = ((5*elevationAngle)>>1) + SERVO_ELEVATION_YINT;
 
-    // Calculate the servos off time by subtracting
-    servoOffTime = SERVO_CCP_PERIOD - azimuthServoOnTime - elevationServoOnTime;
+    /// Calculate the CCPTime by using $ \text{time} = {2000\over 1800}\theta + 2000 $
+
+    if ( ( azimuthAngle < azimuthMax ) &&  ( azimuthAngle > azimuthMin)  ){    
+        azimuthServoOnTime = ((5*azimuthAngle)>>1) + SERVO_AZIMUTH_YINT;            ///< Calculate the new azimuth servo On time
+        currentAzimuth = azimuthAngle;                                              ///< Store the new Azimuth
+    }
+
+    if( ( elevationAngle < elevationMax ) && ( elevationAngle > elevationMin) ){
+        elevationServoOnTime = ((5*elevationAngle)>>1) + SERVO_ELEVATION_YINT;      ///< Calculate the New elevation servo On time
+        currentElevation = elevationAngle;                                          ///< Store the new Elevation
+    }    
+        
+    servoOffTime = SERVO_CCP_PERIOD - azimuthServoOnTime - elevationServoOnTime;    ///< Calculate the servos off time
 }
 
 
