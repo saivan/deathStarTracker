@@ -6,7 +6,9 @@
 #define TRUE 1
 #define FALSE 0
 
+///< Extern these variable so it can be used by the intToDisplay function / just in case. Seems to wrok without
 extern int temperaturemV;
+extern int temperatureDegC;
 
 #ifndef TEMPSENSOR_H
 #define	TEMPSENSOR_H
