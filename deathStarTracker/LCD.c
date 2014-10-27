@@ -5,8 +5,10 @@ unsigned char currentLCDRow = 0;
 unsigned char currentLCDColumn = 0;
 int digitDivisors[4] = { 1000, 100, 10, 1 };     ///< Avoids an un-necessary division
 
+timeTag LCDUpdate = { 0, 0, 0, 2 };
 displayDigit displayChars = { { 0, 0, 0, 0 } , { 0, 0, 0, 0, 0, 0, 0 } };
-
+char LCDTopLine[16] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+char LCDBottomLine[16] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
 /**
  * @brief Initialises the LCD module
@@ -42,6 +44,29 @@ void LCDInitialise( void ){
     Delay10KTCYx(1);
 
 }
+
+
+void updateLCD( void ){
+    static char LCDUpdateState = 0;
+    /// Update the LCD if an update is needed
+    if( eventDue(&LCDUpdate) && systemFlags.LCDRequiresUpdate ){        
+        if( LCDUpdateState == 0 ){             
+            LCDInstruction(EMPTY_DISPLAY,COMMAND_LCD);
+            setTimeTag(2,&LCDUpdate);
+            LCDUpdateState++;
+        } else if ( LCDUpdateState == 1 ){
+            LCDWriteHere(LCDTopLine);
+            LCDMoveCursor(1,0);
+            setTimeTag(1,&LCDUpdate);
+            LCDUpdateState++;
+        } else if ( LCDUpdateState == 2 ){
+            LCDWriteHere(LCDBottomLine);
+            setTimeTag( LCD_REFRESH_TIME, &LCDUpdate );
+            LCDUpdateState = 0;
+        }
+    }
+}
+
 
 
 /**

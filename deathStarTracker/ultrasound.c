@@ -111,22 +111,25 @@ void setUSFrequency (unsigned char frequency){
  *          cycle value
  */
 void testUSState (void){
-    if (TMR3H > 0x0D && USFlags.fireStatus) {  ///< change to 0x0D
-        CCP2CON = 0x05; ///<capture mode, every rising edge
-    }
-    if (TMR3H > 0x58 && USFlags.fireStatus) {  ///<change to 0x58
-        UScapturedValue[USArrayPosition] = 0x00;
-        echoCalc();
-        CCP2CON = 0x00;                         ///<turn of ccp since no value is coming
-        USFlags.fireStatus = 0;                       ///<reset status
-    }
-
-    if (PIR2bits.CCP2IF && USFlags.fireStatus) {
-        PIR2bits.CCP2IF = 0;
-        UScapturedValue[USArrayPosition] = ReadTimer3();    ///<store captured time into array
-        echoCalc();
-        CCP2CON = 0x00;
-        USFlags.fireStatus = 0;
+    if( USFlags.fireStatus ){
+        if ( TMR3H > 0x0D ) {  ///< change to 0x0D
+            CCP2CON = 0x05; ///<capture mode, every rising edge
+        }
+    
+        if (TMR3H > 0x58 ) {  ///<change to 0x58
+            UScapturedValue[USArrayPosition] = 0x00;
+            echoCalc();
+            CCP2CON = 0x00;                         ///<turn off ccp since no value is coming
+            USFlags.fireStatus = 0;                       ///<reset status
+        }
+    
+        if ( PIR2bits.CCP2IF ) {
+            PIR2bits.CCP2IF = 0;
+            UScapturedValue[USArrayPosition] = ReadTimer3();    ///<store captured time into array
+            echoCalc();
+            CCP2CON = 0x00;
+            USFlags.fireStatus = 0;
+        }
     }
 }
 
@@ -141,8 +144,7 @@ void fireEcho (void) {
     INITPIN = 0;
     PIR2bits.CCP2IF = 0;
     USFlags.fireStatus = 1;               ///<change status to be waiting for echos
-    updateTime();
-    storeCurrentTime(&echoCanFire);
+    updateTime();    
     setTimeTag(USValues.freq_ms,&echoCanFire);    ///<time tag for when next echo can be sent
     TMR3L = 0;
     TMR3H = 0;
@@ -170,12 +172,12 @@ void echoCalc (void) {
         if ((subMilliTime*50 + 25) < (UScapturedValue[USArrayPosition] - milliTime*2500)) {                         //multiply by 2500
             subMilliTime = subMilliTime + 1;
         }
-        UScapturedValue[USArrayPosition] = milliTime*distPerMs/10 + subMilliTime*distPerSubMs/10;   ///<gives a distance in cm (remove the /10 for mm)
+        UScapturedValue[USArrayPosition] = milliTime*distPerMs + subMilliTime*distPerSubMs;   ///<gives a distance in cm (remove the /10 for mm)
     }
-    i = 0;
+    i = 0;    
     while (i < USValues.sampleSize) {  ///<checks for void values
         tempDistance = UScapturedValue[i];
-        if (tempDistance < USValues.minRange/10 || tempDistance > USValues.maxRange/10) {       ///<remove /10 for mm
+        if (tempDistance < USValues.minRange || tempDistance > USValues.maxRange) {       ///<remove /10 for mm
             tempDistance = 0;
             voidUSData++;
         }

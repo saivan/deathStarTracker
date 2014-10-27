@@ -28,8 +28,11 @@
 #define COMMAND_LCD         1
 #define CHARACTER_LCD       0
 
+#define LCD_REFRESH_TIME 	40
+
 extern unsigned char currentLCDRow;
 extern unsigned char currentLCDColumn;
+extern unsigned char LCDRequiresUpdate;
 extern int digitDivisors[4];
 
 typedef struct displayDigit{
@@ -38,8 +41,11 @@ typedef struct displayDigit{
 } displayDigit;
 
 extern displayDigit displayChars;
+extern char LCDTopLine[16];
+extern char LCDBottomLine[16];
 
-extern void LCDEventHandler( void );
+extern void updateLCD( void );
+extern timeTag LCDUpdate;
 
 extern void LCDInitialise( void );
 extern void intToDisplay( int displayVal , unsigned char decimalPlace );
