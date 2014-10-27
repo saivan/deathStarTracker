@@ -86,10 +86,10 @@ void main( void ){
 
 		/// Move the servos
 		if( eventDue(&moveServo) ){
-          	// m+=20;
-			// n+=20;
+          	 m+=20;
+			 n+=20;
 
-			if( m > 900 ){
+			if( m > 1800 ){
 				m = 0;
 			}
 
