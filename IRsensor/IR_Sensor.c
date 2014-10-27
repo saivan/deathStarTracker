@@ -10,7 +10,7 @@
 #include "masterHeader.h"
 #include "p18f452.h"
 
-#define IR_READING ADRES        ///< Location that the ADC stores the converted values
+#define AD_READING ADRES        ///< Location that the ADC stores the converted values
 #define ADCON0_SETTING 0x51     ///< Value that ADCON0 must be set to for operation
 #define ADCON1_SETTING 0x0E     ///< Value that ADCON1 must be set to for operation
 
@@ -63,7 +63,7 @@ void IRSensor( void ){
         setTimeTag(IRSensorDelay, &IRSensorTimer);  ///< Set time that IRSensor is next called
         
         if (PIR1bits.ADIF){///< If there is data to be harvested
-            gatheredData[sampleNumber] = (IR_READING >> 6); ///< Store gathered data in memory
+            gatheredData[sampleNumber] = (AD_READING >> 6); ///< Store gathered data in memory
             sampleNumber++;     ///< increment new data counter
             if (sampleNumber == samplesPerEstimate){///< If we have enough data
                 sampleNumber = 0;
@@ -138,7 +138,7 @@ void calibrateIR(void){
 
         while(~PIR1bits.ADIF);  ///< Wait until AD conversion is complete
 
-        calibrationVariable = (IR_READING >> 6) * 1000;  ///< Calculate calibration variable
+        calibrationVariable = (AD_READING >> 6) * 1000;  ///< Calculate calibration variable
 
         if (calibrationVariable > 500){     ///< If the calculated variable is valid
             IRFlags.calibrationInProgress = 1;  ///< Calibration is over
