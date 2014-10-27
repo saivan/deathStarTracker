@@ -57,7 +57,7 @@ void USSetup(void) {
     USValues.sampleSize = 5;                        ///< Starting values
     USValues.minRange = 450;
     USValues.maxRange = 2100;
-    USValues.freq_ms = 200;
+    USValues.freq_ms = 80;
     USArrayPosition = 0;
 }
 

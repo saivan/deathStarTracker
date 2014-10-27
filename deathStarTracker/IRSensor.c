@@ -12,7 +12,7 @@
 
 IRFlagType IRFlags={0,0,0};
 timeTag IRSensorTimer = {0,0,0,0};  ///< TimeTag for next time IRSensor is to be called
-unsigned int IRSensorDelay = 100;     ///< Delay before IRSensor can be called again in ms
+unsigned int IRSensorDelay = 0;     ///< Delay before IRSensor can be called again in ms
 
 unsigned char samplesPerEstimate = 10;   ///< Amount of samples averaged together to make each estimate
 unsigned char sampleNumber = 0;     ///< Incrementer to see if the amount of samples needed is taken

@@ -7,8 +7,8 @@ int digitDivisors[4] = { 1000, 100, 10, 1 };     ///< Avoids an un-necessary div
 
 timeTag LCDUpdate = { 0, 0, 0, 2 };
 displayDigit displayChars = { { 0, 0, 0, 0 } , { 0, 0, 0, 0, 0, 0, 0 } };
-char LCDTopLine[16] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-char LCDBottomLine[16] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+char LCDTopLine[16] = "hello Boob";
+char LCDBottomLine[16] = "Tube";
 
 /**
  * @brief Initialises the LCD module
@@ -18,7 +18,7 @@ char LCDBottomLine[16] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
  */
 void LCDInitialise( void ){
 
-    // Setup to work in four bit mode
+    /// Setup to work in four bit mode
     TRISD = 0x00;
     PORTD = 0x00;                                   ///< Clear PortD
     Delay10KTCYx(10);                                    ///< Wait for 15ms
@@ -31,7 +31,7 @@ void LCDInitialise( void ){
     LCDInstruction( FOURBITMODE_LCD, COMMAND_LCD );            ///< Four bit mode - 2 line - standard font 
     Delay10KTCYx(1);                                     ///< Wait for 1ms
 
-    // Now in Four bit mode, commands can be executed
+    /// Now in Four bit mode, commands can be executed
     LCDInstruction( 0x28, COMMAND_LCD );            ///< Four bit mode - 2 line - standard font
     Delay10KTCYx(1);
     LCDInstruction( 0x0C, COMMAND_LCD );            ///< No cursor and no blinking
@@ -42,6 +42,9 @@ void LCDInitialise( void ){
     Delay10KTCYx(1);
     LCDInstruction( 0x01, COMMAND_LCD );            ///< Move to first digit
     Delay10KTCYx(1);
+
+    /// Tell the LCD that it needs to update
+    systemFlags.LCDRequiresUpdate = 1;
 
 }
 

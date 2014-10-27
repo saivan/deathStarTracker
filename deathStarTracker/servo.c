@@ -57,12 +57,12 @@ void updateCCPServoAngle( unsigned int azimuthAngle, unsigned int elevationAngle
 
     /// Calculate the CCPTime by using $ \text{time} = {2000\over 1800}\theta + 2000 $
 
-    if ( ( azimuthAngle < azimuthMax ) &&  ( azimuthAngle > azimuthMin)  ){    
+    if ( ( azimuthAngle <= azimuthMax ) &&  ( azimuthAngle >= azimuthMin)  ){    
         azimuthServoOnTime = ((5*azimuthAngle)>>1) + SERVO_AZIMUTH_YINT;            ///< Calculate the new azimuth servo On time
         currentAzimuth = azimuthAngle;                                              ///< Store the new Azimuth
     }
 
-    if( ( elevationAngle < elevationMax ) && ( elevationAngle > elevationMin) ){
+    if( ( elevationAngle <= elevationMax ) && ( elevationAngle >= elevationMin) ){
         elevationServoOnTime = ((5*elevationAngle)>>1) + SERVO_ELEVATION_YINT;      ///< Calculate the New elevation servo On time
         currentElevation = elevationAngle;                                          ///< Store the new Elevation
     }    

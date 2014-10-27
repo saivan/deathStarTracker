@@ -46,7 +46,8 @@ void main( void ){
     LCDWriteHere( Hello );
     LCDMoveCursor(1,0);    
         
-    while(1){
+	while(1){
+
 
         updateTime();
 
@@ -65,18 +66,50 @@ void main( void ){
        			setTimeTag(2,&LCDUpdate);
                 LCDState++;
        		} else if ( LCDState == 2 ){
-       			intToDisplay((int)(IRDistance),0);
+       			intToDisplay((int)(USValues.distance),0);
        			LCDWriteHere(displayChars.characters);
        			LCDMoveCursor(1,10);
        			setTimeTag(2,&LCDUpdate);
                 LCDState++;
        		} else if( LCDState == 3 ){
-       			intToDisplay(currentAzimuth,1);
+       			intToDisplay(n,1);
        			LCDWriteHere(displayChars.characters);       			
        			setTimeTag(35,&LCDUpdate);
        			LCDState = 0;
        		}
 		}
+
+        /// Make the LED Blink
+        if(eventDue(&doThingo)){
+        	PORTCbits.RC6 ^= 1;
+        	setTimeTag(500,&doThingo);
+        }
+
+		/// Move the servos
+		if( eventDue(&moveServo) ){
+          	 m+=20;
+			 n+=20;
+
+			if( m > 1800 ){
+				m = 0;
+			}
+
+			if( n > 1800 ){
+				n = 0;
+			}
+
+			updateCCPServoAngle(m,n);
+			setTimeTag(50,&moveServo);
+		}
+
+		/// Set Ultrasound to sample
+		if( eventDue(&echoCanFire) ){
+			fireEcho();
+		}
+		testUSState();
+
+
+		/// Run a tracking step
 
 
 	}

@@ -10,19 +10,19 @@
 trackFlagType trackFlags = {0,0,0,0};
 timeTag servoFinished = {0,0,0,0};
 unsigned int distance = 0;
-unsigned int nextScanAzimuth = 0;
-unsigned int nextScanElevation = 0;
+int nextScanAzimuth = 0;
+int nextScanElevation = 0;
 int deltaScanAzimuth = 50;
 int deltaScanElevation = 50;
 
 
 void track(void){
 
-    if(trackFlags.targetFound){
-        follow();
-    } else {
+//    if(trackFlags.targetFound){
+//        follow();
+//    } else {
         scan();
-    }
+//    }
 
 }
 
@@ -48,14 +48,14 @@ void scan(void){
                 }
             }
 
-
             updateCCPServoAngle(nextScanAzimuth,nextScanElevation);
             setTimeTag(20,&servoFinished);
 
+            trackFlags.distanceReady = 0;
             //@todo think about this stuff
 
         } else {
-            getDistance();
+            getDistance();           
         }
         return;
     }
@@ -105,8 +105,8 @@ void getDistance(void){
         if (trackFlags.USAccuracy == trackFlags.IRAccuracy){
             distance = distance>>1;
         }
-        USFlags.distanceReady = 0;
-        trackFlags.distanceReady = 1;
+         USFlags.distanceReady = 0;
+         trackFlags.distanceReady = 1;
 
         if (distance){
             trackFlags.targetFound = 1;
