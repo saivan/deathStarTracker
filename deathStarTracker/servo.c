@@ -36,13 +36,13 @@ void setupServos( void ){
     // Setup the initial Servo position
     updateCCPServoAngle( 1800, 1800 );
     // Setup the capture Compare module
-    CCPR1 = servoOffTime;               // Write the initial delay
-    CCP1CONbits.CCP1M = 0b1010;         // Setup the compare interrupt
-    // Enable the CCP interrupt
-    RCONbits.IPEN = 1;                  // Enable interrupt priorites
-    IPR1bits.CCP1IP = 1;                // Set CCP interrupt to high priority
-    PIE1bits.CCP1IE = 1;                // Enable the capture compare interrupt
-    INTCONbits.GIEH = 1;                // Enable high priority interrupts
+    CCPR1 = servoOffTime;                       ///< Write the initial delay
+    CCP1CONbits.CCP1M = 0b1010;                 ///< Setup the compare interrupt
+    // Enable the CCP interrupt     
+    RCONbits.IPEN = 1;                          ///< Enable interrupt priorites
+    IPR1bits.CCP1IP = 1;                        ///< Set CCP interrupt to high priority
+    PIE1bits.CCP1IE = 1;                        ///< Enable the capture compare interrupt
+    INTCONbits.GIEH = 1;                        ///< Enable high priority interrupts
 }
 
 
@@ -64,10 +64,8 @@ void updateCCPServoAngle( unsigned int azimuthAngle, unsigned int elevationAngle
     currentAzimuth = azimuthAngle;
     currentElevation = elevationAngle;   
     /// Calculate the CCPTime by using $ \text{time} = {2000\over 1800}\theta + 2000 $
-    // azimuthServoOnTime = ((11*azimuthAngle)>>3) + SERVO_AZIMUTH_YINT;
-    // elevationServoOnTime = ((11*elevationAngle)>>3) + SERVO_ELEVATION_YINT;
-    azimuthServoOnTime = 5000;
-    elevationServoOnTime = 5000;
+    azimuthServoOnTime = ((5*azimuthAngle)>>1) + SERVO_AZIMUTH_YINT;
+    elevationServoOnTime = ((5*elevationAngle)>>1) + SERVO_ELEVATION_YINT;
 
     // Calculate the servos off time by subtracting
     servoOffTime = SERVO_CCP_PERIOD - azimuthServoOnTime - elevationServoOnTime;
