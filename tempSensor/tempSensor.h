@@ -1,17 +1,34 @@
+/*
+ * File:   tempSensor.h
+ * Author: Kye Ridley-Smith
+ *
+ * Created on 26 October 2014
+ */
+
 #include <p18f452.h>
-//#include <delays.h>
-//#include "realTimer.h"
+
+#ifndef TEMPSENSOR_H
+#define	TEMPSENSOR_H
+
+///< Make some defintions
+#define     TRUE 1
+#define     FALSE 0
+#define     HIGH            1
+#define     LOW             0
 
 
-#define TRUE 1
-#define FALSE 0
+void tempSensor(void);
+void calibrateTempSensor(void);
+
+enum AD_STATES {
+	ADCSETUP,
+	CALCULATE_TEMPERATURE,
+};
 
 ///< Extern these variable so it can be used by the intToDisplay function / just in case. Seems to wrok without
 extern int temperaturemV;
 extern int temperatureDegC;
-
-#ifndef TEMPSENSOR_H
-#define	TEMPSENSOR_H
+extern unsigned char tempState;
 
 #endif //< Need this as have a ifndef
 
