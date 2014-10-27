@@ -20,7 +20,8 @@
 #define LCD_REPin           PORTDbits.RD6
 
 // A range of LCD commands to execute
-#define CLEAR_LCD      0x03
+#define EMPTY_DISPLAY		0x01
+#define CLEAR_LCD      		0x03
 #define FOURBITMODE_LCD     0x02
 #define SET_DDRAM_ADDRESS   1<<7
 

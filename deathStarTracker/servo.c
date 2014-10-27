@@ -64,8 +64,11 @@ void updateCCPServoAngle( unsigned int azimuthAngle, unsigned int elevationAngle
     currentAzimuth = azimuthAngle;
     currentElevation = elevationAngle;   
     /// Calculate the CCPTime by using $ \text{time} = {2000\over 1800}\theta + 2000 $
-    azimuthServoOnTime = ((11*azimuthAngle)>>3) + SERVO_MAPPING_YINT;
-    elevationServoOnTime = ((11*elevationAngle)>>3) + SERVO_MAPPING_YINT;
+    // azimuthServoOnTime = ((11*azimuthAngle)>>3) + SERVO_AZIMUTH_YINT;
+    // elevationServoOnTime = ((11*elevationAngle)>>3) + SERVO_ELEVATION_YINT;
+    azimuthServoOnTime = 5000;
+    elevationServoOnTime = 5000;
+
     // Calculate the servos off time by subtracting
     servoOffTime = SERVO_CCP_PERIOD - azimuthServoOnTime - elevationServoOnTime;
 }

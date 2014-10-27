@@ -157,12 +157,13 @@ void intToDisplay( int displayVal , unsigned char decimalPlace ){
     int i;                                                                          ///< Iterrating over the digits
     int charPos = 0;                                                                ///< Iterrating over the characters
 
+
     /// Check for negative numbers
     if( displayVal < 0 ){
         isNegative = TRUE;                                                          ///< If the variable is negative, note it
         displayVal = -displayVal;                                                   ///< Then make it positive for further processing
     }
-        
+
     /// Check for oversized Numbers, exit if oversized
     if( displayVal > 9999 )
         return;                                                                     ///< If the value to be displayed is too large, exit
