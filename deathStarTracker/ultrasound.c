@@ -22,6 +22,7 @@ unsigned int speedOfSound = 0;
 unsigned int distPerMs = 0;
 unsigned int distPerSubMs = 0;
 unsigned int UScapturedValue[10] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+unsigned int UScapturedRaw[10] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 timeTag echoCanFire = {0,0,0,0};
 USFlagType USFlags = {0, 0};
 USValueType USValues = {0,0,0,0,0};
@@ -53,10 +54,10 @@ void USSetup(void) {
     distPerSubMs = speedOfSound/4000;               ///< Divides by 20 times to get 20 subsections
     USFlags.fireStatus = 0;                         ///< Status of 0 means nothing is occuring, 1 means echo is incoming and has not been calculated yet
     USFlags.distanceReady = 0;                      ///< Whether the new distance has been read
-    USValues.sampleSize = 2;                        ///< Starting values
+    USValues.sampleSize = 5;                        ///< Starting values
     USValues.minRange = 450;
     USValues.maxRange = 2100;
-    USValues.freq_ms = 80;
+    USValues.freq_ms = 200;
     USArrayPosition = 0;
 }
 
@@ -112,20 +113,21 @@ void setUSFrequency (unsigned char frequency){
  */
 void testUSState (void){
     if( USFlags.fireStatus ){
-        if ( TMR3H > 0x0D ) {  ///< change to 0x0D
+        if ( TMR3H > 0x1D ) {  ///< change to 0x0D
             CCP2CON = 0x05; ///<capture mode, every rising edge
         }
     
-        if (TMR3H > 0x58 ) {  ///<change to 0x58
-            UScapturedValue[USArrayPosition] = 0x00;
-            echoCalc();
-            CCP2CON = 0x00;                         ///<turn off ccp since no value is coming
-            USFlags.fireStatus = 0;                       ///<reset status
-        }
+//        if (TMR3H > 0x58 ) {  ///<change to 0x58
+//            UScapturedValue[USArrayPosition] = 0x00;
+//            echoCalc();
+//            CCP2CON = 0x00;                         ///<turn off ccp since no value is coming
+//            USFlags.fireStatus = 0;                       ///<reset status
+//        }
     
         if ( PIR2bits.CCP2IF ) {
             PIR2bits.CCP2IF = 0;
             UScapturedValue[USArrayPosition] = ReadTimer3();    ///<store captured time into array
+            UScapturedRaw[USArrayPosition] = ReadTimer3();
             echoCalc();
             CCP2CON = 0x00;
             USFlags.fireStatus = 0;
@@ -166,13 +168,9 @@ void echoCalc (void) {
     unsigned int tempDistance;
     USValues.distance = 0;
     voidUSData = 0;
+    tempDistance = UScapturedValue[USArrayPosition];
     if (UScapturedValue[USArrayPosition] != 0) {
-        milliTime = UScapturedValue[USArrayPosition]/2500;                      ///<divides into millisec           //divide by 2500
-        subMilliTime = (UScapturedValue[USArrayPosition] - milliTime*2500)/50;  ///<divides into millisec/20        //multiply by 2500
-        if ((subMilliTime*50 + 25) < (UScapturedValue[USArrayPosition] - milliTime*2500)) {                         //multiply by 2500
-            subMilliTime = subMilliTime + 1;
-        }
-        UScapturedValue[USArrayPosition] = milliTime*distPerMs + subMilliTime*distPerSubMs;   ///<gives a distance in cm (remove the /10 for mm)
+        UScapturedValue[USArrayPosition] = tempDistance/17;   ///<gives a distance in cm (remove the /10 for mm)
     }
     i = 0;    
     while (i < USValues.sampleSize) {  ///<checks for void values
@@ -185,13 +183,15 @@ void echoCalc (void) {
         i++;
     }
 
-    if (voidUSData != USValues.sampleSize) {
+    if (voidUSData < USValues.sampleSize) {
         USValues.distance = USValues.distance/(USValues.sampleSize-voidUSData); ///<average distance values
     }
+//    USValues.distance = UScapturedValue[USArrayPosition];
     USArrayPosition++;
-    if (USArrayPosition = USValues.sampleSize) {
+    if (USArrayPosition == USValues.sampleSize) {
         USArrayPosition = 0; ///<reset poisition if over buffer
     }
+    
     USFlags.distanceReady = 1;
 }
 

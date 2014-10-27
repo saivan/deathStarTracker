@@ -18,7 +18,8 @@
 #include "ultrasound.h"
 #include "servo.h"
 #include "LCD.h"
-//#include "tracking.h"
+#include "tracker.h"
+#include "IRSensor.h"
 
 /// The system flags
 typedef struct {

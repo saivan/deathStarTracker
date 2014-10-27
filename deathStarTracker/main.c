@@ -35,7 +35,7 @@ void setup( void ){
 	/// Setup Routines go here
 	setupRealTimeTimer();
 	LCDInitialise();   
-    setupServos();
+        setupServos();
 	USSetup();
 }
 
@@ -47,8 +47,11 @@ void main( void ){
     LCDMoveCursor(1,0);    
         
 	while(1){
-        
+
+
         updateTime();
+
+        track();
 
         /// Update the LCD
         if( eventDue(&LCDUpdate) ){
@@ -60,13 +63,13 @@ void main( void ){
        		} else if ( LCDState == 1 ){
        			LCDWriteHere( Hello );
        			LCDMoveCursor(1,0);
-       			setTimeTag(1,&LCDUpdate);
+       			setTimeTag(2,&LCDUpdate);
                 LCDState++;
        		} else if ( LCDState == 2 ){
        			intToDisplay((int)(USValues.distance),0);
        			LCDWriteHere(displayChars.characters);
        			LCDMoveCursor(1,10);
-       			setTimeTag(1,&LCDUpdate);
+       			setTimeTag(2,&LCDUpdate);
                 LCDState++;
        		} else if( LCDState == 3 ){
        			intToDisplay(n,1);

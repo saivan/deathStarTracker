@@ -193,6 +193,8 @@ void intToDisplay( int displayVal , unsigned char decimalPlace ){
     if( displayVal > 9999 )
         return;                                                                     ///< If the value to be displayed is too large, exit
 
+//    systemFlags.LCDUpdate = 0;
+
     /// If the number was negative, add the negative sign
     if( isNegative )
         displayChars.characters[charPos++] = '-';
@@ -220,6 +222,8 @@ void intToDisplay( int displayVal , unsigned char decimalPlace ){
     } else {
         displayChars.characters[charPos] = '\0';
     }
+
+//    systemFlags.LCDUpdate = 1;
 }
 
 
