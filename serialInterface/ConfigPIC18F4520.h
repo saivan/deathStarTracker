@@ -62,6 +62,7 @@
 #endif
 
 #pragma config PBADEN = OFF
+
 //  Oscillator Selection:
 //    OSC = LP          LP
 //    OSC = XT          XT
