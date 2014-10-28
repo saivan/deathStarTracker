@@ -60,7 +60,7 @@ void updateLCD( void ){
         } else if ( LCDUpdateState == 1 ){
             LCDWriteHere(LCDTopLine);
             LCDMoveCursor(1,0);
-            setTimeTag(1,&LCDUpdate);
+            setTimeTag(2,&LCDUpdate);
             LCDUpdateState++;
         } else if ( LCDUpdateState == 2 ){
             LCDWriteHere(LCDBottomLine);

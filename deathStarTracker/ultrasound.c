@@ -57,7 +57,7 @@ void USSetup(void) {
     USValues.sampleSize = 2;                        ///< Starting values
     USValues.currentSampleSize = 1;
     USValues.minRange = 450;
-    USValues.maxRange = 2100;
+    USValues.maxRange = 800;//2100
     USValues.freq_ms = 80;
     USArrayPosition = 0;
 }
@@ -145,8 +145,14 @@ void fireEcho (void) {
     INITPIN = 0;
     PIR2bits.CCP2IF = 0;
     USFlags.fireStatus = 1;               ///<change status to be waiting for echos
-    updateTime();    
-    setTimeTag(USValues.freq_ms,&echoCanFire);    ///<time tag for when next echo can be sent
+    updateTime();
+    if (echoCanFire.hours > 0) {
+        echoCanFire.hours = 1;
+    }
+    setTimeTag(80,&echoCanFire);    ///<time tag for when next echo can be sent
+    if (echoCanFire.hours > 0) {
+        echoCanFire.hours = 1;
+    }
     TMR3L = 0;
     TMR3H = 0;
     INITPIN = 1;                    ///<Start transmitting echos*/

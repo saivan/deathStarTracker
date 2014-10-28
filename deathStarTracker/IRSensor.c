@@ -104,6 +104,8 @@ void IRSensor( void ){
                 IRDistance = 0;
             } else {
                 trackFlags.targetFound = 1;
+                lastKnownAzimuth = currentAzimuth;
+                lastKnownElevation = currentElevation;
             }
 
         }

@@ -15,10 +15,20 @@ int nextScanElevation = 0;
 int deltaScanAzimuth = 50;
 int deltaScanElevation = 50;
 int lastKnownAzimuth = 0;
-int lastKnownElevation =0;
+int lastKnownElevation = 0;
 
-int trackPositions[8][2] = { { 2*A, 0 }, { B, 2*B }, { 0, A }, { -2*B, B }, { -2*A, 0 }, { -2*B, -B }, { 0, -A }, { 2*B, -B } };
+#define CHECK_STATIONARY 0
+#define CHECK_NEIGHBOURS 1
+#define CALCULATE_NEXT_POSITION 0
+#define IR_MEASUREMENT 1
 
+#define AZIM 0
+#define ELEV 1
+#define A 40
+#define B 30
+int trackPositions[8][2] = { { A, 0 }, { B, B }, { 0, A }, { -B, B }, { -A, 0 }, { -B, -B }, { 0, -A }, { B, -B } };
+int currentMinimum = 0;
+unsigned char lowestIndex = 0;
 
 void track(void){
 
@@ -64,11 +74,11 @@ void scan(void){
         return;
     }
 
-    if (IRFlags.idle){
-        getNewIRDistance();
-    }
-
-    IRSensor();
+//    if (IRFlags.idle){
+//        getNewIRDistance();
+//    }
+//
+//    IRSensor();
 }
 
 /**
@@ -76,106 +86,69 @@ void scan(void){
  *
  */
 void follow(void){
-    /// Program state variables
     static unsigned char followState = 0;
     static unsigned char subFollowState = 0;
-    static unsigned char gotNewLow = 0;
-    static unsigned char ballStill = 0;
-    /// Index references
     static int lastIndex = 0; 
-    static int lowestIndex = 0;
-    static int dir;
-    /// Itteration variables to move through possibilities
-    static int currentMinimum = 0;
-    static int point = 0;
     static int depth;
+    static int dir;
+    static int point = 0;
 
-    trackFlags.targetFound = 0;
-    return;
+    
 
-    /// Setup a new measurement and check if the ball is still where it last was
+    /// Setup
     if( followState == CHECK_STATIONARY ){               
-        /// Run a measurement to find a new minimum
-        if( eventDue( &servoFinished )){                     ///< Give the servo 10ms to travel                         
+        /// Run a measurement if the IR is not busy
+        if (IRFlags.idle){
+            getNewIRDistance();
+        }        
+        IRSensor();
+
+        if ( IRFlags.distanceReady ){                        ///< IR sensor has a new distance to process
+            if ( IRDistance != 0 ) {                         ///< If we see the ball, stay where we are
+                getDistance();                
+                return;                                 
+            } else {          
+                lastKnownAzimuth = currentAzimuth;           ///< Store the current position
+                lastKnownElevation = currentElevation;       ///< Store the current elevation         
+                followState = CHECK_NEIGHBOURS;         ///< If we missed the ball, check our surroundings
+                depth = 1;                              ///< Start searching nearest neighbours                
+                point = 0;                              ///< Restart point
+            }
+        } else {
             getDistance();
-            if ( USFlags.distanceReady ){
-                if( ballStill ){
-                    ballStill = FALSE;                           ///< IF the ball was still, discard the last reading
-                    USFlags.distanceReady = FALSE;
-                } else {
-                    if( USValues.distance ){
-                        currentMinimum = USValues.distance;          ///< The current position of the ball is given
-                    } else {
-                        currentMinimum = USValues.maxRange; 
-                    }
-                    lastKnownAzimuth = currentAzimuth;           ///< Store the current position
-                    lastKnownElevation = currentElevation;       ///< Store the current elevation         
-                    followState = CHECK_NEIGHBOURS;              ///< If we missed the ball, check our surroundings                
-                    depth = 1;                                   ///< Start searching nearest neighbours                
-                    point = 0;                                   ///< Restart point
-                }
-            } else if ( IRFlags.distanceReady ){                 ///< IR sensor has a new distance to process
-                IRFlags.distanceReady = FALSE;                   ///< Start a new reading
-                if ( IRDistance ) {                              ///< If we see the ball, stay where we are
-                    ballStill = TRUE;                                 
-                    return;                                 
-                }
-            } 
-        }
-  
+            return;                                     ///< If we haven't got a distance yet, we exit
+        }        
     } else if ( followState == CHECK_NEIGHBOURS ){
 
-        if ( depth < 5 ){
+        if ( depth < 3 ){
             if ( point < 8 ){
                 if( subFollowState == CALCULATE_NEXT_POSITION ){               ///< Calculate a new position
                     dir = ( lastIndex + point ) & 0x07;                        ///< Calculate which direction to move to 
-                    updateCCPServoAngle( depth*trackPositions[dir][AZIM] + lastKnownAzimuth, 
-                                         depth*trackPositions[dir][ELEV] + lastKnownElevation);  ///< Move the servo to the next position
-                    setTimeTag( 40, &servoFinished );                          ///< Give the servo 10ms to move
-                    subFollowState = SENSOR_MEASUREMENT;                       ///< Move to purgatory
-                } else if( subFollowState == SENSOR_MEASUREMENT ){ 
-                    if( eventDue( &servoFinished )){                           ///< Give the servo 10ms to travel                         
-                        if (eventDue(&echoCanFire))                     
-                            fireEcho();
-                        if (IRFlags.idle)
-                            getNewIRDistance();                        
-                        testUSState();
+                    updateCCPServoAngle( depth*trackPositions[dir][AZIM] + lastKnownAzimuth, depth*trackPositions[dir][ELEV] + lastKnownElevation);    ///< Move the servo to the next position
+                    setTimeTag( 30, &servoFinished );                          ///< Give the servo 10ms to move
+                    subFollowState = IR_MEASUREMENT;                           ///< Move to purgatory
+                } else if( subFollowState == IR_MEASUREMENT ){ 
+                    if( eventDue( &servoFinished )){                            ///< Give the servo 10ms to travel 
+                        if( IRFlags.idle ){                                    ///< The IR sensor is not busy
+                            getNewIRDistance();
+                        } 
                         IRSensor();
-
-                        if ( USFlags.distanceReady ){
-                            if( (USValues.distance) && (USValues.distance < currentMinimum) ){
-                                gotNewLow = TRUE;                               ///< We record the fact that we got a new low position
-                                currentMinimum = USValues.distance;             ///< We got a lower ultrasound reading, so record it
-                                lowestIndex = dir;                              ///< And store where it occured
-                            }
-                            point++;                                            ///< We check the next point
-                            subFollowState = CALCULATE_NEXT_POSITION;           ///< We calculate the next servo place
-
-                        } else if ( IRFlags.distanceReady ){                    ///< A new measurement is available
-                            if( IRDistance > 30 ){                              ///< Check if the IRSensor saw something
-                                lastIndex = dir;                                ///< Store dir as the new lastIndex
-                                followState = CHECK_STATIONARY;                 ///< Move back to CHECK_STATIONARY 
-                                lastKnownAzimuth = currentAzimuth;              ///< We have found the ball, so store its position
+                        if ( IRFlags.distanceReady ){                          ///< A new measurement is available
+                            if( IRDistance ){                                  ///< Check if the IRSensor saw something
+                                lastIndex = dir;                               ///< Store dir as the new lastIndex
+                                followState = CHECK_STATIONARY;                ///< Move back to CHECK_STATIONARY 
+                                lastKnownAzimuth = currentAzimuth;             ///< We have found the ball, so store its position
                                 lastKnownElevation = currentElevation;
-                            } else {                                            ///< The ball is not here
-                                IRFlags.idle = 1;                               ///< Look again
+                            } else {                                           ///< The ball is not here
+                                point++;                                       ///< We check the next point
+                                subFollowState = CALCULATE_NEXT_POSITION;      ///< We calculate the next servo place
                             }
                         }
                     }   
                 }                     
             } else {
-                if( gotNewLow ){                                                ///< Move to the lowest US reading if one was available
-                    lastIndex = dir;                                            ///< Store dir as the new lastIndex
-                    followState = CHECK_STATIONARY;                             ///< We found the ball, so check if it's still again 
-                    /// Store the minimum positions as the new ball location
-                    lastKnownAzimuth = depth*trackPositions[lowestIndex][AZIM] + lastKnownAzimuth;       
-                    lastKnownElevation = depth*trackPositions[lowestIndex][ELEV] + lastKnownElevation;
-                    /// Move the servos to that location
-                    updateCCPServoAngle( lastKnownAzimuth, lastKnownElevation );
-                } 
-                gotNewLow = FALSE;                                          ///< We need to look in the next tier
-                point = 0;                                                      ///< We start itterating again
-                depth++;                                                        ///< We move out further
+                point = 0;      ///< We start itterating again
+                depth++;        ///< We move out further
             }
         } else {                                                                ///< The ball is completely lost
             clearUSSamplePerEstimate();                                         ///< Move to single sample to find
@@ -183,6 +156,18 @@ void follow(void){
             depth = 1;                                                          ///< Reset depth for next search
         }
     }
+
+    /// Update the distance at the prespecified rate
+    //getDistance();
+//    if (eventDue(&echoCanFire)){
+//        fireEcho();
+//    }
+//    testUSState();
+//    if ( USFlags.distanceReady ){
+//        distance = USValues.distance;
+//        USFlags.distanceReady = 0;
+//        trackFlags.distanceReady = 1;
+//    }
 }
 
 /**
@@ -220,7 +205,9 @@ void getDistance(void){
          trackFlags.distanceReady = 1;
 
         if (distance!=0){
-            trackFlags.targetFound = 1;            
+            trackFlags.targetFound = 1;
+            lastKnownAzimuth = currentAzimuth;
+            lastKnownElevation = currentElevation;
             USValues.currentSampleSize = USValues.sampleSize;       /// Sets sample rate to user defined rate
         } 
 

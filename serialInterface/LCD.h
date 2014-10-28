@@ -20,34 +20,38 @@
 #define LCD_REPin           PORTDbits.RD6
 
 // A range of LCD commands to execute
-#define INITIALISE_LCD      0x03
+#define EMPTY_DISPLAY		0x01
+#define CLEAR_LCD      		0x03
 #define FOURBITMODE_LCD     0x02
 #define SET_DDRAM_ADDRESS   1<<7
 
 #define COMMAND_LCD         1
 #define CHARACTER_LCD       0
 
+#define LCD_REFRESH_TIME 	40
+
 extern unsigned char currentLCDRow;
 extern unsigned char currentLCDColumn;
+extern unsigned char LCDRequiresUpdate;
+extern int digitDivisors[4];
 
 typedef struct displayDigit{
-    unsigned char upper;
-    unsigned char middle;
-    unsigned char lower;
-    char characters[4];
+    int digit[4];
+    char characters[7];
 } displayDigit;
 
 extern displayDigit displayChars;
+extern char LCDTopLine[16];
+extern char LCDBottomLine[16];
 
-void LCDEventHandler( void );
+extern void updateLCD( void );
+extern timeTag LCDUpdate;
 
-extern void LCDSetup( void );
+extern void LCDInitialise( void );
 extern void LCDOnOff( unsigned char turnOn );
-extern void delayMs( unsigned int miliseconds );
-extern void intToDisplay( unsigned int displayVal );
+extern void intToDisplay( int displayVal , unsigned char decimalPlace );
 extern void LCDInstruction( char data , unsigned char isCommand );
 extern void LCDMoveCursor( unsigned char line, unsigned char character );
-extern void LCDPushString( char *string, unsigned char line );
 extern void LCDWriteHere( char *string );
 
 #endif	/* LCD_H */

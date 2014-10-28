@@ -24,10 +24,10 @@ void setupRealTimeTimer( void ){
     T0CONbits.T0PS = 0b011;				///< Set up a 16 prescaler
     T0CONbits.TMR0ON = 1;				///< Turn on timer 0
     /// Turning on the overflow interrupts and setting priorities
-    INTCON2bits.TMR0IP = 1;				///< Set TMR0 overflow to high Priority
+    INTCON2bits.TMR0IP = 0;				///< Set TMR0 overflow to low Priority
     INTCONbits.TMR0IE = 1; 				///< Enable TMR0 Interrupts
     RCONbits.IPEN =1;					///< Enable interrupt priorities
-    INTCONbits.GIEH = 1;				///< Enable high priority interrupts
+    INTCONbits.GIEL = 1;				///< Enable high priority interrupts
 }
 
 /**

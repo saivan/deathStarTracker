@@ -35,6 +35,8 @@ extern trackFlagType trackFlags;
 extern unsigned int distance;
 extern int lastKnownAzimuth;
 extern int lastKnownElevation;
+extern int lastKnownAzimuth;
+extern int lastKnownElevation;
 
 #endif	/* TRACKER_H */
 

@@ -8,7 +8,7 @@
 **
 **********************************************************/
 
-#include "system.h"
+#include "masterHeader.h"
 
 #ifdef  USING_PIC18F4520
 #define SPBRGvalue  64

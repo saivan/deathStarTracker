@@ -30,11 +30,11 @@ typedef struct USValueType {
 extern USValueType USValues;
 
 /// The external variables are all declared here
+extern timeTag echoCanFire;
 extern unsigned int distPerMs;
 extern unsigned int distPerSubMs;
 extern unsigned int USCapturedValue[10];
 extern unsigned int USCapturedRaw[10];
-extern timeTag echoCanFire;
 
 /// The functions are all declared here
 void fireEcho (void);

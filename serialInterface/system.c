@@ -8,6 +8,34 @@ SystemFlags systemFlags = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 #pragma interrupt highPriorityISR
 void highPriorityISR(void)
 {
+    /// Receive Interrupt
+    if(PIR1bits.RCIF)
+    {
+        userInputBuffer[rcPosition++] = RCREG;
+    }
+    /// Transmit Interrupt
+    if(PIR1bits.TXIF)
+    {
+        if(romramIndicator[toPrintIndex - 1].inRom)
+        {
+            TXREG = *txPtr.romPtr++;
+
+            if(!*txPtr.romPtr)
+            {
+                PIE1bits.TXIE = 0;
+            }
+        }
+        else
+        {
+            TXREG = *txPtr.ramPtr++;
+
+            if(!*txPtr.ramPtr)
+            {
+                PIE1bits.TXIE = 0;
+            }
+        }
+    }
+
 
 }
 
@@ -17,67 +45,20 @@ void highPriorityISR(void)
 #pragma interrupt lowPriorityISR
 void lowPriorityISR(void)
 {
-    
-    /* Start processing the received inputs if something was received */
-    if(PIR1bits.RCIF)
+
+    /// Handling the timer
+    if( INTCONbits.TMR0IF )
     {
-        /* Read the received character into a 2 byte buffer */
-        userInputBuffer[rcPosition++] = RCREG;
-
+        time.updatesRequired++;                     ///< Flag another update for the main
+        INTCONbits.TMR0IF = 0;                      ///< Clear the interrupt flag
     }
-    else if(PIR1bits.TXIF)
-    {
-        PIE1bits.RCIE = 0;
-        if(romIndicator[toPrintIndex - 1])
-        {
-            TXREG = *txPtrRom++;
-
-            if(*txPtrRom == '\0')
-            {
-                PIE1bits.TXIE = 0;
-                PIE1bits.RCIE = 1;
-            }
-        }
-        else
-        {
-            TXREG = *txPtrRam++;
-
-            if(*txPtrRam == '\0')
-            {
-                PIE1bits.TXIE = 0;
-                PIE1bits.RCIE = 1;
-            }
-        }
-        
-    }
-    else if(INTCONbits.RBIF)
+    else if(INTCON3bits.INT1IF)
     {
         buttonPressValue = PORTB >> 2;
         buttonPressValue &= LOWNIBBLE;
         userInputBuffer[rcPosition++] = buttonPressValue;
-//        if(buttonPressValue == UPBUTTON)
-//        {
-//            //userInputBuffer[rcPosition++] = UPCHAR;
-//        }
-//        else if(buttonPressValue == DOWNBUTTON)
-//        {
-//            //userInputBuffer[rcPosition++] = DOWNCHAR;
-//        }
-//        else if(buttonPressValue == BACKBUTTON)
-//        {
-//            userInputBuffer[rcPosition++] = '\b';
-//        }
-//        else if(buttonPressValue == GOBUTTON)
-//        {
-//            userInputBuffer[rcPosition++] = '\r';
-//        }
-//        else
-//        {
-//            userInputBuffer[rcPosition++] = buttonPressValue;
-//        }
 
-        INTCONbits.RBIF = 0;
-        buttonFlags.buttonPressed = 1;
+        INTCON3bits.INT1IF = 0;
     }
     
 }
@@ -105,22 +86,3 @@ void systemReset(void)
 }
 
 
-
-void showTargetStatus(void)
-{
-
-	if (systemFlags.targetfound)
-	{
-		//...do appropriate stuff
-	}
-	else
-	{
-		//...do appropriate stuff
-	}
-}
-
-void showTemperature(void)
-{
-	// Show temperature stuff
-
-}

@@ -19,12 +19,14 @@
 
 void setup(void)
 {
-    systemFlags.remote = 1;
     treeSetup();
     serialSetup();
-    buttonsSetup();
-    LCDSetup();
-    LCDOnOff(HIGH);
+    selectNextChild(); selectNextChild(); selectNextChild();
+    setupRealTimeTimer();
+    PIE1bits.TXIE = 0;
+    PIE1bits.RCIE = 0;
+    //enterRemoteMode();
+    enterLocalMode();
 }
 
 /* 'main' function */
@@ -32,66 +34,32 @@ void main(void)
 {
     /* Setup and Config the microcontroller */
     setup();
-
     for(EVER)
     {
+        updateTime();
+
         if(systemFlags.remote)
         {
             handleReception();
-        }
-        else
-        {
-            handleReceptionLocal();
-        }
-        
-        if(!PIE1bits.TXIE)
-        {
-            PIE1bits.RCIE = 1;
-            if(toPrintIndex == cueIntoIndex)
+            
+            handleTransmission();
+            if(systemFlags.updatePrompt)
             {
-                cueIntoIndex = 0;
-                toPrintIndex = 0;
-            }
-            if(toPrintIndex < cueIntoIndex)
-            {
-                if(romIndicator[toPrintIndex])
-                {
-                    txPtrRom = toPrintStrings[toPrintIndex++].romPtr;
-                }
-                else
-                {
-                    txPtrRam = toPrintStrings[toPrintIndex++].ramPtr;
-                }
-//                if(romramIndicator & BIT(toPrintIndex))
-//                {
-//                    txPtrRom = toPrintStringsRom[toPrintIndex++];
-//                }
-//                else
-//                {
-//                    txPtrRam = toPrintStringsRam[toPrintIndex++];
-//                }
-                PIE1bits.TXIE = 1;
-            }
-            PIE1bits.RCIE = 1;
-        }
-
-        executeCurrentNodeFunction();
-
-        if(systemFlags.commandReceived)
-        {
-            systemFlags.commandReceived = 0;
-
-            if(systemFlags.remote)
-            {
+                systemFlags.updatePrompt = 0;
                 showChildOptions();
                 printRomString(msgNewLine);
                 printRomString(msgNewLine);
                 prompt();
             }
-            else
-            {
-                updateLocalInterface();
-            }
         }
+        else
+        {
+            handleReceptionLocal();
+            handleTransmissionLocal();
+            updateLCD();
+
+        }
+
+        executeCurrentNodeFunction();
     }
 }

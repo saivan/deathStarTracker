@@ -1,5 +1,6 @@
 
-#include "system.h"
+#include "masterHeader.h"
+
 ButtonFlags buttonFlags = {0, 0, 0, 0, 0, 0, 0, 0};
 
 unsigned char buttonPressValue = 0;

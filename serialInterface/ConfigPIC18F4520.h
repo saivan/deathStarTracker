@@ -61,7 +61,7 @@
 #error  "ERROR: Configuration-header file mismatch.  Verify selected processor."
 #endif
 
-
+#pragma config PBADEN = OFF
 //  Oscillator Selection:
 //    OSC = LP          LP
 //    OSC = XT          XT
