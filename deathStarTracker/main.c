@@ -7,13 +7,12 @@
 
 void setup( void ){	
 	/// Setup Routines go here
-  treeSetup();
-  serialSetup();
-  enterRemoteMode();
-	//setupRealTimeTimer();   
- //  setupServos();
+  // treeSetup();
+  // serialSetup();
+  // enterRemoteMode();
+	// setupRealTimeTimer();   
+  setupServos();
 	// USSetup();
-  enterRemoteMode();
 }
 
 
@@ -21,36 +20,35 @@ void main( void ){
 
 	setup();
         
-  while(1)
-  {
+  while(1){
 
-        //updateTime();
-        //track();            
+        // updateTime();
+        // track();            
   
-        if(systemFlags.remote)
-        {
-            handleReception();
+        // if(systemFlags.remote)
+        // {
+        //     handleReception();
             
-            handleTransmission();
-            if(systemFlags.updatePrompt)
-            {
-                systemFlags.updatePrompt = 0;
-                showChildOptions();
-                printRomString(msgNewLine);
-                printRomString(msgNewLine);
-                prompt();
-            }
-        }
+        //     handleTransmission();
+        //     if(systemFlags.updatePrompt)
+        //     {
+        //         systemFlags.updatePrompt = 0;
+        //         showChildOptions();
+        //         printRomString(msgNewLine);
+        //         printRomString(msgNewLine);
+        //         prompt();
+        //     }
+        // }
 
-        else
-        {
-            handleReceptionLocal();
-            handleTransmissionLocal();
-            updateLCD();
+        // else
+        // {
+        //     handleReceptionLocal();
+        //     handleTransmissionLocal();
+        //     updateLCD();
 
-        }
+        // }
 
-        executeCurrentNodeFunction();        
+        // executeCurrentNodeFunction();        
 
 
   //       /// Update the LCD
@@ -80,5 +78,5 @@ void main( void ){
 		// }
 
 
-    }
+	}
 }
