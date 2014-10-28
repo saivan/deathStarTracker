@@ -71,7 +71,7 @@ void main( void ){
        			setTimeTag(2,&LCDUpdate);
                 LCDState++;
        		} else if( LCDState == 3 ){
-       			intToDisplay(currentAzimuth,1);
+       			intToDisplay((int)(trackFlags.targetFound),0);
        			LCDWriteHere(displayChars.characters);       			
        			setTimeTag(35,&LCDUpdate);
        			LCDState = 0;

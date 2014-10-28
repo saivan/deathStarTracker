@@ -21,6 +21,7 @@ extern USFlagType USFlags;
 typedef struct USValueType {
 	unsigned int distance;
         unsigned char sampleSize;
+        unsigned char currentSampleSize;
         unsigned int maxRange;
         unsigned int minRange;
         unsigned int freq_ms;
@@ -31,7 +32,8 @@ extern USValueType USValues;
 /// The external variables are all declared here
 extern unsigned int distPerMs;
 extern unsigned int distPerSubMs;
-extern unsigned int UScapturedValue[10];
+extern unsigned int USCapturedValue[10];
+extern unsigned int USCapturedRaw[10];
 extern timeTag echoCanFire;
 
 /// The functions are all declared here
@@ -41,7 +43,7 @@ void testUSState(void);
 void USSetup(void);
 void setUSMin (unsigned int min);
 void setUSMax (unsigned int max);
-void setUSSamplePerEstimate (unsigned char samples);
+void clearUSSamplePerEstimate (void);
 void setUSFrequency (unsigned char frequency);
 
 #endif

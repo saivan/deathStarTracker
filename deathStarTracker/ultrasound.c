@@ -21,11 +21,11 @@ unsigned char USArrayPosition = 0;
 unsigned int speedOfSound = 0;
 unsigned int distPerMs = 0;
 unsigned int distPerSubMs = 0;
-unsigned int UScapturedValue[10] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-unsigned int UScapturedRaw[10] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+unsigned int USCapturedValue[10] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+unsigned int USCapturedRaw[10] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 timeTag echoCanFire = {0,0,0,0};
 USFlagType USFlags = {0, 0};
-USValueType USValues = {0,0,0,0,0};
+USValueType USValues = {0,0,0,0,0,0};
 
 /**
  * @brief sets up the US]
@@ -54,7 +54,8 @@ void USSetup(void) {
     distPerSubMs = speedOfSound/4000;               ///< Divides by 20 times to get 20 subsections
     USFlags.fireStatus = 0;                         ///< Status of 0 means nothing is occuring, 1 means echo is incoming and has not been calculated yet
     USFlags.distanceReady = 0;                      ///< Whether the new distance has been read
-    USValues.sampleSize = 5;                        ///< Starting values
+    USValues.sampleSize = 2;                        ///< Starting values
+    USValues.currentSampleSize = 1;
     USValues.minRange = 450;
     USValues.maxRange = 2100;
     USValues.freq_ms = 80;
@@ -78,15 +79,13 @@ void setUSMax (unsigned int max){
 /**
  * @brief [sets up the US Samples per Average]
  */
-void setUSSamplePerEstimate (unsigned char samples){
+void clearUSSamplePerEstimate (void){
     unsigned char i = 0;
-    while (i < 10) {
-        UScapturedValue[i] = 0;
+    while (i < USValues.currentSampleSize) {
+        USCapturedValue[i] = 0;
         i++;
     }
-    if (samples <= 10 && samples > 0) {
-        USValues.sampleSize = samples;
-    }
+    USValues.currentSampleSize = 1;
 }
 
 /**
@@ -117,17 +116,17 @@ void testUSState (void){
             CCP2CON = 0x05; ///<capture mode, every rising edge
         }
     
-//        if (TMR3H > 0x58 ) {  ///<change to 0x58
-//            UScapturedValue[USArrayPosition] = 0x00;
-//            echoCalc();
-//            CCP2CON = 0x00;                         ///<turn off ccp since no value is coming
-//            USFlags.fireStatus = 0;                       ///<reset status
-//        }
+           if (TMR3H > 0x58 ) {  ///<change to 0x58
+               USCapturedValue[USArrayPosition] = 0x00;
+               echoCalc();
+               CCP2CON = 0x00;                         ///<turn off ccp since no value is coming
+               USFlags.fireStatus = 0;                       ///<reset status
+           }
     
         if ( PIR2bits.CCP2IF ) {
             PIR2bits.CCP2IF = 0;
-            UScapturedValue[USArrayPosition] = ReadTimer3();    ///<store captured time into array
-            UScapturedRaw[USArrayPosition] = ReadTimer3();
+            USCapturedValue[USArrayPosition] = ReadTimer3();    ///<store captured time into array
+            USCapturedRaw[USArrayPosition] = ReadTimer3();
             echoCalc();
             CCP2CON = 0x00;
             USFlags.fireStatus = 0;
@@ -168,13 +167,13 @@ void echoCalc (void) {
     unsigned int tempDistance;
     USValues.distance = 0;
     voidUSData = 0;
-    tempDistance = UScapturedValue[USArrayPosition];
-    if (UScapturedValue[USArrayPosition] != 0) {
-        UScapturedValue[USArrayPosition] = tempDistance/17;   ///<gives a distance in cm (remove the /10 for mm)
+    tempDistance = USCapturedValue[USArrayPosition];
+    if (USCapturedValue[USArrayPosition] != 0) {
+        USCapturedValue[USArrayPosition] = tempDistance/17;   ///<gives a distance in cm (remove the /10 for mm)
     }
     i = 0;    
-    while (i < USValues.sampleSize) {  ///<checks for void values
-        tempDistance = UScapturedValue[i];
+    while (i < USValues.currentSampleSize) {  ///<checks for void values
+        tempDistance = USCapturedValue[i];
         if (tempDistance < USValues.minRange || tempDistance > USValues.maxRange) {       ///<remove /10 for mm
             tempDistance = 0;
             voidUSData++;
@@ -183,12 +182,12 @@ void echoCalc (void) {
         i++;
     }
 
-    if (voidUSData < USValues.sampleSize) {
-        USValues.distance = USValues.distance/(USValues.sampleSize-voidUSData); ///<average distance values
+    if (voidUSData < USValues.currentSampleSize) {
+        USValues.distance = USValues.distance/(USValues.currentSampleSize-voidUSData); ///<average distance values
     }
 //    USValues.distance = UScapturedValue[USArrayPosition];
     USArrayPosition++;
-    if (USArrayPosition == USValues.sampleSize) {
+    if (USArrayPosition == USValues.currentSampleSize) {
         USArrayPosition = 0; ///<reset poisition if over buffer
     }
     

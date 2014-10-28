@@ -196,6 +196,11 @@ void intToDisplay( int displayVal , unsigned char decimalPlace ){
     if( displayVal > 9999 )
         return;                                                                     ///< If the value to be displayed is too large, exit
 
+    if( displayVal == 0 ){
+        displayChars.characters[0] = '0';
+        displayChars.characters[1] = '\0';
+        return;
+    }
 //    systemFlags.LCDUpdate = 0;
 
     /// If the number was negative, add the negative sign

@@ -8,6 +8,17 @@
 #ifndef TRACKER_H
 #define	TRACKER_H
 
+#define CHECK_STATIONARY 0
+#define CHECK_NEIGHBOURS 1
+#define CALCULATE_NEXT_POSITION 0
+#define SENSOR_MEASUREMENT 1
+
+#define AZIM 0
+#define ELEV 1
+#define A 40
+#define B 30
+
+
 void track(void);
 void scan(void);
 void follow(void);
@@ -22,6 +33,8 @@ typedef struct trackFlagType{
 
 extern trackFlagType trackFlags;
 extern unsigned int distance;
+extern int lastKnownAzimuth;
+extern int lastKnownElevation;
 
 #endif	/* TRACKER_H */
 

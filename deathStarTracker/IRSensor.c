@@ -20,7 +20,7 @@ unsigned int gatheredData [] = {0,0,0,0,0,0,0,0,0,0};   ///< Gathered readings f
 unsigned int reading = 0;   ///< Averaged reading across the samples taken
 unsigned int calibrationVariable = 14000;   ///< constant used in distance calculations
 unsigned int IRDistance = 0;	///< The predicted distance from the IR sensor
-unsigned int maxRange = 2000;
+unsigned int maxRange = 800/*2000*/;
 unsigned int minRange = 500;
 
 char startCalibration [] = "Place the object 1m from sensor and press the button when ready";

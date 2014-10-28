@@ -33,7 +33,7 @@ void setupServos( void ){
     T1CONbits.RD16 = 1;                         ///< Latch in 16 bit values for CCPR1L and CCPR1H
     T1CONbits.TMR1ON = 1;                       ///< Turn on timer 1
     // Setup the initial Servo position
-    updateCCPServoAngle( 1800, 1800 );
+    updateCCPServoAngle( 900, 0 );
     // Setup the capture Compare module
     CCPR1 = servoOffTime;                       ///< Write the initial delay
     CCP1CONbits.CCP1M = 0b1010;                 ///< Setup the compare interrupt

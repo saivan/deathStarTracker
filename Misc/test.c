@@ -67,6 +67,7 @@ int main(void){
 	int elevationAngle = 2236;
 	intToDisplay(elevationAngle,3);
 	printf("%s\n", displayChars.characters );	
+    printf("%s\n", "hello" );
 
 }
 
