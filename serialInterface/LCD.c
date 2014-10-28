@@ -46,29 +46,6 @@ void LCDInitialise( void ){
 }
 
 
-void updateLCD( void ){
-    static char LCDUpdateState = 0;
-    /// Update the LCD if an update is needed
-    if( eventDue(&LCDUpdate) & systemFlags.LCDRequiresUpdate ){
-        if( LCDUpdateState == 0 ){             
-            LCDInstruction(EMPTY_DISPLAY,COMMAND_LCD);
-            setTimeTag(100,&LCDUpdate);
-            LCDUpdateState++;
-        } else if ( LCDUpdateState == 1 ){
-            LCDWriteHere(LCDTopLine);
-            LCDMoveCursor(1,0);
-            setTimeTag(100,&LCDUpdate);
-            LCDUpdateState++;
-        } else if ( LCDUpdateState == 2 ){
-            LCDWriteHere(LCDBottomLine);
-            setTimeTag( LCD_REFRESH_TIME, &LCDUpdate );
-            LCDUpdateState = 0;
-        }
-    }
-}
-
-
-
 /**
  * @brief Turns on or off the LCD
  * @details Call this function to turn on or off the LCD
