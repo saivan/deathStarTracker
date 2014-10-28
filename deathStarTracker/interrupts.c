@@ -37,25 +37,25 @@ void highPriorityISR(void)
         }
     }
     
-    /// Handling the servos 
-    if( PIR1bits.CCP1IF ){
-         PIR1bits.CCP1IF = 0;                       ///< Clear the flag for the next interrupt
-         if( ~servoFlags.azimuthFired ){    
-             AZIMUTH_PIN = 1;                       ///< Turn on the azimuth servo
-             CCPR1 = azimuthServoOnTime;            ///< Set CCP1 to the Azimuth on time
-             servoFlags.azimuthFired = 1;           ///< Note that the azimuth servo was triggered
-         } else if ( ~servoFlags.elevationFired ){
-             AZIMUTH_PIN = 0;                       ///< Turn off the Azimuth servo
-             ELEVATION_PIN = 1;                     ///< Turn on the elevation servo
-             CCPR1 = elevationServoOnTime;          ///< Set CCP1 to the Elevation on time
-             servoFlags.elevationFired = 1;         ///< Note that the elevation servo was triggered
-         } else {   
-             ELEVATION_PIN = 0;                     ///< Turn off the Elevation servo
-             CCPR1 = servoOffTime;                  ///< Move the off time to the CCP1
-             servoFlags.azimuthFired = 0;           ///< Restart the azimuth cycle
-             servoFlags.elevationFired = 0;         ///< Restart the elevation cycle
-         }
-    }
+    // /// Handling the servos 
+    // if( PIR1bits.CCP1IF ){
+    //      PIR1bits.CCP1IF = 0;                       ///< Clear the flag for the next interrupt
+    //      if( ~servoFlags.azimuthFired ){    
+    //          AZIMUTH_PIN = 1;                       ///< Turn on the azimuth servo
+    //          CCPR1 = azimuthServoOnTime;            ///< Set CCP1 to the Azimuth on time
+    //          servoFlags.azimuthFired = 1;           ///< Note that the azimuth servo was triggered
+    //      } else if ( ~servoFlags.elevationFired ){
+    //          AZIMUTH_PIN = 0;                       ///< Turn off the Azimuth servo
+    //          ELEVATION_PIN = 1;                     ///< Turn on the elevation servo
+    //          CCPR1 = elevationServoOnTime;          ///< Set CCP1 to the Elevation on time
+    //          servoFlags.elevationFired = 1;         ///< Note that the elevation servo was triggered
+    //      } else {   
+    //          ELEVATION_PIN = 0;                     ///< Turn off the Elevation servo
+    //          CCPR1 = servoOffTime;                  ///< Move the off time to the CCP1
+    //          servoFlags.azimuthFired = 0;           ///< Restart the azimuth cycle
+    //          servoFlags.elevationFired = 0;         ///< Restart the elevation cycle
+    //      }
+    // }
 
 
 }
@@ -88,7 +88,13 @@ void lowPriorityISR(void)
 #pragma code highISR = 0x0008
 void gotoHighISR(void)
 {
-    _asm goto highPriorityISR _endasm   /* Simply go to 'highPriorityISR' */
+    _asm 
+            btfss PIR1, 2, 0
+            goto highPriorityISR
+            clrf TMR1H, 0
+            clrf TMR1L, 0
+            goto highPriorityISR
+    _endasm   /* Simply go to 'highPriorityISR' */
 }
 
 /* Low Priority Interrupt Service Routine */

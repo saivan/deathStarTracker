@@ -40,7 +40,7 @@ void setupServos( void ){
     // Enable the CCP interrupt     
     RCONbits.IPEN = 1;                          ///< Enable interrupt priorites
     IPR1bits.CCP1IP = 1;                        ///< Set CCP interrupt to high priority
-    PIE1bits.CCP1IE = 1;                        ///< Enable the capture compare interrupt
+    PIE1bits.CCP1IE = 0;                        ///< Enable the capture compare interrupt
     INTCONbits.GIEH = 1;                        ///< Enable high priority interrupts
 }
 

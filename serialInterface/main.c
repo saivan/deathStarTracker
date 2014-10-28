@@ -25,8 +25,8 @@ void setup(void)
     setupRealTimeTimer();
     PIE1bits.TXIE = 0;
     PIE1bits.RCIE = 0;
-    //enterRemoteMode();
-    enterLocalMode();
+    enterRemoteMode();
+    //enterLocalMode();
 }
 
 /* 'main' function */

@@ -122,7 +122,7 @@ void serialSetup(void)
 {
     //transmitBuffer[INPUTSIZE - 1] = '\0';
     /* Config: Interrupt Control Register (Disable Interrupts during Setup) */
-    //INTCON = ZERO;      /*Disable Global and Peripheral Interrupts*/
+    INTCON = ZERO;      /*Disable Global and Peripheral Interrupts*/
 
     /* Config: USART Transmission Status & Control Register */
     TXSTA = ZERO;       /* 8-bit transmission, Asynchronous mode */
@@ -141,8 +141,8 @@ void serialSetup(void)
     PIE1bits.RCIE = 1;  /* Enable USART Receive  Interrupt */
     
     /* Config: Peripheral Interrupt Request (Flag) Register */
-//    IPR1 = ZERO;
-//    IPR2 = ZERO;
+    IPR1 = ZERO;
+    IPR2 = ZERO;
     IPR1bits.RCIP = 1;  /* Make USART Receive  Interrupt a Low Priority */
     IPR1bits.TXIP = 1;
     
