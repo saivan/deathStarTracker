@@ -84,5 +84,3 @@ void systemReset(void)
 {
     _asm reset _endasm
 }
-
-
