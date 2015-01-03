@@ -22,11 +22,11 @@ unsigned int speedOfSound = 0;
 unsigned int distPerMs = 0;
 unsigned int distPerSubMs = 0;
 unsigned int USCapturedValue[10] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-unsigned int USCapturedRaw[10] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+unsigned int USCapturedRaw[10] = { 1, 0, 1, 0, 1, 0, 1, 0, 1, 0 };
 timeTag echoCanFire = {0,0,0,0};
+//timeTag showRawTag = {0, 0, 0, 0};
 USFlagType USFlags = {0, 0};
 USValueType USValues = {0,0,0,0,0,0};
-
 /**
  * @brief sets up the US]
  * @details [configures timer 3 and sets initial status of

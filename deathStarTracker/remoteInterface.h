@@ -64,6 +64,8 @@ extern rom char rom msgDefault[];
 extern rom char rom msgCR[];
 extern rom char rom msgValueGood[];
 extern rom char rom msgValueBad[];
+extern rom char rom msgOutOfRange[];
+extern rom char rom msgInputDone[];
 extern rom char rom msgSpaces[];
 
 extern rom char rom password[];

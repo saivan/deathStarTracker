@@ -39,6 +39,7 @@
 
 /// The system flags
 typedef struct {
+        unsigned int toTrack : 1;
  	unsigned int remote : 1;
  	unsigned int factory : 1;
  	unsigned int optionsShown : 1;
@@ -49,10 +50,10 @@ typedef struct {
         unsigned int downPressed : 1;
         unsigned int userChosen : 1;
         unsigned int updatePrompt : 1;
+        unsigned int userInputStored : 1;
         unsigned int numberParsed : 1;
         unsigned int LCDRequiresUpdate : 1;
 } SystemFlags;
-extern SystemFlags systemFlags;
 
 #define TRUE 1
 #define FALSE 0

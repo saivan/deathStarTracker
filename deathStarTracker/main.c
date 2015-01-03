@@ -5,50 +5,57 @@
 
 // static char LCDState = 0;
 
-void setup( void ){	
-	/// Setup Routines go here
-  // treeSetup();
-  // serialSetup();
-  // enterRemoteMode();
-	// setupRealTimeTimer();   
-  setupServos();
-	// USSetup();
+void setup( void )
+{	
+    /// Setup Routines go here
+    treeSetup();
+    serialSetup();
+    enterRemoteMode();
+    setupRealTimeTimer();
+    setupServos();
+    USSetup();
 }
 
 
-void main( void ){	
+void main( void )
+{	
 
-	setup();
+    setup();
         
-  while(1){
+    while(1)
+    {
 
-        // updateTime();
-        // track();            
-  
-        // if(systemFlags.remote)
-        // {
-        //     handleReception();
-            
-        //     handleTransmission();
-        //     if(systemFlags.updatePrompt)
-        //     {
-        //         systemFlags.updatePrompt = 0;
-        //         showChildOptions();
-        //         printRomString(msgNewLine);
-        //         printRomString(msgNewLine);
-        //         prompt();
-        //     }
-        // }
+        updateTime();
 
-        // else
-        // {
-        //     handleReceptionLocal();
-        //     handleTransmissionLocal();
-        //     updateLCD();
+        if(systemFlags.toTrack)
+        {
+            track();
+        }
 
-        // }
+        if(systemFlags.remote)
+        {
+            handleReception();
 
-        // executeCurrentNodeFunction();        
+            handleTransmission();
+            if(systemFlags.updatePrompt)
+            {
+                systemFlags.updatePrompt = 0;
+                showChildOptions();
+                printRomString(msgNewLine);
+                printRomString(msgNewLine);
+                prompt();
+            }
+        }
+
+        else
+        {
+            handleReceptionLocal();
+            handleTransmissionLocal();
+            updateLCD();
+
+        }
+
+        executeCurrentNodeFunction();
 
 
   //       /// Update the LCD
@@ -77,6 +84,5 @@ void main( void ){
   //      		}
 		// }
 
-
-	}
+    }
 }

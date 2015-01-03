@@ -59,8 +59,10 @@ rom char rom msgDeleteInFront[] =
 rom char rom msgDefault[] = "\r\t\t\t\t<Default>";
 rom char rom msgCR[] = "\r";
 rom char rom msgSpaces[] = "     ";
-rom char rom msgValueGood[] = "\r\n\n\t<Input Received>\r\n\n";
-rom char rom msgValueBad[] = "\r\n\n\t<Invalid Input>\r\n\n";
+rom char rom msgValueGood[] = "\r\n\n\t<Input Number Received>\r\n\n";
+rom char rom msgValueBad[] = "\r\n\n\t<Not a number>\r\n\n";
+rom char rom msgOutOfRange[] = "\r\n\n\t<Number of out range>\r\n\n";
+rom char rom msgInputDone[] = "\r\n\n\t<Input Number Accepted>\r\n\n";
 
 rom char rom *numberChars[] = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"};
 rom char rom clearChars1[] = "[2J";

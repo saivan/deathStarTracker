@@ -228,7 +228,25 @@ void handleReception(void)
             else
             {
                 checkReset(userInputBuffer);
-                printRomString(msgInvalidCommand);
+
+                if(!systemFlags.numberInput)
+                {
+                    printRomString(msgInvalidCommand);
+                }
+            }
+
+            if(systemFlags.numberInput)
+            {
+                parsedNumber = convertToNumber(userInputBuffer);
+                if(systemFlags.userError)
+                {
+                    printRomString(msgValueBad);
+                }
+                {
+                    systemFlags.numberParsed = 1;
+                    printRomString(msgValueGood);
+                }
+                systemFlags.userError = 0;
             }
 
             freshNodePromptSettings();
@@ -288,6 +306,8 @@ void printRamString(static char *ramMessage)
         handleTransmission();
         return;
     }
+    while(toPrintIndex < cueIntoIndex)
+    {}
     romramIndicator[cueIntoIndex].inRom = FALSE;
     toPrintStrings[cueIntoIndex++].ramPtr = ramMessage;
     handleTransmission();

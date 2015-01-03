@@ -39,9 +39,10 @@ void setupServos( void ){
     CCP1CONbits.CCP1M = 0b1010;                 ///< Setup the compare interrupt
     // Enable the CCP interrupt     
     RCONbits.IPEN = 1;                          ///< Enable interrupt priorites
-    IPR1bits.CCP1IP = 1;                        ///< Set CCP interrupt to high priority
+    IPR1bits.CCP1IP = 0;                        ///< Set CCP interrupt to high priority
     PIE1bits.CCP1IE = 1;                        ///< Enable the capture compare interrupt
     INTCONbits.GIEH = 1;                        ///< Enable high priority interrupts
+    INTCONbits.GIEL = 1;
 }
 
 
