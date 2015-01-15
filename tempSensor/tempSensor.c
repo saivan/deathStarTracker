@@ -81,7 +81,7 @@ void tempSensorInitialisation(void){
 
 ///< Function to determine a temp offset so our temp matches user input temp
 void calibrateTempSensor(void){
-    temperatureOffset = calibrationTemperature - temperaturemV;
+    temperatureOffset = calibrationTemperature - temperatureDegC;
 }
 
 ///< function which allows for the temperature offset to be easily cleared

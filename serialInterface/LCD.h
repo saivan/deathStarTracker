@@ -44,7 +44,7 @@ extern displayDigit displayChars;
 extern char LCDTopLine[16];
 extern char LCDBottomLine[16];
 
-extern void updateLCD( void );
+extern void updateTheLCD( void );
 extern timeTag LCDUpdate;
 
 extern void LCDInitialise( void );

@@ -1,0 +1,17 @@
+			
+			
+			\begin{figure}[!htbp]
+				\centering
+					\includegraphics[width = \textwidth]{Figures/yourImage.png}
+				\caption{Your Caption}
+				
+				\label{Your Label}
+			\end{figure}						
+						
+			\FloatBarrier
+			
+			
+			
+			% When you want to refer to your figure, just simple do: From Figure (\ref{Your Label}) we can see that...
+			
+			% Put ALL OF YOUR FIGURES in a folder called 'Figures'. It MUST be called 'Figures'. If your image is .jpg, then change use 'Figures/yourImage.jpg' instead.
